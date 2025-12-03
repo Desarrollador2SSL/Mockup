@@ -1,0 +1,1415 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guía Visual - Portal Cliente SSL v4.0</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #667eea;
+            --accent-color: #764ba2;
+            --success-color: #27ae60;
+            --warning-color: #f39c12;
+            --error-color: #e74c3c;
+            --info-color: #3498db;
+            --text-color: #333;
+            --text-light: #666;
+            --bg-light: #f8f9fa;
+            --border-color: #e0e0e0;
+            --shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            --shadow-hover: 0 5px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-light);
+            color: var(--text-color);
+            line-height: 1.6;
+        }
+
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, var(--secondary-color), var(--accent-color));
+            color: white;
+            padding: 2rem 0;
+            text-align: center;
+            box-shadow: var(--shadow);
+            position: relative;
+            min-height: 200px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            animation: fadeInDown 0.8s ease;
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            animation: fadeInUp 0.8s ease;
+        }
+
+        /* Back to Dashboard Button */
+        .back-to-dashboard {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            background: rgba(255, 255, 255, 0.95);
+            color: var(--secondary-color);
+            text-decoration: none;
+            border-radius: 8px;
+            border: 2px solid white;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+            z-index: 10;
+        }
+
+        .back-to-dashboard:hover {
+            background: white;
+            color: var(--accent-color);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .back-to-dashboard i {
+            font-size: 1.1rem;
+        }
+
+        /* Container */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* Navigation Menu */
+        .nav-menu {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            box-shadow: var(--shadow);
+            position: sticky;
+            top: 20px;
+            z-index: 100;
+        }
+
+        .nav-menu ul {
+            list-style: none;
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .nav-menu a {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            background: var(--bg-light);
+            color: var(--text-color);
+            text-decoration: none;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .nav-menu a:hover {
+            background: var(--secondary-color);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: var(--shadow);
+        }
+
+        .nav-menu a.active {
+            background: var(--secondary-color);
+            color: white;
+            border-color: var(--accent-color);
+        }
+
+        /* Section */
+        .section {
+            margin-bottom: 4rem;
+            animation: fadeIn 0.8s ease;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 3px solid var(--secondary-color);
+        }
+
+        .section-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, var(--secondary-color), var(--accent-color));
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.8rem;
+        }
+
+        .section-title h2 {
+            font-size: 2rem;
+            color: var(--primary-color);
+        }
+
+        .section-title p {
+            color: var(--text-light);
+            margin-top: 0.5rem;
+        }
+
+        /* Process Flow */
+        .process-flow {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: var(--shadow);
+            margin-bottom: 2rem;
+        }
+
+        .flow-steps {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            flex-wrap: wrap;
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .flow-step {
+            flex: 1;
+            min-width: 250px;
+            text-align: center;
+            position: relative;
+        }
+
+        .flow-step::after {
+            content: '';
+            position: absolute;
+            top: 40px;
+            right: -20%;
+            width: 40%;
+            height: 2px;
+            background: var(--secondary-color);
+            display: none;
+        }
+
+        .flow-steps .flow-step:not(:last-child)::after {
+            display: block;
+        }
+
+        .step-icon {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 1rem;
+            background: linear-gradient(135deg, var(--secondary-color), var(--accent-color));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 2rem;
+            position: relative;
+            z-index: 1;
+            transition: transform 0.3s ease;
+        }
+
+        .flow-step:hover .step-icon {
+            transform: scale(1.1);
+        }
+
+        .step-number {
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            width: 30px;
+            height: 30px;
+            background: var(--success-color);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9rem;
+            font-weight: bold;
+        }
+
+        .step-title {
+            font-weight: 600;
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .step-description {
+            color: var(--text-light);
+            font-size: 0.9rem;
+        }
+
+        /* Visual Diagram */
+        .visual-diagram {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: var(--shadow);
+            margin-bottom: 2rem;
+            overflow-x: auto;
+        }
+
+        .diagram-container {
+            min-width: 800px;
+            margin: 2rem 0;
+        }
+
+        /* Flow Chart */
+        .flow-chart {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 2rem;
+            padding: 2rem;
+            background: var(--bg-light);
+            border-radius: 8px;
+            position: relative;
+        }
+
+        .flow-node {
+            background: white;
+            border: 2px solid var(--secondary-color);
+            border-radius: 8px;
+            padding: 1.5rem;
+            text-align: center;
+            min-width: 150px;
+            box-shadow: var(--shadow);
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .flow-node:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-hover);
+            border-color: var(--accent-color);
+        }
+
+        .flow-node i {
+            font-size: 2rem;
+            color: var(--secondary-color);
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+
+        .flow-node h4 {
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .flow-arrow {
+            position: absolute;
+            top: 50%;
+            right: -40px;
+            transform: translateY(-50%);
+            color: var(--secondary-color);
+            font-size: 2rem;
+        }
+
+        /* Feature Cards */
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .feature-card {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: var(--shadow);
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-hover);
+            border-color: var(--secondary-color);
+        }
+
+        .feature-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, var(--secondary-color), var(--accent-color));
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .feature-card h3 {
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+        }
+
+        .feature-card p {
+            color: var(--text-light);
+            margin-bottom: 1rem;
+        }
+
+        .feature-list {
+            list-style: none;
+        }
+
+        .feature-list li {
+            padding: 0.5rem 0;
+            color: var(--text-light);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .feature-list i {
+            color: var(--success-color);
+            font-size: 0.9rem;
+        }
+
+        /* Timeline */
+        .timeline {
+            position: relative;
+            padding: 2rem 0;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 50%;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: var(--secondary-color);
+            transform: translateX(-50%);
+        }
+
+        .timeline-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 3rem;
+            position: relative;
+        }
+
+        .timeline-item:nth-child(even) {
+            flex-direction: row-reverse;
+        }
+
+        .timeline-content {
+            flex: 1;
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: var(--shadow);
+            margin: 0 2rem;
+            position: relative;
+        }
+
+        .timeline-dot {
+            width: 20px;
+            height: 20px;
+            background: var(--secondary-color);
+            border-radius: 50%;
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            border: 4px solid white;
+            box-shadow: var(--shadow);
+        }
+
+        .timeline-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, var(--secondary-color), var(--accent-color));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+        }
+
+        /* Interactive Elements */
+        .interactive-demo {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: var(--shadow);
+            margin-top: 2rem;
+        }
+
+        .demo-tabs {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        .demo-tab {
+            padding: 1rem 2rem;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+            color: var(--text-light);
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .demo-tab.active {
+            color: var(--secondary-color);
+            font-weight: 600;
+        }
+
+        .demo-tab.active::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: var(--secondary-color);
+        }
+
+        .demo-content {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .demo-content.active {
+            display: block;
+        }
+
+        /* Tips & Info */
+        .tip-box {
+            background: linear-gradient(135deg, #e3f2fd, #f3e5f5);
+            border-left: 4px solid var(--info-color);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin: 2rem 0;
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+        }
+
+        .tip-icon {
+            color: var(--info-color);
+            font-size: 1.5rem;
+            flex-shrink: 0;
+        }
+
+        .tip-content h4 {
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .tip-content p {
+            color: var(--text-light);
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .back-to-dashboard {
+                position: static;
+                margin-bottom: 1rem;
+                display: inline-flex;
+            }
+
+            .header {
+                padding-top: 1rem;
+            }
+
+            .flow-steps {
+                flex-direction: column;
+            }
+
+            .flow-step::after {
+                display: none;
+            }
+
+            .timeline::before {
+                left: 30px;
+            }
+
+            .timeline-item {
+                flex-direction: column !important;
+                margin-left: 60px;
+            }
+
+            .timeline-dot {
+                left: 30px;
+            }
+
+            .flow-chart {
+                flex-direction: column;
+            }
+
+            .flow-arrow {
+                transform: rotate(90deg);
+                right: 50%;
+                top: auto;
+                bottom: -40px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <a href="cliente_dashboard.html" class="back-to-dashboard">
+            <i class="fas fa-arrow-left"></i>
+            Volver al Dashboard
+        </a>
+        <h1><i class="fas fa-book-open"></i> Guía Visual del Sistema SSL v4.0</h1>
+        <p>Aprenda a utilizar la plataforma de manera eficiente con esta guía interactiva</p>
+    </header>
+
+    <!-- Navigation -->
+    <div class="container">
+        <nav class="nav-menu">
+            <ul>
+                <li><a href="#overview" class="active"><i class="fas fa-home"></i> Visión General</a></li>
+                <li><a href="#flujo-trabajo"><i class="fas fa-project-diagram"></i> Flujo de Trabajo</a></li>
+                <li><a href="#cotizacion"><i class="fas fa-file-alt"></i> Cotización</a></li>
+                <li><a href="#compra"><i class="fas fa-shopping-cart"></i> Compra</a></li>
+                <li><a href="#entregas"><i class="fas fa-truck"></i> Entregas</a></li>
+                <li><a href="#pagos"><i class="fas fa-money-check-alt"></i> Pagos</a></li>
+                <li><a href="#configuracion"><i class="fas fa-cog"></i> Configuración</a></li>
+            </ul>
+        </nav>
+
+        <!-- Visión General -->
+        <section id="overview" class="section">
+            <div class="section-header">
+                <div class="section-icon">
+                    <i class="fas fa-globe"></i>
+                </div>
+                <div class="section-title">
+                    <h2>Visión General del Sistema</h2>
+                    <p>Conozca cómo SSL v4.0 optimiza su proceso de compra y gestión de materiales</p>
+                </div>
+            </div>
+
+            <div class="process-flow">
+                <h3>¿Qué es SSL v4.0?</h3>
+                <p>SSL v4.0 es una plataforma integral que conecta a clientes con proveedores para la gestión eficiente de materiales de construcción. El sistema automatiza todo el proceso desde la solicitud hasta la entrega y pago.</p>
+                
+                <div class="flow-steps">
+                    <div class="flow-step">
+                        <div class="step-icon pulse">
+                            <i class="fas fa-clipboard-list"></i>
+                            <span class="step-number">1</span>
+                        </div>
+                        <h4 class="step-title">Solicitar</h4>
+                        <p class="step-description">Cree solicitudes de materiales para sus obras de manera rápida y organizada</p>
+                    </div>
+
+                    <div class="flow-step">
+                        <div class="step-icon">
+                            <i class="fas fa-search-dollar"></i>
+                            <span class="step-number">2</span>
+                        </div>
+                        <h4 class="step-title">Cotizar</h4>
+                        <p class="step-description">Reciba y compare múltiples cotizaciones de diferentes proveedores</p>
+                    </div>
+
+                    <div class="flow-step">
+                        <div class="step-icon">
+                            <i class="fas fa-shopping-cart"></i>
+                            <span class="step-number">3</span>
+                        </div>
+                        <h4 class="step-title">Comprar</h4>
+                        <p class="step-description">Genere órdenes de compra con los mejores precios y condiciones</p>
+                    </div>
+
+                    <div class="flow-step">
+                        <div class="step-icon">
+                            <i class="fas fa-truck"></i>
+                            <span class="step-number">4</span>
+                        </div>
+                        <h4 class="step-title">Recibir</h4>
+                        <p class="step-description">Controle las entregas y valide la recepción de materiales</p>
+                    </div>
+
+                    <div class="flow-step">
+                        <div class="step-icon">
+                            <i class="fas fa-money-bill-wave"></i>
+                            <span class="step-number">5</span>
+                        </div>
+                        <h4 class="step-title">Pagar</h4>
+                        <p class="step-description">Gestione los pagos y mantenga control de su cuenta corriente</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tip-box">
+                <i class="fas fa-lightbulb tip-icon"></i>
+                <div class="tip-content">
+                    <h4>¡Importante!</h4>
+                    <p>SSL actúa como intermediario entre su empresa y múltiples proveedores, centralizando la gestión y optimizando los procesos de compra.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Flujo de Trabajo Detallado -->
+        <section id="flujo-trabajo" class="section">
+            <div class="section-header">
+                <div class="section-icon">
+                    <i class="fas fa-project-diagram"></i>
+                </div>
+                <div class="section-title">
+                    <h2>Flujo de Trabajo Completo</h2>
+                    <p>Comprenda el proceso completo desde la solicitud hasta el pago</p>
+                </div>
+            </div>
+
+            <div class="visual-diagram">
+                <h3>Flujo del Proceso Principal</h3>
+                <div class="diagram-container">
+                    <div class="flow-chart">
+                        <div class="flow-node">
+                            <i class="fas fa-user"></i>
+                            <h4>Cliente</h4>
+                            <p>Genera solicitud</p>
+                            <i class="fas fa-arrow-right flow-arrow"></i>
+                        </div>
+                        <div class="flow-node">
+                            <i class="fas fa-building"></i>
+                            <h4>SSL</h4>
+                            <p>Procesa y cotiza</p>
+                            <i class="fas fa-arrow-right flow-arrow"></i>
+                        </div>
+                        <div class="flow-node">
+                            <i class="fas fa-industry"></i>
+                            <h4>Proveedores</h4>
+                            <p>Envían cotizaciones</p>
+                            <i class="fas fa-arrow-right flow-arrow"></i>
+                        </div>
+                        <div class="flow-node">
+                            <i class="fas fa-balance-scale"></i>
+                            <h4>Comparación</h4>
+                            <p>Análisis de ofertas</p>
+                            <i class="fas fa-arrow-right flow-arrow"></i>
+                        </div>
+                        <div class="flow-node">
+                            <i class="fas fa-handshake"></i>
+                            <h4>Orden de Compra</h4>
+                            <p>Confirmación</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="interactive-demo">
+                <h3>Etapas del Proceso</h3>
+                <div class="demo-tabs">
+                    <button class="demo-tab active" onclick="showTab('primera-parte')">Primera Parte</button>
+                    <button class="demo-tab" onclick="showTab('segunda-parte')">Segunda Parte</button>
+                    <button class="demo-tab" onclick="showTab('tercera-parte')">Tercera Parte</button>
+                </div>
+
+                <div id="primera-parte" class="demo-content active">
+                    <h4><i class="fas fa-clipboard-list"></i> Primera Parte: Solicitud y Cotización</h4>
+                    <div class="timeline">
+                        <div class="timeline-item">
+                            <div class="timeline-dot"></div>
+                            <div class="timeline-content">
+                                <div class="timeline-icon">
+                                    <i class="fas fa-file-alt"></i>
+                                </div>
+                                <h5>1. Generar Solicitud de Pedido</h5>
+                                <p>El cliente crea una solicitud especificando:</p>
+                                <ul class="feature-list">
+                                    <li><i class="fas fa-check"></i> Obra asociada</li>
+                                    <li><i class="fas fa-check"></i> Productos requeridos</li>
+                                    <li><i class="fas fa-check"></i> Cantidades necesarias</li>
+                                    <li><i class="fas fa-check"></i> Fechas de entrega</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="timeline-item">
+                            <div class="timeline-dot"></div>
+                            <div class="timeline-content">
+                                <div class="timeline-icon">
+                                    <i class="fas fa-search"></i>
+                                </div>
+                                <h5>2. SSL Revisa y Aclara</h5>
+                                <p>SSL procesa la solicitud:</p>
+                                <ul class="feature-list">
+                                    <li><i class="fas fa-check"></i> Verifica productos</li>
+                                    <li><i class="fas fa-check"></i> Aclara especificaciones</li>
+                                    <li><i class="fas fa-check"></i> Puede generar nueva versión</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="timeline-item">
+                            <div class="timeline-dot"></div>
+                            <div class="timeline-content">
+                                <div class="timeline-icon">
+                                    <i class="fas fa-paper-plane"></i>
+                                </div>
+                                <h5>3. Solicitar Cotizaciones</h5>
+                                <p>SSL contacta proveedores:</p>
+                                <ul class="feature-list">
+                                    <li><i class="fas fa-check"></i> Envía solicitudes a múltiples proveedores</li>
+                                    <li><i class="fas fa-check"></i> Recibe cotizaciones</li>
+                                    <li><i class="fas fa-check"></i> Consolida información</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="timeline-item">
+                            <div class="timeline-dot"></div>
+                            <div class="timeline-content">
+                                <div class="timeline-icon">
+                                    <i class="fas fa-balance-scale"></i>
+                                </div>
+                                <h5>4. Cuadro Comparativo</h5>
+                                <p>Cliente analiza opciones:</p>
+                                <ul class="feature-list">
+                                    <li><i class="fas fa-check"></i> Compara precios</li>
+                                    <li><i class="fas fa-check"></i> Evalúa condiciones</li>
+                                    <li><i class="fas fa-check"></i> Selecciona productos/proveedores</li>
+                                    <li><i class="fas fa-check"></i> Chat para aclarar dudas</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="timeline-item">
+                            <div class="timeline-dot"></div>
+                            <div class="timeline-content">
+                                <div class="timeline-icon">
+                                    <i class="fas fa-shopping-cart"></i>
+                                </div>
+                                <h5>5. Generar Orden de Compra</h5>
+                                <p>Confirmación de compra:</p>
+                                <ul class="feature-list">
+                                    <li><i class="fas fa-check"></i> Cliente acepta cotización</li>
+                                    <li><i class="fas fa-check"></i> Genera una o más OC</li>
+                                    <li><i class="fas fa-check"></i> Define condiciones finales</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="segunda-parte" class="demo-content">
+                    <h4><i class="fas fa-truck"></i> Segunda Parte: Compra y Entrega</h4>
+                    <div class="timeline">
+                        <div class="timeline-item">
+                            <div class="timeline-dot"></div>
+                            <div class="timeline-content">
+                                <div class="timeline-icon">
+                                    <i class="fas fa-upload"></i>
+                                </div>
+                                <h5>1. Crear OC en Sistema</h5>
+                                <p>Cliente formaliza la orden:</p>
+                                <ul class="feature-list">
+                                    <li><i class="fas fa-check"></i> Sube OC al sistema</li>
+                                    <li><i class="fas fa-check"></i> Define fechas de entrega</li>
+                                    <li><i class="fas fa-check"></i> Especifica condiciones</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="timeline-item">
+                            <div class="timeline-dot"></div>
+                            <div class="timeline-content">
+                                <div class="timeline-icon">
+                                    <i class="fas fa-check-circle"></i>
+                                </div>
+                                <h5>2. SSL Acepta/Rechaza</h5>
+                                <p>Validación de la orden:</p>
+                                <ul class="feature-list">
+                                    <li><i class="fas fa-check"></i> Revisa términos</li>
+                                    <li><i class="fas fa-check"></i> Confirma disponibilidad</li>
+                                    <li><i class="fas fa-check"></i> Acepta o solicita cambios</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="timeline-item">
+                            <div class="timeline-dot"></div>
+                            <div class="timeline-content">
+                                <div class="timeline-icon">
+                                    <i class="fas fa-calendar-alt"></i>
+                                </div>
+                                <h5>3. Planificación de Entregas</h5>
+                                <p>SSL coordina logística:</p>
+                                <ul class="feature-list">
+                                    <li><i class="fas fa-check"></i> Programa con proveedores</li>
+                                    <li><i class="fas fa-check"></i> Considera peso/volumen</li>
+                                    <li><i class="fas fa-check"></i> Gestiona documentación</li>
+                                    <li><i class="fas fa-check"></i> Tramita aduana si aplica</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="timeline-item">
+                            <div class="timeline-dot"></div>
+                            <div class="timeline-content">
+                                <div class="timeline-icon">
+                                    <i class="fas fa-file-invoice"></i>
+                                </div>
+                                <h5>4. Documentación</h5>
+                                <p>Generación de documentos:</p>
+                                <ul class="feature-list">
+                                    <li><i class="fas fa-check"></i> Declaración Ingreso (DI)</li>
+                                    <li><i class="fas fa-check"></i> Declaración Salida (DS)</li>
+                                    <li><i class="fas fa-check"></i> Listado Productos Entregados (LPE)</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="timeline-item">
+                            <div class="timeline-dot"></div>
+                            <div class="timeline-content">
+                                <div class="timeline-icon">
+                                    <i class="fas fa-clipboard-check"></i>
+                                </div>
+                                <h5>5. Recepción y Control</h5>
+                                <p>Validación de entregas:</p>
+                                <ul class="feature-list">
+                                    <li><i class="fas fa-check"></i> Recepción en obra</li>
+                                    <li><i class="fas fa-check"></i> Verificación de productos</li>
+                                    <li><i class="fas fa-check"></i> Reporte de incidencias</li>
+                                    <li><i class="fas fa-check"></i> Control de cumplimiento</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="tercera-parte" class="demo-content">
+                    <h4><i class="fas fa-money-check-alt"></i> Tercera Parte: Facturación y Pago</h4>
+                    <div class="timeline">
+                        <div class="timeline-item">
+                            <div class="timeline-dot"></div>
+                            <div class="timeline-content">
+                                <div class="timeline-icon">
+                                    <i class="fas fa-file-invoice-dollar"></i>
+                                </div>
+                                <h5>1. Generación de Cobranza</h5>
+                                <p>Por cada entrega (LPE):</p>
+                                <ul class="feature-list">
+                                    <li><i class="fas fa-check"></i> Se genera factura</li>
+                                    <li><i class="fas fa-check"></i> Se calcula monto a pagar</li>
+                                    <li><i class="fas fa-check"></i> Se establece vencimiento</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="timeline-item">
+                            <div class="timeline-dot"></div>
+                            <div class="timeline-content">
+                                <div class="timeline-icon">
+                                    <i class="fas fa-money-bill-wave"></i>
+                                </div>
+                                <h5>2. Proceso de Pago</h5>
+                                <p>Cliente gestiona pagos:</p>
+                                <ul class="feature-list">
+                                    <li><i class="fas fa-check"></i> Revisa facturas pendientes</li>
+                                    <li><i class="fas fa-check"></i> Realiza transferencia</li>
+                                    <li><i class="fas fa-check"></i> Informa pago en sistema</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="timeline-item">
+                            <div class="timeline-dot"></div>
+                            <div class="timeline-content">
+                                <div class="timeline-icon">
+                                    <i class="fas fa-receipt"></i>
+                                </div>
+                                <h5>3. Documentación de Pago</h5>
+                                <p>Respaldo del proceso:</p>
+                                <ul class="feature-list">
+                                    <li><i class="fas fa-check"></i> Sube comprobante</li>
+                                    <li><i class="fas fa-check"></i> Asocia a facturas</li>
+                                    <li><i class="fas fa-check"></i> Mantiene trazabilidad</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Cotización y Compra -->
+        <section id="cotizacion" class="section">
+            <div class="section-header">
+                <div class="section-icon">
+                    <i class="fas fa-file-alt"></i>
+                </div>
+                <div class="section-title">
+                    <h2>Módulo de Cotización y Compra</h2>
+                    <p>Gestione eficientemente sus solicitudes y órdenes de compra</p>
+                </div>
+            </div>
+
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-clipboard-list"></i>
+                    </div>
+                    <h3>Solicitudes de Pedido</h3>
+                    <p>Centro de control para todas sus solicitudes de materiales</p>
+                    <ul class="feature-list">
+                        <li><i class="fas fa-check"></i> Crear nuevas solicitudes</li>
+                        <li><i class="fas fa-check"></i> Ver estado actual</li>
+                        <li><i class="fas fa-check"></i> Editar borradores</li>
+                        <li><i class="fas fa-check"></i> Duplicar solicitudes anteriores</li>
+                        <li><i class="fas fa-check"></i> Exportar a Excel</li>
+                    </ul>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-file-contract"></i>
+                    </div>
+                    <h3>Cotizaciones</h3>
+                    <p>Administre las propuestas recibidas de proveedores</p>
+                    <ul class="feature-list">
+                        <li><i class="fas fa-check"></i> Ver cotizaciones vigentes</li>
+                        <li><i class="fas fa-check"></i> Comparar ofertas</li>
+                        <li><i class="fas fa-check"></i> Aceptar o rechazar</li>
+                        <li><i class="fas fa-check"></i> Solicitar modificaciones</li>
+                        <li><i class="fas fa-check"></i> Descargar PDF</li>
+                    </ul>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-shopping-cart"></i>
+                    </div>
+                    <h3>Órdenes de Compra</h3>
+                    <p>Control completo de sus compras confirmadas</p>
+                    <ul class="feature-list">
+                        <li><i class="fas fa-check"></i> Generar desde cotizaciones</li>
+                        <li><i class="fas fa-check"></i> Ver estado de OC</li>
+                        <li><i class="fas fa-check"></i> Confirmar recepciones</li>
+                        <li><i class="fas fa-check"></i> Historial de entregas</li>
+                        <li><i class="fas fa-check"></i> Documentos asociados</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="visual-diagram">
+                <h3>Flujo de Documentos - Opción Cotización Separada vs Unificada</h3>
+                <div class="feature-grid">
+                    <div class="feature-card">
+                        <h4><i class="fas fa-code-branch"></i> Cotización Separada</h4>
+                        <p>Se generan tantas cotizaciones como proveedores seleccionados</p>
+                        <ul class="feature-list">
+                            <li><i class="fas fa-plus"></i> Ventaja: Mejor control por proveedor</li>
+                            <li><i class="fas fa-plus"></i> Ventaja: Trazabilidad específica</li>
+                            <li><i class="fas fa-minus"></i> Desventaja: Más documentos por administrar</li>
+                        </ul>
+                    </div>
+                    <div class="feature-card">
+                        <h4><i class="fas fa-compress"></i> Cotización Unificada</h4>
+                        <p>Una sola cotización independiente de proveedores</p>
+                        <ul class="feature-list">
+                            <li><i class="fas fa-plus"></i> Ventaja: Simplicidad administrativa</li>
+                            <li><i class="fas fa-plus"></i> Ventaja: Una sola OC</li>
+                            <li><i class="fas fa-minus"></i> Desventaja: Menor trazabilidad por proveedor</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Control de Entregas -->
+        <section id="entregas" class="section">
+            <div class="section-header">
+                <div class="section-icon">
+                    <i class="fas fa-truck"></i>
+                </div>
+                <div class="section-title">
+                    <h2>Control de Entregas</h2>
+                    <p>Monitoree y valide la recepción de sus materiales</p>
+                </div>
+            </div>
+
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-tasks"></i>
+                    </div>
+                    <h3>Control por OC</h3>
+                    <p>Seguimiento detallado por orden de compra</p>
+                    <ul class="feature-list">
+                        <li><i class="fas fa-check"></i> Estado de cumplimiento</li>
+                        <li><i class="fas fa-check"></i> Entregas completadas/parciales</li>
+                        <li><i class="fas fa-check"></i> Fechas comprometidas vs reales</li>
+                        <li><i class="fas fa-check"></i> Reportes por proveedor</li>
+                    </ul>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-shipping-fast"></i>
+                    </div>
+                    <h3>Control por Despacho</h3>
+                    <p>Gestión de documentos y recepciones</p>
+                    <ul class="feature-list">
+                        <li><i class="fas fa-check"></i> Guías de despacho</li>
+                        <li><i class="fas fa-check"></i> Facturas asociadas</li>
+                        <li><i class="fas fa-check"></i> Confirmar recepciones</li>
+                        <li><i class="fas fa-check"></i> Reportar incidencias</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="tip-box">
+                <i class="fas fa-exclamation-triangle tip-icon" style="color: var(--warning-color);"></i>
+                <div class="tip-content">
+                    <h4>Documentos Importantes</h4>
+                    <p><strong>LPE (Listado de Productos Entregados):</strong> Documento clave que detalla los productos efectivamente entregados en obra. Puede incluir materiales de múltiples obras cuando pasan por aduana.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Pagos -->
+        <section id="pagos" class="section">
+            <div class="section-header">
+                <div class="section-icon">
+                    <i class="fas fa-money-check-alt"></i>
+                </div>
+                <div class="section-title">
+                    <h2>Gestión de Pagos</h2>
+                    <p>Controle su cuenta corriente y pagos pendientes</p>
+                </div>
+            </div>
+
+            <div class="process-flow">
+                <h3>Proceso de Pago</h3>
+                <div class="flow-steps">
+                    <div class="flow-step">
+                        <div class="step-icon">
+                            <i class="fas fa-file-invoice"></i>
+                        </div>
+                        <h4 class="step-title">Facturación</h4>
+                        <p class="step-description">Por cada LPE se genera factura con vencimiento establecido</p>
+                    </div>
+
+                    <div class="flow-step">
+                        <div class="step-icon">
+                            <i class="fas fa-list-alt"></i>
+                        </div>
+                        <h4 class="step-title">Revisión</h4>
+                        <p class="step-description">Consulte facturas pendientes y montos adeudados</p>
+                    </div>
+
+                    <div class="flow-step">
+                        <div class="step-icon">
+                            <i class="fas fa-university"></i>
+                        </div>
+                        <h4 class="step-title">Transferencia</h4>
+                        <p class="step-description">Realice el pago según condiciones acordadas</p>
+                    </div>
+
+                    <div class="flow-step">
+                        <div class="step-icon">
+                            <i class="fas fa-cloud-upload-alt"></i>
+                        </div>
+                        <h4 class="step-title">Informar</h4>
+                        <p class="step-description">Suba comprobante de transferencia al sistema</p>
+                    </div>
+
+                    <div class="flow-step">
+                        <div class="step-icon">
+                            <i class="fas fa-check-double"></i>
+                        </div>
+                        <h4 class="step-title">Conciliación</h4>
+                        <p class="step-description">SSL valida y actualiza estado de cuenta</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Configuración -->
+        <section id="configuracion" class="section">
+            <div class="section-header">
+                <div class="section-icon">
+                    <i class="fas fa-cog"></i>
+                </div>
+                <div class="section-title">
+                    <h2>Configuración del Sistema</h2>
+                    <p>Personalice y administre los parámetros de su cuenta</p>
+                </div>
+            </div>
+
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-building"></i>
+                    </div>
+                    <h3>Administración de Obras</h3>
+                    <p>Configure sus proyectos activos</p>
+                    <ul class="feature-list">
+                        <li><i class="fas fa-check"></i> Crear y editar obras</li>
+                        <li><i class="fas fa-check"></i> Direcciones de entrega</li>
+                        <li><i class="fas fa-check"></i> Contactos responsables</li>
+                        <li><i class="fas fa-check"></i> Centros de costo</li>
+                        <li><i class="fas fa-check"></i> Presupuestos asignados</li>
+                    </ul>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-barcode"></i>
+                    </div>
+                    <h3>Códigos de Productos</h3>
+                    <p>Estandarice su catálogo</p>
+                    <ul class="feature-list">
+                        <li><i class="fas fa-check"></i> Evitar errores de compra</li>
+                        <li><i class="fas fa-check"></i> Descripción estandarizada</li>
+                        <li><i class="fas fa-check"></i> Unidades de medida</li>
+                        <li><i class="fas fa-check"></i> Categorías definidas</li>
+                    </ul>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <h3>Gestión de Usuarios</h3>
+                    <p>Controle accesos y permisos</p>
+                    <ul class="feature-list">
+                        <li><i class="fas fa-check"></i> Crear usuarios</li>
+                        <li><i class="fas fa-check"></i> Asignar roles</li>
+                        <li><i class="fas fa-check"></i> Límites de aprobación</li>
+                        <li><i class="fas fa-check"></i> Acceso por obra</li>
+                        <li><i class="fas fa-check"></i> Auditoría de cambios</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="tip-box">
+                <i class="fas fa-shield-alt tip-icon" style="color: var(--success-color);"></i>
+                <div class="tip-content">
+                    <h4>Seguridad y Control</h4>
+                    <p>La correcta configuración de usuarios y permisos garantiza que cada persona tenga acceso únicamente a la información y funciones que necesita para su trabajo.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer Tips -->
+        <section class="section">
+            <div class="section-header">
+                <div class="section-icon">
+                    <i class="fas fa-graduation-cap"></i>
+                </div>
+                <div class="section-title">
+                    <h2>Consejos Finales</h2>
+                    <p>Maximice el uso de la plataforma con estas recomendaciones</p>
+                </div>
+            </div>
+
+            <div class="feature-grid">
+                <div class="tip-box" style="grid-column: 1/-1;">
+                    <i class="fas fa-rocket tip-icon"></i>
+                    <div class="tip-content">
+                        <h4>Inicio Rápido</h4>
+                        <p>1. Configure sus obras activas<br>
+                           2. Agregue usuarios con permisos apropiados<br>
+                           3. Revise el catálogo de productos<br>
+                           4. Cree su primera solicitud de pedido</p>
+                    </div>
+                </div>
+
+                <div class="tip-box" style="grid-column: 1/-1;">
+                    <i class="fas fa-chart-line tip-icon"></i>
+                    <div class="tip-content">
+                        <h4>Mejores Prácticas</h4>
+                        <p>• Mantenga actualizados los datos de sus obras<br>
+                           • Revise periódicamente cotizaciones vigentes<br>
+                           • Confirme recepciones oportunamente<br>
+                           • Documente incidencias con fotografías<br>
+                           • Realice pagos dentro de los plazos establecidos</p>
+                    </div>
+                </div>
+
+                <div class="tip-box" style="grid-column: 1/-1;">
+                    <i class="fas fa-headset tip-icon"></i>
+                    <div class="tip-content">
+                        <h4>¿Necesita Ayuda?</h4>
+                        <p>Nuestro equipo de soporte está disponible para asistirle. Use el chat integrado en la plataforma o contacte a su ejecutivo asignado para resolver cualquier duda o inconveniente.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        // Tab functionality
+        function showTab(tabId) {
+            // Hide all tabs
+            document.querySelectorAll('.demo-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            document.querySelectorAll('.demo-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Show selected tab
+            document.getElementById(tabId).classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        // Smooth scrolling for navigation
+        document.querySelectorAll('.nav-menu a').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                // Remove active class from all links
+                document.querySelectorAll('.nav-menu a').forEach(a => a.classList.remove('active'));
+                
+                // Add active class to clicked link
+                this.classList.add('active');
+                
+                // Smooth scroll to section
+                const targetId = this.getAttribute('href').substring(1);
+                const targetSection = document.getElementById(targetId);
+                
+                if (targetSection) {
+                    targetSection.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Intersection Observer for animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -100px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        // Observe all sections
+        document.querySelectorAll('.section').forEach(section => {
+            section.style.opacity = '0';
+            section.style.transform = 'translateY(20px)';
+            section.style.transition = 'all 0.6s ease';
+            observer.observe(section);
+        });
+
+        // Update active nav link on scroll
+        window.addEventListener('scroll', () => {
+            const sections = document.querySelectorAll('.section');
+            const navLinks = document.querySelectorAll('.nav-menu a');
+            
+            let current = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                const sectionHeight = section.clientHeight;
+                if (pageYOffset >= sectionTop - 200) {
+                    current = section.getAttribute('id');
+                }
+            });
+
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href').substring(1) === current) {
+                    link.classList.add('active');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

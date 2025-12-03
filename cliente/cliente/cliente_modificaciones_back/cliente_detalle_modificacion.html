@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detalle de Modificación - SSL v4.0</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../css/menu-styles.css">
+    <link rel="stylesheet" href="../css/cliente-dashboard-styles.css">
+    <link rel="stylesheet" href="css/cliente-modificacion-styles.css">
+</head>
+<body>
+    <header class="header">
+        <div class="header-left">
+            <div class="menu-toggle" onclick="toggleMobileMenu()">
+                <i class="fas fa-bars"></i>
+            </div>
+            <div class="logo">
+                <img src="../../PagWebLocal/logo_ssl.png" alt="SSL Logo">
+                <div class="logo-text">
+                    <h1>SSL v4.0</h1>
+                    <span class="portal-type">Portal Cliente</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="header-right">
+            <div class="header-date">
+                <i class="fas fa-calendar-alt"></i>
+                <span id="currentDate">Cargando...</span>
+            </div>
+
+            <div class="help-button-container">
+                <a href="../cliente_navegacion.html" class="help-button" title="Ayuda y Navegación">
+                    <i class="fas fa-question-circle"></i>
+                    <span class="help-text">Ayuda</span>
+                </a>
+            </div>
+
+            <div class="notifications">
+                <button class="notifications-button" onclick="showNotifications()">
+                    <i class="fas fa-bell"></i>
+                </button>
+                <span class="notification-count">8</span>
+            </div>
+            
+            <div class="user-menu" id="userMenu">
+                <div class="user-avatar">
+                    <span id="userInitial">C</span>
+                </div>
+                <span class="user-name" id="userName">Empresa Demo S.A.</span>
+                <i class="fas fa-chevron-down user-menu-arrow"></i>
+                
+                <div class="user-dropdown">
+                    <div class="dropdown-header">
+                        <div class="dropdown-user-info">
+                            <div class="dropdown-avatar">
+                                <span id="dropdownUserInitial">C</span>
+                            </div>
+                            <div class="dropdown-user-details">
+                                <div class="dropdown-user-name" id="dropdownUserName">Empresa Demo S.A.</div>
+                                <div class="dropdown-user-email" id="dropdownUserEmail">cliente@demo.com</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="dropdown-menu">
+                        <a href="#" class="dropdown-item" onclick="goToProfile(event)">
+                            <i class="fas fa-user-circle"></i>
+                            <span>Mi Perfil</span>
+                        </a>
+                        <a href="#" class="dropdown-item" onclick="goToSettings(event)">
+                            <i class="fas fa-cog"></i>
+                            <span>Configuración</span>
+                        </a>
+                        <div class="dropdown-divider"></div>
+                        <a href="#" class="dropdown-item logout" onclick="logout(event)">
+                            <i class="fas fa-sign-out-alt"></i>
+                            <span>Cerrar Sesión</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <!-- Sidebar Menu -->
+        <nav class="sidebar" id="sidebar">
+            <ul class="menu">
+                <!-- Dashboard -->
+                <li class="menu-item">
+                    <div class="menu-header" onclick="window.location.href='../cliente_dashboard.html'">
+                        <i class="fas fa-home"></i>
+                        <span>Dashboard</span>
+                        <div class="menu-tooltip">Dashboard</div>
+                    </div>
+                </li>
+
+                <!-- Modificaciones (Active) -->
+                <li class="menu-item active">
+                    <div class="menu-header active" onclick="window.location.href='cliente_listado_modificaciones.html'">
+                        <i class="fas fa-edit"></i>
+                        <span>Modificaciones OC</span>
+                        <div class="menu-tooltip">Modificaciones OC</div>
+                    </div>
+                </li>
+            </ul>
+        </nav>
+
+        <!-- Toggle Button -->
+        <div class="sidebar-toggle" onclick="toggleSidebar()">
+            <i class="fas fa-chevron-left"></i>
+        </div>
+
+        <main class="content">
+            <div class="breadcrumb">
+                <div class="breadcrumb-item"><a href="../cliente_dashboard.html">Inicio</a></div>
+                <div class="breadcrumb-item"><a href="cliente_listado_modificaciones.html">Control de Modificaciones</a></div>
+                <div class="breadcrumb-item active">Detalle de Modificación</div>
+            </div>
+
+            <h1 class="page-title">Detalle de Modificación de Orden de Compra</h1>
+
+            <!-- Modification Header -->
+            <div class="modification-header">
+                <div class="header-info">
+                    <div class="modification-title">
+                        <span class="mod-badge">MOD-2025-0045</span>
+                        <span class="status-badge status-pending">
+                            <i class="fas fa-clock"></i>
+                            Pendiente
+                        </span>
+                    </div>
+                    <div class="modification-meta">
+                        <div class="meta-item">
+                            <i class="fas fa-user"></i>
+                            <span>Solicitado por: Juan Pérez</span>
+                        </div>
+                        <div class="meta-item">
+                            <i class="fas fa-calendar"></i>
+                            <span>Fecha: 27/08/2025</span>
+                        </div>
+                        <div class="meta-item">
+                            <i class="fas fa-file-alt"></i>
+                            <span>OC Asociada: OC-2025-0234</span>
+                        </div>
+                        <div class="meta-item">
+                            <i class="fas fa-building"></i>
+                            <span>Proyecto: Torre Pacífico</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="header-actions">
+                    <button class="btn-secondary" onclick="cancelarModificacion()">
+                        <i class="fas fa-times"></i>
+                        Cancelar
+                    </button>
+                    <button class="btn-primary" onclick="enviarAprobacion()">
+                        <i class="fas fa-paper-plane"></i>
+                        Enviar a Revisión
+                    </button>
+                </div>
+            </div>
+
+            <!-- Alert -->
+            <div class="alert alert-warning">
+                <i class="fas fa-exclamation-triangle"></i>
+                <div>
+                    <strong>Atención:</strong> Esta modificación está pendiente de envío. Complete la revisión y envíe a SSL para su aprobación.
+                    El tiempo estimado de respuesta es de 48 horas hábiles.
+                </div>
+            </div>
+
+            <!-- Detail Grid -->
+            <div class="detail-grid">
+                <!-- Left Column -->
+                <div class="detail-column">
+                    <!-- Modification Summary -->
+                    <div class="detail-card">
+                        <div class="card-header">
+                            <h3><i class="fas fa-clipboard-check"></i> Resumen de la Modificación</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="summary-section">
+                                <h4>Tipo de Modificación</h4>
+                                <div class="modification-types">
+                                    <div class="type-item active">
+                                        <i class="fas fa-minus-circle"></i>
+                                        <span>Reducción de Cantidad</span>
+                                    </div>
+                                    <div class="type-item">
+                                        <i class="fas fa-calendar-alt"></i>
+                                        <span>Cambio de Fecha</span>
+                                    </div>
+                                    <div class="type-item">
+                                        <i class="fas fa-exchange-alt"></i>
+                                        <span>Mixto</span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="summary-section">
+                                <h4>Motivo de la Modificación</h4>
+                                <p class="reason-text">
+                                    Ajuste del proyecto debido a cambios en el diseño arquitectónico que requieren menor cantidad de material del especificado originalmente.
+                                </p>
+                            </div>
+                            
+                            <div class="summary-section">
+                                <h4>Impacto Económico</h4>
+                                <div class="impact-summary">
+                                    <div class="impact-row">
+                                        <span>Valor Original OC:</span>
+                                        <span class="value">$450,000</span>
+                                    </div>
+                                    <div class="impact-row">
+                                        <span>Reducción:</span>
+                                        <span class="value negative">-$25,000</span>
+                                    </div>
+                                    <div class="impact-row total">
+                                        <span>Nuevo Valor OC:</span>
+                                        <span class="value">$425,000</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Items Modification Details -->
+                    <div class="detail-card">
+                        <div class="card-header">
+                            <h3><i class="fas fa-list-alt"></i> Detalle de Ítems a Modificar</h3>
+                            <button class="btn-small" onclick="agregarItem()">
+                                <i class="fas fa-plus"></i>
+                                Agregar Ítem
+                            </button>
+                        </div>
+                        <div class="card-body">
+                            <table class="items-table">
+                                <thead>
+                                    <tr>
+                                        <th>Código</th>
+                                        <th>Descripción</th>
+                                        <th>Cant. Original</th>
+                                        <th>Cant. Nueva</th>
+                                        <th>Diferencia</th>
+                                        <th>Impacto</th>
+                                        <th>Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>FE-500</td>
+                                        <td>Fierro Corrugado 1/2"</td>
+                                        <td class="text-center">500 ton</td>
+                                        <td class="text-center">
+                                            <input type="number" value="450" class="input-small" disabled>
+                                            ton
+                                        </td>
+                                        <td class="text-center negative">-50 ton</td>
+                                        <td class="negative">-$15,000</td>
+                                        <td>
+                                            <button class="btn-icon-small" onclick="editarItem('FE-500')">
+                                                <i class="fas fa-edit"></i>
+                                            </button>
+                                            <button class="btn-icon-small danger" onclick="eliminarItem('FE-500')">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>FE-380</td>
+                                        <td>Fierro Corrugado 3/8"</td>
+                                        <td class="text-center">300 ton</td>
+                                        <td class="text-center">
+                                            <input type="number" value="270" class="input-small" disabled>
+                                            ton
+                                        </td>
+                                        <td class="text-center negative">-30 ton</td>
+                                        <td class="negative">-$10,000</td>
+                                        <td>
+                                            <button class="btn-icon-small" onclick="editarItem('FE-380')">
+                                                <i class="fas fa-edit"></i>
+                                            </button>
+                                            <button class="btn-icon-small danger" onclick="eliminarItem('FE-380')">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                                <tfoot>
+                                    <tr class="total-row">
+                                        <td colspan="5" class="text-right"><strong>Total Impacto:</strong></td>
+                                        <td class="negative"><strong>-$25,000</strong></td>
+                                        <td></td>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Delivery Schedule Changes -->
+                    <div class="detail-card">
+                        <div class="card-header">
+                            <h3><i class="fas fa-truck"></i> Cambios en Cronograma de Entregas</h3>
+                        </div>
+                        <div class="card-body">
+                            <table class="delivery-table">
+                                <thead>
+                                    <tr>
+                                        <th>Entrega</th>
+                                        <th>Fecha Original</th>
+                                        <th>Nueva Fecha</th>
+                                        <th>Cantidad Original</th>
+                                        <th>Nueva Cantidad</th>
+                                        <th>Estado</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr class="modified-row">
+                                        <td>Entrega #1</td>
+                                        <td>05/09/2025</td>
+                                        <td>05/09/2025</td>
+                                        <td class="text-center">200 ton</td>
+                                        <td class="text-center modified">180 ton</td>
+                                        <td><span class="badge-small warning">Modificado</span></td>
+                                    </tr>
+                                    <tr class="modified-row">
+                                        <td>Entrega #2</td>
+                                        <td>15/09/2025</td>
+                                        <td>15/09/2025</td>
+                                        <td class="text-center">300 ton</td>
+                                        <td class="text-center modified">270 ton</td>
+                                        <td><span class="badge-small warning">Modificado</span></td>
+                                    </tr>
+                                    <tr class="modified-row">
+                                        <td>Entrega #3</td>
+                                        <td>25/09/2025</td>
+                                        <td>25/09/2025</td>
+                                        <td class="text-center">300 ton</td>
+                                        <td class="text-center modified">270 ton</td>
+                                        <td><span class="badge-small warning">Modificado</span></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Column -->
+                <div class="detail-column">
+                    <!-- Process Status -->
+                    <div class="detail-card">
+                        <div class="card-header">
+                            <h3><i class="fas fa-tasks"></i> Estado del Proceso</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="process-timeline">
+                                <div class="timeline-item completed">
+                                    <div class="timeline-marker">
+                                        <i class="fas fa-check"></i>
+                                    </div>
+                                    <div class="timeline-content">
+                                        <div class="timeline-title">Modificación Creada</div>
+                                        <div class="timeline-date">27/08/2025 09:30</div>
+                                        <div class="timeline-user">Por: Juan Pérez</div>
+                                    </div>
+                                </div>
+                                
+                                <div class="timeline-item active">
+                                    <div class="timeline-marker">
+                                        <i class="fas fa-clock"></i>
+                                    </div>
+                                    <div class="timeline-content">
+                                        <div class="timeline-title">Pendiente de Envío</div>
+                                        <div class="timeline-date">En espera</div>
+                                        <div class="timeline-note">Requiere revisión y aprobación del solicitante</div>
+                                    </div>
+                                </div>
+                                
+                                <div class="timeline-item">
+                                    <div class="timeline-marker">
+                                        <i class="fas fa-search"></i>
+                                    </div>
+                                    <div class="timeline-content">
+                                        <div class="timeline-title">En Revisión SSL</div>
+                                        <div class="timeline-date">-</div>
+                                    </div>
+                                </div>
+                                
+                                <div class="timeline-item">
+                                    <div class="timeline-marker">
+                                        <i class="fas fa-check-double"></i>
+                                    </div>
+                                    <div class="timeline-content">
+                                        <div class="timeline-title">Decisión Final</div>
+                                        <div class="timeline-date">-</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- OC Information -->
+                    <div class="detail-card">
+                        <div class="card-header">
+                            <h3><i class="fas fa-file-contract"></i> Información de la OC</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="oc-info">
+                                <div class="info-row">
+                                    <span class="info-label">Número OC:</span>
+                                    <a href="../cliente_orden_compra/cliente_detalle_orden_compra.html?oc=OC-2025-0234" class="link-primary">
+                                        OC-2025-0234
+                                    </a>
+                                </div>
+                                <div class="info-row">
+                                    <span class="info-label">Proveedor:</span>
+                                    <span>ACEROS DEL PACÍFICO S.A.</span>
+                                </div>
+                                <div class="info-row">
+                                    <span class="info-label">Proyecto:</span>
+                                    <span>Torre Pacífico</span>
+                                </div>
+                                <div class="info-row">
+                                    <span class="info-label">Fecha OC:</span>
+                                    <span>15/08/2025</span>
+                                </div>
+                                <div class="info-row">
+                                    <span class="info-label">Estado OC:</span>
+                                    <span class="status-badge status-approved">Activa</span>
+                                </div>
+                                <div class="info-row">
+                                    <span class="info-label">Progreso:</span>
+                                    <div class="progress-bar">
+                                        <div class="progress-fill" style="width: 0%"></div>
+                                    </div>
+                                    <span>0%</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Documents -->
+                    <div class="detail-card">
+                        <div class="card-header">
+                            <h3><i class="fas fa-paperclip"></i> Documentos Adjuntos</h3>
+                            <button class="btn-small" onclick="adjuntarDocumento()">
+                                <i class="fas fa-upload"></i>
+                                Adjuntar
+                            </button>
+                        </div>
+                        <div class="card-body">
+                            <div class="document-list">
+                                <div class="document-item">
+                                    <div class="document-icon">
+                                        <i class="fas fa-file-pdf"></i>
+                                    </div>
+                                    <div class="document-info">
+                                        <div class="document-name">Memo_Cambio_Diseño.pdf</div>
+                                        <div class="document-meta">1.2 MB • 27/08/2025</div>
+                                    </div>
+                                    <div class="document-actions">
+                                        <button class="btn-icon-small" onclick="verDocumento('doc1')">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                        <button class="btn-icon-small" onclick="descargarDocumento('doc1')">
+                                            <i class="fas fa-download"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="document-item">
+                                    <div class="document-icon">
+                                        <i class="fas fa-file-excel"></i>
+                                    </div>
+                                    <div class="document-info">
+                                        <div class="document-name">Análisis_Impacto.xlsx</div>
+                                        <div class="document-meta">856 KB • 27/08/2025</div>
+                                    </div>
+                                    <div class="document-actions">
+                                        <button class="btn-icon-small" onclick="verDocumento('doc2')">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                        <button class="btn-icon-small" onclick="descargarDocumento('doc2')">
+                                            <i class="fas fa-download"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="document-item">
+                                    <div class="document-icon">
+                                        <i class="fas fa-file-word"></i>
+                                    </div>
+                                    <div class="document-info">
+                                        <div class="document-name">Justificación_Técnica.docx</div>
+                                        <div class="document-meta">2.3 MB • 27/08/2025</div>
+                                    </div>
+                                    <div class="document-actions">
+                                        <button class="btn-icon-small" onclick="verDocumento('doc3')">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                        <button class="btn-icon-small" onclick="descargarDocumento('doc3')">
+                                            <i class="fas fa-download"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Comments -->
+                    <div class="detail-card">
+                        <div class="card-header">
+                            <h3><i class="fas fa-comments"></i> Comentarios y Observaciones</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="comments-section">
+                                <div class="comment-input">
+                                    <textarea 
+                                        id="newComment"
+                                        placeholder="Agregar un comentario..." 
+                                        rows="3"></textarea>
+                                    <button class="btn-primary" onclick="agregarComentario()">
+                                        <i class="fas fa-paper-plane"></i>
+                                        Enviar
+                                    </button>
+                                </div>
+                                <div class="comments-list">
+                                    <div class="comment-item">
+                                        <div class="comment-header">
+                                            <span class="comment-author">Juan Pérez</span>
+                                            <span class="comment-date">27/08/2025 09:30</span>
+                                        </div>
+                                        <div class="comment-text">
+                                            Solicito la reducción de cantidades según el nuevo diseño arquitectónico aprobado.
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Confirmation Modal -->
+    <div id="confirmModal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Confirmar Envío de Modificación</h3>
+                <span class="close" onclick="closeModal()">&times;</span>
+            </div>
+            <div class="modal-body">
+                <p>¿Está seguro que desea enviar esta modificación a revisión?</p>
+                <p><strong>Una vez enviada, no podrá editar la información hasta recibir una respuesta de SSL.</strong></p>
+                <ul style="margin: 15px 0; padding-left: 20px;">
+                    <li>Número de Modificación: MOD-2025-0045</li>
+                    <li>OC Asociada: OC-2025-0234</li>
+                    <li>Impacto económico: -$25,000</li>
+                    <li>Tiempo estimado de respuesta: 48 horas hábiles</li>
+                </ul>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-secondary" onclick="closeModal()">
+                    <i class="fas fa-times"></i>
+                    Cancelar
+                </button>
+                <button class="btn-primary" onclick="confirmarEnvio()">
+                    <i class="fas fa-check"></i>
+                    Confirmar y Enviar
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="../js/cliente_dashboard.js"></script>
+    <script src="js/cliente_modificacion.js"></script>
+</body>
+</html>

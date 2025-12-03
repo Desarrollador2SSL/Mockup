@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Control de Modificaciones - SSL v4.0</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../css/menu-styles.css">
+    <link rel="stylesheet" href="../css/cliente-dashboard-styles.css">
+    <link rel="stylesheet" href="css/cliente-modificacion-styles.css">
+</head>
+<body>
+    <header class="header">
+        <div class="header-left">
+            <div class="menu-toggle" onclick="toggleMobileMenu()">
+                <i class="fas fa-bars"></i>
+            </div>
+            <div class="logo">
+                <img src="../../PagWebLocal/logo_ssl.png" alt="SSL Logo">
+                <div class="logo-text">
+                    <h1>SSL v4.0</h1>
+                    <span class="portal-type">Portal Cliente</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="header-right">
+            <div class="header-date">
+                <i class="fas fa-calendar-alt"></i>
+                <span id="currentDate">Cargando...</span>
+            </div>
+
+            <div class="help-button-container">
+                <a href="../cliente_navegacion.html" class="help-button" title="Ayuda y Navegación">
+                    <i class="fas fa-question-circle"></i>
+                    <span class="help-text">Ayuda</span>
+                </a>
+            </div>
+
+            <div class="notifications">
+                <button class="notifications-button" onclick="showNotifications()">
+                    <i class="fas fa-bell"></i>
+                </button>
+                <span class="notification-count">8</span>
+            </div>
+            
+            <div class="user-menu" id="userMenu">
+                <div class="user-avatar">
+                    <span id="userInitial">C</span>
+                </div>
+                <span class="user-name" id="userName">Empresa Demo S.A.</span>
+                <i class="fas fa-chevron-down user-menu-arrow"></i>
+                
+                <div class="user-dropdown">
+                    <div class="dropdown-header">
+                        <div class="dropdown-user-info">
+                            <div class="dropdown-avatar">
+                                <span id="dropdownUserInitial">C</span>
+                            </div>
+                            <div class="dropdown-user-details">
+                                <div class="dropdown-user-name" id="dropdownUserName">Empresa Demo S.A.</div>
+                                <div class="dropdown-user-email" id="dropdownUserEmail">cliente@demo.com</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="dropdown-menu">
+                        <a href="#" class="dropdown-item" onclick="goToProfile(event)">
+                            <i class="fas fa-user-circle"></i>
+                            <span>Mi Perfil</span>
+                        </a>
+                        <a href="#" class="dropdown-item" onclick="goToSettings(event)">
+                            <i class="fas fa-cog"></i>
+                            <span>Configuración</span>
+                        </a>
+                        <div class="dropdown-divider"></div>
+                        <a href="#" class="dropdown-item logout" onclick="logout(event)">
+                            <i class="fas fa-sign-out-alt"></i>
+                            <span>Cerrar Sesión</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <!-- Sidebar Menu -->
+        <nav class="sidebar" id="sidebar">
+            <ul class="menu">
+                <!-- Dashboard -->
+                <li class="menu-item">
+                    <div class="menu-header" onclick="window.location.href='../cliente_dashboard.html'">
+                        <i class="fas fa-home"></i>
+                        <span>Dashboard</span>
+                        <div class="menu-tooltip">Dashboard</div>
+                    </div>
+                </li>
+
+                <!-- Solicitudes y Cotizaciones -->
+                <li class="menu-item">
+                    <div class="menu-header" onclick="toggleSubmenu(this)">
+                        <i class="fas fa-file-alt"></i>
+                        <span>Cotización y Compra</span>
+                        <i class="fas fa-chevron-right arrow"></i>
+                        <div class="menu-tooltip">Cotización y Compra</div>
+                    </div>
+                    <div class="submenu">
+                        <a href="../cliente_solicitud_pedido/cliente_listado_solicitudes.html" class="submenu-item">
+                            <span class="full-text">Solicitudes de Pedido</span>
+                            <span class="siglas">SP</span>
+                            <div class="sigla-tooltip">Solicitudes de Pedido</div>
+                        </a>
+                        <a href="../cliente_cotizaciones/cliente_listado_cotizaciones.html" class="submenu-item">
+                            <span class="full-text">Cotizaciones</span>
+                            <span class="siglas">CO</span>
+                            <div class="sigla-tooltip">Cotizaciones</div>
+                        </a>
+                        <a href="../cliente_orden_compra/cliente_listado_ordenes_compra.html" class="submenu-item">
+                            <span class="full-text">Órdenes de Compra</span>
+                            <span class="siglas">OC</span>
+                            <div class="sigla-tooltip">Órdenes de Compra</div>
+                        </a>
+                    </div>
+                </li>
+
+                <!-- Control de Entregas -->
+                <li class="menu-item">
+                    <div class="menu-header" onclick="toggleSubmenu(this)">
+                        <i class="fas fa-truck"></i>
+                        <span>Control de Entregas</span>
+                        <i class="fas fa-chevron-right arrow"></i>
+                        <div class="menu-tooltip">Control de Entregas</div>
+                    </div>
+                    <div class="submenu">
+                        <a href="../cliente_control_entrega/cliente_listado_control_entregas.html" class="submenu-item">
+                            <span class="full-text">Control Entrega por OC</span>
+                            <span class="siglas">CEO</span>
+                            <div class="sigla-tooltip">Control Entrega por OC</div>
+                        </a>
+                        <a href="../cliente_control_recepcion/cliente_listado_despachos.html" class="submenu-item">
+                            <span class="full-text">Control Recepción</span>
+                            <span class="siglas">CRE</span>
+                            <div class="sigla-tooltip">Control Recepción</div>
+                        </a>
+                    </div>
+                </li>
+
+                <!-- Modificaciones (Active) -->
+                <li class="menu-item active">
+                    <div class="menu-header active" onclick="toggleSubmenu(this)">
+                        <i class="fas fa-edit"></i>
+                        <span>Modificaciones OC</span>
+                        <div class="menu-tooltip">Modificaciones OC</div>
+                    </div>
+                </li>
+            </ul>
+        </nav>
+
+        <!-- Toggle Button -->
+        <div class="sidebar-toggle" onclick="toggleSidebar()">
+            <i class="fas fa-chevron-left"></i>
+        </div>
+
+        <main class="content">
+            <div class="breadcrumb">
+                <div class="breadcrumb-item"><a href="../cliente_dashboard.html">Inicio</a></div>
+                <div class="breadcrumb-item active">Control de Modificaciones</div>
+            </div>
+
+            <h1 class="page-title">Control de Modificaciones de Órdenes de Compra</h1>
+
+            <!-- Modifications Header -->
+            <div class="modifications-header">
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon pending">
+                            <i class="fas fa-clock"></i>
+                        </div>
+                        <div class="stat-content">
+                            <div class="stat-value">5</div>
+                            <div class="stat-label">Pendientes</div>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon review">
+                            <i class="fas fa-search"></i>
+                        </div>
+                        <div class="stat-content">
+                            <div class="stat-value">3</div>
+                            <div class="stat-label">En Revisión</div>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon approved">
+                            <i class="fas fa-check-circle"></i>
+                        </div>
+                        <div class="stat-content">
+                            <div class="stat-value">12</div>
+                            <div class="stat-label">Aprobadas este mes</div>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon total">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <div class="stat-content">
+                            <div class="stat-value">$180K</div>
+                            <div class="stat-label">Impacto económico</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Actions Bar -->
+            <div class="actions-bar">
+                <div class="actions-left">
+                    <button class="btn-primary" onclick="window.location.href='cliente_nueva_modificacion.html'">
+                        <i class="fas fa-plus"></i>
+                        Nueva Modificación
+                    </button>
+                </div>
+                
+                <div class="actions-right">
+                    <div class="search-box">
+                        <i class="fas fa-search"></i>
+                        <input type="text" id="searchModifications" placeholder="Buscar modificación o OC...">
+                    </div>
+                    
+                    <div class="filter-group">
+                        <select id="filterStatus" class="filter-select">
+                            <option value="">Todos los estados</option>
+                            <option value="pendiente">Pendiente</option>
+                            <option value="revision">En Revisión</option>
+                            <option value="aprobado">Aprobado</option>
+                            <option value="rechazado">Rechazado</option>
+                        </select>
+                        
+                        <select id="filterType" class="filter-select">
+                            <option value="">Todos los tipos</option>
+                            <option value="cantidad">Reducción de cantidad</option>
+                            <option value="fecha">Cambio de fecha</option>
+                            <option value="mixto">Mixto</option>
+                        </select>
+                    </div>
+                    
+                    <button class="btn-secondary" onclick="exportarModificaciones()">
+                        <i class="fas fa-download"></i>
+                        Exportar
+                    </button>
+                </div>
+            </div>
+
+            <!-- Modifications Table -->
+            <div class="table-container">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>N° Modificación</th>
+                            <th>OC Asociada</th>
+                            <th>Tipo</th>
+                            <th>Obra/Proyecto</th>
+                            <th>Fecha Solicitud</th>
+                            <th>Estado</th>
+                            <th>Impacto</th>
+                            <th>Solicitante</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="modificationsTableBody">
+                        <!-- Modificación Pendiente -->
+                        <tr>
+                            <td class="modification-number">
+                                <span class="mod-badge">MOD-2025-0045</span>
+                            </td>
+                            <td class="oc-reference">
+                                <a href="../cliente_orden_compra/cliente_detalle_orden_compra.html?oc=OC-2025-0234" class="link-primary">
+                                    OC-2025-0234
+                                </a>
+                            </td>
+                            <td>
+                                <span class="type-badge type-quantity">
+                                    <i class="fas fa-minus-circle"></i>
+                                    Reducción cantidad
+                                </span>
+                            </td>
+                            <td>Torre Pacífico</td>
+                            <td>27/08/2025</td>
+                            <td>
+                                <span class="status-badge status-pending">
+                                    <i class="fas fa-clock"></i>
+                                    Pendiente
+                                </span>
+                            </td>
+                            <td class="impact negative">
+                                <i class="fas fa-arrow-down"></i>
+                                -$25,000
+                            </td>
+                            <td>Juan Pérez</td>
+                            <td>
+                                <div class="action-buttons">
+                                    <button class="btn-icon" onclick="verModificacion('MOD-2025-0045')" title="Ver detalle">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                    <button class="btn-icon" onclick="editarModificacion('MOD-2025-0045')" title="Editar">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                    <button class="btn-icon" onclick="enviarRevision('MOD-2025-0045')" title="Enviar a revisión">
+                                        <i class="fas fa-paper-plane"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+
+                        <!-- Modificación En Revisión -->
+                        <tr>
+                            <td class="modification-number">
+                                <span class="mod-badge">MOD-2025-0044</span>
+                            </td>
+                            <td class="oc-reference">
+                                <a href="../cliente_orden_compra/cliente_detalle_orden_compra.html?oc=OC-2025-0230" class="link-primary">
+                                    OC-2025-0230
+                                </a>
+                            </td>
+                            <td>
+                                <span class="type-badge type-date">
+                                    <i class="fas fa-calendar-alt"></i>
+                                    Cambio fecha
+                                </span>
+                            </td>
+                            <td>Mall Plaza Norte</td>
+                            <td>26/08/2025</td>
+                            <td>
+                                <span class="status-badge status-review">
+                                    <i class="fas fa-search"></i>
+                                    En Revisión
+                                </span>
+                            </td>
+                            <td class="impact neutral">
+                                <i class="fas fa-minus"></i>
+                                Sin impacto
+                            </td>
+                            <td>María González</td>
+                            <td>
+                                <div class="action-buttons">
+                                    <button class="btn-icon" onclick="verModificacion('MOD-2025-0044')" title="Ver detalle">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                    <button class="btn-icon" onclick="verProgreso('MOD-2025-0044')" title="Ver progreso">
+                                        <i class="fas fa-tasks"></i>
+                                    </button>
+                                    <button class="btn-icon" onclick="abrirChat('MOD-2025-0044')" title="Chat">
+                                        <i class="fas fa-comments"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+
+                        <!-- Modificación Mixta -->
+                        <tr>
+                            <td class="modification-number">
+                                <span class="mod-badge">MOD-2025-0043</span>
+                                <span class="urgent-badge">Urgente</span>
+                            </td>
+                            <td class="oc-reference">
+                                <a href="../cliente_orden_compra/cliente_detalle_orden_compra.html?oc=OC-2025-0228" class="link-primary">
+                                    OC-2025-0228
+                                </a>
+                            </td>
+                            <td>
+                                <span class="type-badge type-mixed">
+                                    <i class="fas fa-exchange-alt"></i>
+                                    Mixto
+                                </span>
+                            </td>
+                            <td>Hospital Regional</td>
+                            <td>25/08/2025</td>
+                            <td>
+                                <span class="status-badge status-review">
+                                    <i class="fas fa-search"></i>
+                                    En Revisión
+                                </span>
+                            </td>
+                            <td class="impact negative">
+                                <i class="fas fa-arrow-down"></i>
+                                -$45,000
+                            </td>
+                            <td>Carlos Ruiz</td>
+                            <td>
+                                <div class="action-buttons">
+                                    <button class="btn-icon" onclick="verModificacion('MOD-2025-0043')" title="Ver detalle">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                    <button class="btn-icon" onclick="verProgreso('MOD-2025-0043')" title="Ver progreso">
+                                        <i class="fas fa-tasks"></i>
+                                    </button>
+                                    <button class="btn-icon" onclick="abrirChat('MOD-2025-0043')" title="Chat">
+                                        <i class="fas fa-comments"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+
+                        <!-- Modificación Aprobada -->
+                        <tr>
+                            <td class="modification-number">
+                                <span class="mod-badge">MOD-2025-0042</span>
+                            </td>
+                            <td class="oc-reference">
+                                <a href="../cliente_orden_compra/cliente_detalle_orden_compra.html?oc=OC-2025-0225" class="link-primary">
+                                    OC-2025-0225
+                                </a>
+                            </td>
+                            <td>
+                                <span class="type-badge type-quantity">
+                                    <i class="fas fa-minus-circle"></i>
+                                    Reducción cantidad
+                                </span>
+                            </td>
+                            <td>Edificio Corporativo</td>
+                            <td>23/08/2025</td>
+                            <td>
+                                <span class="status-badge status-approved">
+                                    <i class="fas fa-check-circle"></i>
+                                    Aprobado
+                                </span>
+                            </td>
+                            <td class="impact negative">
+                                <i class="fas fa-arrow-down"></i>
+                                -$18,500
+                            </td>
+                            <td>Ana Martínez</td>
+                            <td>
+                                <div class="action-buttons">
+                                    <button class="btn-icon" onclick="verModificacion('MOD-2025-0042')" title="Ver detalle">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                    <button class="btn-icon" onclick="descargarDocumento('MOD-2025-0042')" title="Descargar documento">
+                                        <i class="fas fa-download"></i>
+                                    </button>
+                                    <button class="btn-icon" onclick="verImpacto('MOD-2025-0042')" title="Ver impacto">
+                                        <i class="fas fa-chart-pie"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+
+                        <!-- Más modificaciones -->
+                        <tr>
+                            <td class="modification-number">
+                                <span class="mod-badge">MOD-2025-0041</span>
+                            </td>
+                            <td class="oc-reference">
+                                <a href="../cliente_orden_compra/cliente_detalle_orden_compra.html?oc=OC-2025-0220" class="link-primary">
+                                    OC-2025-0220
+                                </a>
+                            </td>
+                            <td>
+                                <span class="type-badge type-date">
+                                    <i class="fas fa-calendar-alt"></i>
+                                    Cambio fecha
+                                </span>
+                            </td>
+                            <td>Centro Comercial Sur</td>
+                            <td>22/08/2025</td>
+                            <td>
+                                <span class="status-badge status-approved">
+                                    <i class="fas fa-check-circle"></i>
+                                    Aprobado
+                                </span>
+                            </td>
+                            <td class="impact neutral">
+                                <i class="fas fa-minus"></i>
+                                Sin impacto
+                            </td>
+                            <td>Pedro Sánchez</td>
+                            <td>
+                                <div class="action-buttons">
+                                    <button class="btn-icon" onclick="verModificacion('MOD-2025-0041')" title="Ver detalle">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                    <button class="btn-icon" onclick="descargarDocumento('MOD-2025-0041')" title="Descargar documento">
+                                        <i class="fas fa-download"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+
+                        <!-- Modificación Rechazada -->
+                        <tr>
+                            <td class="modification-number">
+                                <span class="mod-badge">MOD-2025-0040</span>
+                            </td>
+                            <td class="oc-reference">
+                                <a href="../cliente_orden_compra/cliente_detalle_orden_compra.html?oc=OC-2025-0218" class="link-primary">
+                                    OC-2025-0218
+                                </a>
+                            </td>
+                            <td>
+                                <span class="type-badge type-quantity">
+                                    <i class="fas fa-minus-circle"></i>
+                                    Reducción cantidad
+                                </span>
+                            </td>
+                            <td>Puente Metropolitano</td>
+                            <td>20/08/2025</td>
+                            <td>
+                                <span class="status-badge status-rejected">
+                                    <i class="fas fa-times-circle"></i>
+                                    Rechazado
+                                </span>
+                            </td>
+                            <td class="impact negative">
+                                <i class="fas fa-arrow-down"></i>
+                                -$67,000
+                            </td>
+                            <td>Luis García</td>
+                            <td>
+                                <div class="action-buttons">
+                                    <button class="btn-icon" onclick="verModificacion('MOD-2025-0040')" title="Ver detalle">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                    <button class="btn-icon" onclick="verRazonRechazo('MOD-2025-0040')" title="Ver razón de rechazo">
+                                        <i class="fas fa-info-circle"></i>
+                                    </button>
+                                    <button class="btn-icon" onclick="reenviarsolicitud('MOD-2025-0040')" title="Reenviar solicitud">
+                                        <i class="fas fa-redo"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Pagination -->
+            <div class="pagination-container">
+                <div class="pagination-info">
+                    Mostrando 6 de 20 modificaciones
+                </div>
+                <div class="pagination-controls">
+                    <button class="btn-pagination" disabled>
+                        <i class="fas fa-chevron-left"></i>
+                    </button>
+                    <button class="btn-pagination active">1</button>
+                    <button class="btn-pagination">2</button>
+                    <button class="btn-pagination">3</button>
+                    <button class="btn-pagination">4</button>
+                    <button class="btn-pagination">
+                        <i class="fas fa-chevron-right"></i>
+                    </button>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Scripts -->
+    <script src="../js/cliente_dashboard.js"></script>
+    <script src="js/cliente_modificacion.js"></script>
+</body>
+</html>

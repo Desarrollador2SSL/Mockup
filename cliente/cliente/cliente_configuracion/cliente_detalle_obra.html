@@ -1,0 +1,1953 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detalle de Obra/Proyecto - SSL v4.0</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Archivo CSS del menú separado -->
+    <link rel="stylesheet" href="../css/menu-styles.css">
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #667eea;
+            --accent-color: #764ba2;
+            --success-color: #27ae60;
+            --warning-color: #f39c12;
+            --error-color: #e74c3c;
+            --text-color: #333;
+            --text-light: #ecf0f1;
+            --border-color: #ddd;
+            --hover-color: #5a52d5;
+            --active-color: #4a42b5;
+            --menu-width: 260px;
+            --menu-collapsed-width: 70px;
+            --header-height: 65px;
+            --transition-speed: 0.3s;
+            --card-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+            --hover-shadow: 0 5px 20px rgba(0, 0, 0, 0.12);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f8f9fa;
+            color: var(--text-color);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        /* Header */
+        .header {
+            background-color: white;
+            color: var(--text-color);
+            height: var(--header-height);
+            padding: 0 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo img {
+            height: 40px;
+        }
+
+        .logo-text {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .logo h1 {
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+
+        .portal-type {
+            font-size: 0.8rem;
+            color: var(--secondary-color);
+            font-weight: 500;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .header-date {
+            display: flex;
+            align-items: center;
+            font-size: 0.9rem;
+            color: #666;
+            padding: 0 15px;
+            border-right: 1px solid var(--border-color);
+            height: 35px;
+        }
+
+        .header-date i {
+            margin-right: 8px;
+            color: var(--secondary-color);
+        }
+
+        .notifications {
+            position: relative;
+            margin-right: 15px;
+        }
+
+        .notifications-button {
+            background: none;
+            border: none;
+            font-size: 1.2rem;
+            color: #666;
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 50%;
+            transition: all var(--transition-speed);
+        }
+
+        .notifications-button:hover {
+            background-color: #f0f0f0;
+            color: var(--secondary-color);
+        }
+
+        .notification-count {
+            position: absolute;
+            top: 0;
+            right: 0;
+            background-color: var(--error-color);
+            color: white;
+            border-radius: 50%;
+            font-size: 0.7rem;
+            width: 18px;
+            height: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+        }
+
+        .user-menu {
+            display: flex;
+            align-items: center;
+            margin-left: 10px;
+            cursor: pointer;
+            position: relative;
+            padding: 8px 12px;
+            border-radius: 8px;
+            transition: background-color var(--transition-speed);
+        }
+
+        .user-menu:hover {
+            background-color: #f0f0f0;
+        }
+
+        .user-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--secondary-color), var(--accent-color));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            margin-right: 10px;
+            font-weight: 600;
+        }
+
+        .user-name {
+            font-weight: 500;
+            margin-right: 8px;
+            color: var(--text-color);
+        }
+
+        .user-menu-arrow {
+            font-size: 0.8rem;
+            color: #666;
+            transition: transform var(--transition-speed);
+        }
+
+        .user-menu.active .user-menu-arrow {
+            transform: rotate(180deg);
+        }
+
+        /* User Dropdown */
+        .user-dropdown {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            margin-top: 10px;
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 5px 25px rgba(0, 0, 0, 0.15);
+            min-width: 220px;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: all var(--transition-speed);
+        }
+
+        .user-menu.active .user-dropdown {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .dropdown-header {
+            padding: 20px;
+            border-bottom: 1px solid var(--border-color);
+            background-color: #f8f9fa;
+            border-radius: 12px 12px 0 0;
+        }
+
+        .dropdown-user-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .dropdown-avatar {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--secondary-color), var(--accent-color));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+
+        .dropdown-user-details {
+            flex: 1;
+        }
+
+        .dropdown-user-name {
+            font-weight: 600;
+            color: var(--text-color);
+            font-size: 0.95rem;
+        }
+
+        .dropdown-user-email {
+            font-size: 0.85rem;
+            color: #666;
+        }
+
+        .dropdown-menu {
+            padding: 8px 0;
+        }
+
+        .dropdown-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 20px;
+            color: var(--text-color);
+            text-decoration: none;
+            transition: background-color var(--transition-speed);
+            cursor: pointer;
+        }
+
+        .dropdown-item:hover {
+            background-color: #f8f9fa;
+        }
+
+        .dropdown-item i {
+            margin-right: 12px;
+            width: 20px;
+            text-align: center;
+            color: #666;
+        }
+
+        .dropdown-divider {
+            height: 1px;
+            background-color: var(--border-color);
+            margin: 8px 0;
+        }
+
+        .dropdown-item.logout {
+            color: var(--error-color);
+        }
+
+        .dropdown-item.logout i {
+            color: var(--error-color);
+        }
+
+        /* Container */
+        .container {
+            display: flex;
+            flex: 1;
+            margin-top: var(--header-height);
+        }
+
+        /* Content */
+        .content {
+            flex: 1;
+            padding: 30px;
+            margin-left: var(--menu-width);
+            transition: margin-left var(--transition-speed);
+        }
+
+        .sidebar.collapsed ~ .content {
+            margin-left: var(--menu-collapsed-width);
+        }
+
+        .breadcrumb {
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            font-size: 0.9rem;
+        }
+
+        .breadcrumb-item {
+            display: inline-block;
+            color: #666;
+        }
+
+        .breadcrumb-item:not(:last-child)::after {
+            content: "/";
+            margin: 0 10px;
+            color: #ccc;
+        }
+
+        .breadcrumb-item a {
+            color: var(--secondary-color);
+            text-decoration: none;
+            transition: color var(--transition-speed);
+        }
+
+        .breadcrumb-item a:hover {
+            color: var(--accent-color);
+            text-decoration: underline;
+        }
+
+        .breadcrumb-item.active {
+            color: var(--text-color);
+            font-weight: 500;
+        }
+
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .page-title {
+            font-size: 2rem;
+            color: var(--primary-color);
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        /* Status Badge */
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            gap: 8px;
+        }
+
+        .status-badge.active {
+            background-color: #d4edda;
+            color: #155724;
+        }
+
+        .status-badge.inactive {
+            background-color: #e2e3e5;
+            color: #383d41;
+        }
+
+        /* Info Card */
+        .info-card {
+            background-color: white;
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: var(--card-shadow);
+        }
+
+        .info-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .info-card-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .info-card-title i {
+            color: var(--secondary-color);
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .info-item {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .info-label {
+            font-size: 0.85rem;
+            color: #666;
+            font-weight: 500;
+        }
+
+        .info-value {
+            font-size: 1rem;
+            color: var(--text-color);
+            font-weight: 500;
+        }
+
+        /* Action Buttons */
+        .btn-primary {
+            padding: 10px 20px;
+            background: linear-gradient(135deg, var(--secondary-color), var(--accent-color));
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all var(--transition-speed);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.95rem;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-secondary {
+            padding: 10px 20px;
+            background-color: white;
+            color: var(--text-color);
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all var(--transition-speed);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.95rem;
+        }
+
+        .btn-secondary:hover {
+            background-color: #f8f9fa;
+            border-color: var(--secondary-color);
+            color: var(--secondary-color);
+        }
+
+        /* Managers Table */
+        .managers-table {
+            width: 100%;
+            margin-top: 20px;
+            border-collapse: collapse;
+        }
+
+        .managers-table th {
+            background-color: #f8f9fa;
+            padding: 12px;
+            text-align: left;
+            font-weight: 600;
+            color: var(--text-color);
+            font-size: 0.9rem;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        .managers-table td {
+            padding: 12px;
+            border-bottom: 1px solid #f0f0f0;
+            vertical-align: middle;
+        }
+
+        .managers-table tbody tr:hover {
+            background-color: #f8f9fa;
+        }
+
+        /* Role Tags */
+        .role-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+
+        .role-tag {
+            display: inline-flex;
+            align-items: center;
+            padding: 4px 10px;
+            background-color: #e8eafd;
+            color: var(--secondary-color);
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        /* Manager Actions */
+        .manager-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .btn-icon {
+            padding: 8px;
+            background-color: transparent;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all var(--transition-speed);
+            color: #666;
+        }
+
+        .btn-icon:hover {
+            background-color: #f8f9fa;
+            color: var(--secondary-color);
+            border-color: var(--secondary-color);
+        }
+
+        .btn-icon.danger:hover {
+            color: var(--error-color);
+            border-color: var(--error-color);
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background-color: white;
+            border-radius: 12px;
+            padding: 30px;
+            max-width: 600px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            animation: modalSlideIn 0.3s ease-out;
+        }
+
+        @keyframes modalSlideIn {
+            from {
+                transform: translateY(-50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .modal-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: #999;
+            cursor: pointer;
+            transition: color var(--transition-speed);
+        }
+
+        .modal-close:hover {
+            color: var(--error-color);
+        }
+
+        /* Form */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: var(--text-color);
+            font-size: 0.95rem;
+        }
+
+        .form-group label .required {
+            color: var(--error-color);
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 10px 15px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 0.95rem;
+            transition: all var(--transition-speed);
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: var(--secondary-color);
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        /* Checkbox Group */
+        .checkbox-group {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 12px;
+            padding: 10px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+        }
+
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .checkbox-item input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+        }
+
+        .checkbox-item label {
+            margin: 0;
+            cursor: pointer;
+            font-weight: normal;
+        }
+
+        /* Form Actions */
+        .form-actions {
+            display: flex;
+            gap: 15px;
+            margin-top: 25px;
+            justify-content: flex-end;
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 40px;
+            color: #666;
+        }
+
+        .empty-state i {
+            font-size: 3rem;
+            color: #ddd;
+            margin-bottom: 15px;
+        }
+
+        .empty-state p {
+            margin-bottom: 20px;
+        }
+
+        /* Create Mode Styles */
+        .create-mode .info-card.view-only {
+            display: none;
+        }
+
+        .create-mode .page-title {
+            font-size: 1.8rem;
+        }
+
+        /* Edit Form Visible */
+        .edit-form-container {
+            display: none;
+        }
+
+        .edit-form-container.active {
+            display: block;
+        }
+
+        .view-mode-content {
+            display: block;
+        }
+
+        .view-mode-content.hidden {
+            display: none;
+        }
+
+        /* Help Button */
+        .help-button-container {
+            margin: 0 15px;
+        }
+
+        .help-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 16px;
+            background-color: var(--secondary-color);
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: all var(--transition-speed);
+            position: relative;
+        }
+
+        .help-button:hover {
+            background-color: var(--hover-color);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+        }
+
+        .help-button i {
+            font-size: 1.1rem;
+        }
+
+        .help-text {
+            display: inline-block;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .content {
+                margin-left: 0 !important;
+                padding: 20px;
+            }
+
+            .user-name {
+                display: none;
+            }
+
+            .header-date {
+                display: none;
+            }
+
+            .page-header {
+                flex-direction: column;
+                gap: 20px;
+                align-items: flex-start;
+            }
+
+            .page-title {
+                font-size: 1.5rem;
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+
+            .info-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .managers-table {
+                font-size: 0.85rem;
+            }
+
+            .managers-table th,
+            .managers-table td {
+                padding: 8px;
+            }
+
+            .role-tags {
+                max-width: 200px;
+            }
+
+            .checkbox-group {
+                grid-template-columns: 1fr;
+            }
+
+            .help-text {
+                display: none;
+            }
+            
+            .help-button {
+                padding: 8px 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-left">
+            <div class="menu-toggle" onclick="toggleMobileMenu()">
+                <i class="fas fa-bars"></i>
+            </div>
+            <div class="logo">
+                <img src="../PagWebLocal/logo_ssl.png" alt="SSL Logo">
+                <div class="logo-text">
+                    <h1>SSL v4.0</h1>
+                    <span class="portal-type">Portal Cliente</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="header-right">
+            <div class="header-date">
+                <i class="fas fa-calendar-alt"></i>
+                <span id="currentDate">Cargando...</span>
+            </div>
+            
+            <!-- AGREGAR ESTE BOTÓN DE AYUDA -->
+            <div class="help-button-container">
+                <a href="../cliente_navegacion.html" class="help-button" title="Ayuda y Navegación">
+                    <i class="fas fa-question-circle"></i>
+                    <span class="help-text">Ayuda</span>
+                </a>
+            </div>
+                        
+            <div class="notifications">
+                <button class="notifications-button" onclick="showNotifications()">
+                    <i class="fas fa-bell"></i>
+                </button>
+                <span class="notification-count">5</span>
+            </div>
+            
+            <div class="user-menu" id="userMenu">
+                <div class="user-avatar">
+                    <span id="userInitial">C</span>
+                </div>
+                <span class="user-name" id="userName">Empresa Demo S.A.</span>
+                <i class="fas fa-chevron-down user-menu-arrow"></i>
+                
+                <div class="user-dropdown">
+                    <div class="dropdown-header">
+                        <div class="dropdown-user-info">
+                            <div class="dropdown-avatar">
+                                <span id="dropdownUserInitial">C</span>
+                            </div>
+                            <div class="dropdown-user-details">
+                                <div class="dropdown-user-name" id="dropdownUserName">Empresa Demo S.A.</div>
+                                <div class="dropdown-user-email" id="dropdownUserEmail">cliente@demo.com</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="dropdown-menu">
+                        <a href="#" class="dropdown-item" onclick="goToProfile(event)">
+                            <i class="fas fa-user-circle"></i>
+                            <span>Mi Perfil</span>
+                        </a>
+                        <a href="#" class="dropdown-item" onclick="goToSettings(event)">
+                            <i class="fas fa-cog"></i>
+                            <span>Configuración</span>
+                        </a>
+                        <div class="dropdown-divider"></div>
+                        <a href="#" class="dropdown-item logout" onclick="logout(event)">
+                            <i class="fas fa-sign-out-alt"></i>
+                            <span>Cerrar Sesión</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+
+        
+        <!-- Administración de Obras / Proyectos -->
+        <nav class="sidebar" id="sidebar">
+            <ul class="menu">
+
+                <!-- Dashboard -->
+                <li class="menu-item">
+                    <div class="menu-header" onclick="window.location.href='../cliente_dashboard.html'">
+                        <i class="fas fa-home"></i>
+                        <span>Dashboard</span>
+                        <div class="menu-tooltip">Dashboard</div>
+                    </div>
+                </li>
+
+                <!-- Central de Mensajería -->
+                <li class="menu-item">
+                    <div class="menu-header" onclick="window.location.href='../cliente_mensajeria/cliente_listado_mensajeria.html'">
+                        <i class="fas fa-comments"></i>
+                        <span>Central de Mensajería</span>
+                        <div class="menu-tooltip">Central de Mensajería</div>
+                    </div>
+                </li>
+
+                <!-- Solicitudes y Cotizaciones  -->
+                <li class="menu-item">
+                    <div class="menu-header" onclick="toggleSubmenu(this)">
+                        <i class="fas fa-file-alt"></i>
+                        <span>Cotización y Compra</span>
+                        <i class="fas fa-chevron-right arrow"></i>
+                        <div class="menu-tooltip">Cotización y Compra</div>
+                    </div>
+                    <div class="submenu">
+                        <a href="cliente_listado_solicitudes.html" class="submenu-item">
+                            <span class="full-text">Solicitudes de Pedido</span>
+                            <span class="siglas">SP</span>
+                            <div class="sigla-tooltip">Solicitudes de Pedido</div>
+                        </a>
+                        <a href="../cliente_cotizaciones/cliente_listado_cotizaciones.html" class="submenu-item">
+                            <span class="full-text">Cotizaciones</span>
+                            <span class="siglas">CO</span>
+                            <div class="sigla-tooltip">Cotizaciones</div>
+                        </a>
+                        <a href="../cliente_orden_compra/cliente_listado_ordenes_compra.html" class="submenu-item">
+                            <span class="full-text">Órdenes de Compra</span>
+                            <span class="siglas">OC</span>
+                            <div class="sigla-tooltip">Órdenes de Compra</div>
+                        </a>
+                    </div>
+                </li>
+
+                <!-- Control de Entregas -->
+                <li class="menu-item">
+                    <div class="menu-header" onclick="toggleSubmenu(this)">
+                        <i class="fas fa-truck"></i>
+                        <span>Control de Entregas</span>
+                        <i class="fas fa-chevron-right arrow"></i>
+                        <div class="menu-tooltip">Control de Entregas</div>
+                    </div>
+                    <div class="submenu">
+                        <a href="../cliente_control_entrega/cliente_listado_control_entregas.html" class="submenu-item">
+                            <span class="full-text">Control Entrega por OC</span>
+                            <span class="siglas">CEO</span>
+                            <div class="sigla-tooltip">Control Entrega por OC</div>
+                        </a>
+
+                        <a href="../cliente_modificaciones/cliente_listado_modificaciones.html" class="submenu-item">
+                            <span class="full-text">Modificaciones OC</span>
+                            <span class="siglas">MOC</span>
+                            <div class="sigla-tooltip">Modificaciones OC</div>
+                        </a>
+
+                        <a href="../cliente_control_recepcion/cliente_listado_despachos.html" class="submenu-item">
+                            <span class="full-text">Control Recepción</span>
+                            <span class="siglas">CRE</span>
+                            <div class="sigla-tooltip">Control Recepción</div>
+                        </a>
+
+                        <a href="../cliente_incidentes/cliente_listado_incidentes.html" class="submenu-item">
+                            <span class="full-text">Incidentes de Entrega</span>
+                            <span class="siglas">IEN</span>
+                            <div class="sigla-tooltip">Incidentes de Entrega</div>
+                        </a>                        
+                    </div>
+                </li>
+               
+                <!-- Pagos -->
+                <li class="menu-item">
+                    <div class="menu-header" onclick="toggleSubmenu(this)">
+                        <i class="fas fa-file-invoice-dollar"></i>
+                        <span>Pagos</span>
+                        <i class="fas fa-chevron-right arrow"></i>
+                        <div class="menu-tooltip">Pagos</div>
+                    </div>
+                    <div class="submenu">
+                        <a href="../cliente_pagos/cliente_listado_pagos.html" class="submenu-item">
+                            <span class="full-text">Estado de Pagos</span>
+                            <span class="siglas">EP</span>
+                            <div class="sigla-tooltip">Estado de Pagos</div>
+                        </a>                          
+                    </div>
+                </li>
+
+                <!-- Control Total de Obras -->
+                <li class="menu-item">
+                    <div class="menu-header" onclick="toggleSubmenu(this)">
+                        <i class="fas fa-hard-hat"></i>
+                        <span>Control Total de Obras</span>
+                        <i class="fas fa-chevron-right arrow"></i>
+                        <div class="menu-tooltip">Control Total de Obras</div>
+                    </div>
+                    <div class="submenu">
+                        <a href="../cliente_control_obra/cliente_listado_obras_control.html" class="submenu-item">
+                            <span class="full-text">Listado de Obras</span>
+                            <span class="siglas">LO</span>
+                            <div class="sigla-tooltip">Listado de Obras</div>
+                        </a>
+                    </div>
+                </li>
+                
+                <!-- Configuración (active) -->
+                <li class="menu-item active">
+                    <div class="menu-header active" onclick="toggleSubmenu(this)">
+                        <i class="fas fa-cog"></i>
+                        <span>Configuración</span>
+                        <i class="fas fa-chevron-right arrow"></i>
+                        <div class="menu-tooltip">Configuración</div>
+                    </div>
+                    <div class="submenu">
+                        <a href="../cliente_configuracion/cliente_listado_obras.html" class="submenu-item active">
+                            <span class="full-text">Administración de Obras / Proyectos</span>
+                            <span class="siglas">AOP</span>
+                            <div class="sigla-tooltip">Administración de Obras / Proyectos</div>
+                        </a>
+                        <a href="../cliente_configuracion/cliente_listado_usuarios.html" class="submenu-item">
+                            <span class="full-text">Administración de Usuarios</span>
+                            <span class="siglas">AU</span>
+                            <div class="sigla-tooltip">Administración de Usuarios</div>
+                        </a>
+                    </div>
+                </li>
+            </ul>
+        </nav>
+
+
+        <!-- Toggle Button (fuera del sidebar) -->
+        <div class="sidebar-toggle" onclick="toggleSidebar()">
+            <i class="fas fa-chevron-left"></i>
+        </div>
+
+        <main class="content">
+            <div class="breadcrumb">
+                <div class="breadcrumb-item"><a href="../cliente_dashboard.html">Inicio</a></div>
+                <div class="breadcrumb-item"><a href="#">Configuración</a></div>
+                <div class="breadcrumb-item"><a href="cliente_listado_obras.html">Administración de Obras / Proyectos</a></div>
+                <div class="breadcrumb-item active" id="breadcrumbProject">Torre Pacífico</div>
+            </div>
+
+            <div class="page-header">
+                <h1 class="page-title" id="pageTitle">
+                    <span id="projectTitle">Torre Pacífico</span>
+                    <span class="status-badge active" id="statusBadge">
+                        <i class="fas fa-circle"></i>
+                        <span id="statusText">Activo</span>
+                    </span>
+                </h1>
+                <div style="display: flex; gap: 15px;" id="pageActions">
+                    <button class="btn-secondary" onclick="openEditModal()">
+                        <i class="fas fa-edit"></i>
+                        Editar Obra
+                    </button>
+                    <button class="btn-secondary" onclick="window.location.href='cliente_listado_obras.html'">
+                        <i class="fas fa-arrow-left"></i>
+                        Volver
+                    </button>
+                </div>
+            </div>
+
+            <!-- View Mode Content -->
+            <div class="view-mode-content" id="viewModeContent">
+                <!-- Información General (View Mode) -->
+                <div class="info-card">
+                    <div class="info-card-header">
+                        <h2 class="info-card-title">
+                            <i class="fas fa-info-circle"></i>
+                            Información General
+                        </h2>
+                    </div>
+                    
+                    <div class="info-grid">
+                        <div class="info-item">
+                            <span class="info-label">Código del Proyecto</span>
+                            <span class="info-value" id="viewProjectCode">PRY-2025-001</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Nombre de la Obra</span>
+                            <span class="info-value" id="viewProjectName">Torre Pacífico</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Dirección</span>
+                            <span class="info-value" id="viewProjectAddress">Av. Providencia 1234, Providencia</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Región</span>
+                            <span class="info-value" id="viewProjectRegion">Región Metropolitana</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Fecha de Inicio</span>
+                            <span class="info-value" id="viewProjectStartDate">15/01/2025</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Fecha Estimada de Término</span>
+                            <span class="info-value" id="viewProjectEndDate">30/12/2025</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Encargados de la Obra (View Mode) -->
+                <div class="info-card" id="managersSection">
+                    <div class="info-card-header">
+                        <h2 class="info-card-title">
+                            <i class="fas fa-users"></i>
+                            Encargados de la Obra
+                        </h2>
+                        <button class="btn-primary" onclick="openManagerModal()">
+                            <i class="fas fa-plus"></i>
+                            Agregar Encargado
+                        </button>
+                    </div>
+
+                    <table class="managers-table">
+                        <thead>
+                            <tr>
+                                <th>Nombre</th>
+                                <th>Email</th>
+                                <th>Celular</th>
+                                <th>Roles en la Empresa</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="managersTableBody">
+                            <tr>
+                                <td><strong>Juan Pérez González</strong></td>
+                                <td>juan.perez@empresa.com</td>
+                                <td>+56 9 8765 4321</td>
+                                <td>
+                                    <div class="role-tags">
+                                        <span class="role-tag">Compras</span>
+                                        <span class="role-tag">Seguimiento</span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="manager-actions">
+                                        <button class="btn-icon" onclick="editManager(1)" title="Editar">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button class="btn-icon danger" onclick="deleteManager(1)" title="Eliminar">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><strong>María Silva Rojas</strong></td>
+                                <td>maria.silva@empresa.com</td>
+                                <td>+56 9 9876 5432</td>
+                                <td>
+                                    <div class="role-tags">
+                                        <span class="role-tag">Recepción</span>
+                                        <span class="role-tag">Pagos</span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="manager-actions">
+                                        <button class="btn-icon" onclick="editManager(2)" title="Editar">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button class="btn-icon danger" onclick="deleteManager(2)" title="Eliminar">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><strong>Carlos Mendoza López</strong></td>
+                                <td>carlos.mendoza@empresa.com</td>
+                                <td>+56 9 6543 2109</td>
+                                <td>
+                                    <div class="role-tags">
+                                        <span class="role-tag">Envío OC</span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="manager-actions">
+                                        <button class="btn-icon" onclick="editManager(3)" title="Editar">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button class="btn-icon danger" onclick="deleteManager(3)" title="Eliminar">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><strong>Ana Torres Vargas</strong></td>
+                                <td>ana.torres@empresa.com</td>
+                                <td>+56 9 3210 9876</td>
+                                <td>
+                                    <div class="role-tags">
+                                        <span class="role-tag">Compras</span>
+                                        <span class="role-tag">Recepción</span>
+                                        <span class="role-tag">Seguimiento</span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="manager-actions">
+                                        <button class="btn-icon" onclick="editManager(4)" title="Editar">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button class="btn-icon danger" onclick="deleteManager(4)" title="Eliminar">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><strong>Roberto Díaz Muñoz</strong></td>
+                                <td>roberto.diaz@empresa.com</td>
+                                <td>+56 9 5432 1098</td>
+                                <td>
+                                    <div class="role-tags">
+                                        <span class="role-tag">Otros</span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="manager-actions">
+                                        <button class="btn-icon" onclick="editManager(5)" title="Editar">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button class="btn-icon danger" onclick="deleteManager(5)" title="Eliminar">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Edit/Create Form -->
+            <div class="edit-form-container" id="editFormContainer">
+                <div class="info-card">
+                    <div class="info-card-header">
+                        <h2 class="info-card-title">
+                            <i class="fas fa-edit"></i>
+                            <span id="formTitle">Información de la Obra</span>
+                        </h2>
+                    </div>
+
+                    <form id="projectForm" onsubmit="saveProject(event)">
+                        <div class="form-group">
+                            <label for="projectCode">
+                                Código del Proyecto <span class="required">*</span>
+                            </label>
+                            <input type="text" id="projectCode" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="projectStatus">
+                                Estado <span class="required">*</span>
+                            </label>
+                            <select id="projectStatus" required>
+                                <option value="active">Activo</option>
+                                <option value="inactive">Inactivo</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="projectName">
+                                Nombre de la Obra <span class="required">*</span>
+                            </label>
+                            <input type="text" id="projectName" required placeholder="Ej: Torre Pacífico">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="projectAddress">
+                                Dirección <span class="required">*</span>
+                            </label>
+                            <input type="text" id="projectAddress" required placeholder="Ej: Av. Providencia 1234, Providencia">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="projectRegion">
+                                Región <span class="required">*</span>
+                            </label>
+                            <select id="projectRegion" required>
+                                <option value="">Seleccione una región</option>
+                                <option value="arica">Región de Arica y Parinacota</option>
+                                <option value="tarapaca">Región de Tarapacá</option>
+                                <option value="antofagasta">Región de Antofagasta</option>
+                                <option value="atacama">Región de Atacama</option>
+                                <option value="coquimbo">Región de Coquimbo</option>
+                                <option value="valparaiso">Región de Valparaíso</option>
+                                <option value="rm">Región Metropolitana</option>
+                                <option value="ohiggins">Región de O'Higgins</option>
+                                <option value="maule">Región del Maule</option>
+                                <option value="nuble">Región de Ñuble</option>
+                                <option value="biobio">Región del Biobío</option>
+                                <option value="araucania">Región de La Araucanía</option>
+                                <option value="losrios">Región de Los Ríos</option>
+                                <option value="loslagos">Región de Los Lagos</option>
+                                <option value="aysen">Región de Aysén</option>
+                                <option value="magallanes">Región de Magallanes</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="projectStartDate">
+                                Fecha de Inicio <span class="required">*</span>
+                            </label>
+                            <input type="date" id="projectStartDate" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="projectEndDate">
+                                Fecha Estimada de Término
+                            </label>
+                            <input type="date" id="projectEndDate">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="projectDescription">
+                                Descripción
+                            </label>
+                            <textarea id="projectDescription" rows="3" placeholder="Descripción opcional de la obra o proyecto..."></textarea>
+                        </div>
+
+                        <div class="form-actions">
+                            <button type="submit" class="btn-primary">
+                                <i class="fas fa-save"></i>
+                                <span id="saveButtonText">Guardar Cambios</span>
+                            </button>
+                            <button type="button" class="btn-secondary" onclick="cancelEdit()">
+                                <i class="fas fa-times"></i>
+                                Cancelar
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Modal Agregar/Editar Encargado -->
+            <div class="modal" id="managerModal">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h3 class="modal-title" id="modalTitle">Agregar Encargado</h3>
+                        <button class="modal-close" onclick="closeManagerModal()">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+
+                    <form id="managerForm" onsubmit="saveManager(event)">
+                        <div class="form-group">
+                            <label for="managerName">
+                                Nombre Completo <span class="required">*</span>
+                            </label>
+                            <input type="text" id="managerName" required placeholder="Ej: Juan Pérez González">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="managerEmail">
+                                Email <span class="required">*</span>
+                            </label>
+                            <input type="email" id="managerEmail" required placeholder="Ej: juan.perez@empresa.com">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="managerPhone">
+                                Celular <span class="required">*</span>
+                            </label>
+                            <input type="tel" id="managerPhone" required placeholder="Ej: +56 9 8765 4321">
+                        </div>
+
+                        <div class="form-group">
+                            <label>
+                                Roles en la Empresa <span class="required">*</span>
+                            </label>
+                            <div class="checkbox-group">
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="roleCompras" name="roles" value="Compras">
+                                    <label for="roleCompras">Compras</label>
+                                </div>
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="roleRecepcion" name="roles" value="Recepción">
+                                    <label for="roleRecepcion">Recepción</label>
+                                </div>
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="roleSeguimiento" name="roles" value="Seguimiento">
+                                    <label for="roleSeguimiento">Seguimiento</label>
+                                </div>
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="roleEnvioOC" name="roles" value="Envío OC">
+                                    <label for="roleEnvioOC">Envío OC</label>
+                                </div>
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="rolePagos" name="roles" value="Pagos">
+                                    <label for="rolePagos">Pagos</label>
+                                </div>
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="roleOtros" name="roles" value="Otros">
+                                    <label for="roleOtros">Otros</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-actions">
+                            <button type="submit" class="btn-primary">
+                                <i class="fas fa-check"></i>
+                                Guardar
+                            </button>
+                            <button type="button" class="btn-secondary" onclick="closeManagerModal()">
+                                <i class="fas fa-times"></i>
+                                Cancelar
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Global variables
+        let currentMode = 'view'; // 'view', 'edit', 'create'
+        let projectId = null;
+        let editingManagerId = null;
+
+        // Get URL parameters
+        function getUrlParameter(name) {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get(name);
+        }
+
+        // Initialize page based on URL parameters
+        function initializePage() {
+            projectId = getUrlParameter('id');
+            const mode = getUrlParameter('mode');
+
+            if (!projectId && mode !== 'create') {
+                // If no ID and not in create mode, go to create mode
+                currentMode = 'create';
+                showCreateMode();
+            } else if (mode === 'create') {
+                currentMode = 'create';
+                showCreateMode();
+            } else if (mode === 'edit') {
+                currentMode = 'edit';
+                showEditMode();
+            } else {
+                currentMode = 'view';
+                loadProjectData(projectId);
+            }
+        }
+
+        // Show create mode
+        function showCreateMode() {
+            document.body.classList.add('create-mode');
+            
+            // Update page title and breadcrumb
+            document.getElementById('pageTitle').innerHTML = 'Nueva Obra/Proyecto';
+            document.getElementById('breadcrumbProject').textContent = 'Nueva Obra';
+            
+            // Hide view mode content
+            document.getElementById('viewModeContent').classList.add('hidden');
+            
+            // Show edit form
+            document.getElementById('editFormContainer').classList.add('active');
+            
+            // Update form title
+            document.getElementById('formTitle').textContent = 'Nueva Obra/Proyecto';
+            
+            // Clear form and set defaults
+            document.getElementById('projectForm').reset();
+            document.getElementById('projectCode').value = generateProjectCode();
+            document.getElementById('projectCode').readOnly = true;
+            document.getElementById('projectStatus').value = 'active';
+            
+            // Update save button text
+            document.getElementById('saveButtonText').textContent = 'Crear Obra';
+            
+            // Update page actions
+            document.getElementById('pageActions').innerHTML = `
+                <button class="btn-secondary" onclick="window.location.href='cliente_listado_obras.html'">
+                    <i class="fas fa-arrow-left"></i>
+                    Volver
+                </button>
+            `;
+        }
+
+        // Show edit mode
+        function showEditMode() {
+            if (!projectId) return;
+            
+            // Hide view mode content
+            document.getElementById('viewModeContent').classList.add('hidden');
+            
+            // Show edit form
+            document.getElementById('editFormContainer').classList.add('active');
+            
+            // Load project data into form
+            loadProjectDataForEdit(projectId);
+            
+            // Update form title
+            document.getElementById('formTitle').textContent = 'Editar Información de la Obra';
+            
+            // Update save button text
+            document.getElementById('saveButtonText').textContent = 'Guardar Cambios';
+        }
+
+        // Generate project code
+        function generateProjectCode() {
+            const year = new Date().getFullYear();
+            const random = Math.floor(Math.random() * 900) + 100;
+            return `PRY-${year}-${random}`;
+        }
+
+        // Load project data for viewing
+        function loadProjectData(id) {
+            // Simulate loading project data
+            // In a real application, this would fetch from a backend
+            const projectData = {
+                'PRY-2025-001': {
+                    code: 'PRY-2025-001',
+                    name: 'Torre Pacífico',
+                    address: 'Av. Providencia 1234, Providencia',
+                    region: 'Región Metropolitana',
+                    status: 'active',
+                    startDate: '15/01/2025',
+                    endDate: '30/12/2025'
+                },
+                'PRY-2025-002': {
+                    code: 'PRY-2025-002',
+                    name: 'Edificio Los Leones',
+                    address: 'Av. Los Leones 567, Las Condes',
+                    region: 'Región Metropolitana',
+                    status: 'active',
+                    startDate: '01/02/2025',
+                    endDate: '31/01/2026'
+                }
+            };
+
+            const project = projectData[id] || projectData['PRY-2025-001'];
+            
+            // Update page elements
+            document.getElementById('projectTitle').textContent = project.name;
+            document.getElementById('breadcrumbProject').textContent = project.name;
+            document.getElementById('viewProjectCode').textContent = project.code;
+            document.getElementById('viewProjectName').textContent = project.name;
+            document.getElementById('viewProjectAddress').textContent = project.address;
+            document.getElementById('viewProjectRegion').textContent = project.region;
+            document.getElementById('viewProjectStartDate').textContent = project.startDate;
+            document.getElementById('viewProjectEndDate').textContent = project.endDate;
+            
+            // Update status badge
+            const statusBadge = document.getElementById('statusBadge');
+            const statusText = document.getElementById('statusText');
+            if (project.status === 'active') {
+                statusBadge.className = 'status-badge active';
+                statusText.textContent = 'Activo';
+            } else {
+                statusBadge.className = 'status-badge inactive';
+                statusText.textContent = 'Inactivo';
+            }
+        }
+
+        // Load project data for editing
+        function loadProjectDataForEdit(id) {
+            // Simulate loading project data
+            const projectData = {
+                'PRY-2025-001': {
+                    code: 'PRY-2025-001',
+                    name: 'Torre Pacífico',
+                    address: 'Av. Providencia 1234, Providencia',
+                    region: 'rm',
+                    status: 'active',
+                    startDate: '2025-01-15',
+                    endDate: '2025-12-30',
+                    description: ''
+                }
+            };
+
+            const project = projectData[id] || projectData['PRY-2025-001'];
+            
+            // Fill form with project data
+            document.getElementById('projectCode').value = project.code;
+            document.getElementById('projectCode').readOnly = true;
+            document.getElementById('projectName').value = project.name;
+            document.getElementById('projectAddress').value = project.address;
+            document.getElementById('projectRegion').value = project.region;
+            document.getElementById('projectStatus').value = project.status;
+            document.getElementById('projectStartDate').value = project.startDate;
+            document.getElementById('projectEndDate').value = project.endDate;
+            document.getElementById('projectDescription').value = project.description;
+        }
+
+        // Open edit modal
+        function openEditModal() {
+            currentMode = 'edit';
+            showEditMode();
+        }
+
+        // Cancel edit
+        function cancelEdit() {
+            if (currentMode === 'create') {
+                // If in create mode, go back to list
+                window.location.href = 'cliente_listado_obras.html';
+            } else {
+                // If in edit mode, go back to view mode
+                document.getElementById('viewModeContent').classList.remove('hidden');
+                document.getElementById('editFormContainer').classList.remove('active');
+                currentMode = 'view';
+            }
+        }
+
+        // Save project
+        function saveProject(event) {
+            event.preventDefault();
+            
+            const projectData = {
+                code: document.getElementById('projectCode').value,
+                name: document.getElementById('projectName').value,
+                address: document.getElementById('projectAddress').value,
+                region: document.getElementById('projectRegion').value,
+                status: document.getElementById('projectStatus').value,
+                startDate: document.getElementById('projectStartDate').value,
+                endDate: document.getElementById('projectEndDate').value,
+                description: document.getElementById('projectDescription').value
+            };
+            
+            console.log('Project data:', projectData);
+            
+            if (currentMode === 'create') {
+                alert('Nueva obra creada exitosamente.');
+                // Redirect to the new project detail page
+                window.location.href = `cliente_detalle_obra.html?id=${projectData.code}`;
+            } else {
+                alert('Información de la obra actualizada exitosamente.');
+                // Reload the page in view mode
+                window.location.href = `cliente_detalle_obra.html?id=${projectId}`;
+            }
+        }
+
+        // Toggle sidebar collapse
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const toggleButton = document.querySelector('.sidebar-toggle');
+            const isCollapsed = sidebar.classList.contains('collapsed');
+            
+            if (isCollapsed) {
+                sidebar.classList.remove('collapsed');
+                localStorage.setItem('sidebarCollapsed', 'false');
+            } else {
+                sidebar.classList.add('collapsed');
+                localStorage.setItem('sidebarCollapsed', 'true');
+            }
+            
+            // Update button icon rotation
+            const icon = toggleButton.querySelector('i');
+            if (sidebar.classList.contains('collapsed')) {
+                icon.style.transform = 'rotate(180deg)';
+            } else {
+                icon.style.transform = 'rotate(0deg)';
+            }
+        }
+
+        // Load sidebar state from localStorage
+        function loadSidebarState() {
+            const isCollapsed = localStorage.getItem('sidebarCollapsed') === 'true';
+            const sidebar = document.getElementById('sidebar');
+            const toggleButton = document.querySelector('.sidebar-toggle');
+            const icon = toggleButton.querySelector('i');
+            
+            if (isCollapsed) {
+                sidebar.classList.add('collapsed');
+                icon.style.transform = 'rotate(180deg)';
+            }
+        }
+
+        // Toggle mobile menu
+        function toggleMobileMenu() {
+            const sidebar = document.getElementById('sidebar');
+            sidebar.classList.toggle('active');
+        }
+
+        // Toggle submenu
+        function toggleSubmenu(header) {
+            const menuItem = header.parentElement;
+            const sidebar = document.getElementById('sidebar');
+            const wasActive = menuItem.classList.contains('active');
+            
+            // If sidebar is collapsed and clicking on item with submenu, don't expand sidebar
+            // Just toggle the submenu
+            
+            // Close all submenus
+            document.querySelectorAll('.menu-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            
+            // Remove active from all headers
+            document.querySelectorAll('.menu-header').forEach(h => {
+                h.classList.remove('active');
+            });
+            
+            // If it wasn't active, open it
+            if (!wasActive && header.nextElementSibling) {
+                menuItem.classList.add('active');
+            }
+            
+            // Always keep the clicked header active if it's a main item
+            if (!header.querySelector('.arrow')) {
+                header.classList.add('active');
+            }
+        }
+
+        // User menu dropdown
+        const userMenu = document.getElementById('userMenu');
+        let isUserMenuOpen = false;
+
+        userMenu.addEventListener('click', function(e) {
+            e.stopPropagation();
+            isUserMenuOpen = !isUserMenuOpen;
+            this.classList.toggle('active');
+        });
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', function(e) {
+            if (!userMenu.contains(e.target) && isUserMenuOpen) {
+                userMenu.classList.remove('active');
+                isUserMenuOpen = false;
+            }
+        });
+
+        // Update date
+        function updateDate() {
+            const now = new Date();
+            const options = { 
+                weekday: 'long', 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric' 
+            };
+            const formattedDate = now.toLocaleDateString('es-CL', options);
+            const capitalizedDate = formattedDate.charAt(0).toUpperCase() + formattedDate.slice(1);
+            document.getElementById('currentDate').textContent = capitalizedDate;
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            updateDate();
+            loadUserData();
+            loadSidebarState();
+            initializePage();
+            
+            // Update date every minute
+            setInterval(updateDate, 60000);
+        });
+
+        // Load user data
+        function loadUserData() {
+            const userData = sessionStorage.getItem('userData');
+            if (userData) {
+                try {
+                    const user = JSON.parse(userData);
+                    const userName = user.name || 'Cliente';
+                    const userEmail = user.email || 'cliente@demo.com';
+                    
+                    // Update UI
+                    document.getElementById('userName').textContent = userName;
+                    document.getElementById('dropdownUserName').textContent = userName;
+                    document.getElementById('dropdownUserEmail').textContent = userEmail;
+                    
+                    // Update initials
+                    const initial = userName.charAt(0).toUpperCase();
+                    document.getElementById('userInitial').textContent = initial;
+                    document.getElementById('dropdownUserInitial').textContent = initial;
+                } catch (e) {
+                    console.error('Error parsing user data:', e);
+                }
+            }
+        }
+
+        // Profile function
+        function goToProfile(e) {
+            e.preventDefault();
+            alert('Navegando al perfil de usuario...\nEsta funcionalidad estará disponible próximamente.');
+            userMenu.classList.remove('active');
+            isUserMenuOpen = false;
+        }
+
+        // Settings function
+        function goToSettings(e) {
+            e.preventDefault();
+            alert('Navegando a configuración...\nEsta funcionalidad estará disponible próximamente.');
+            userMenu.classList.remove('active');
+            isUserMenuOpen = false;
+        }
+
+        // Logout function
+        function logout(e) {
+            e.preventDefault();
+            if (confirm('¿Está seguro que desea cerrar sesión?')) {
+                sessionStorage.clear();
+                window.location.href = '../../index.html';
+            }
+        }
+
+        // Show notifications
+        function showNotifications() {
+            alert('Panel de notificaciones\n\nEsta funcionalidad estará disponible próximamente.');
+        }
+
+        // Manager Modal Functions
+        function openManagerModal() {
+            const modal = document.getElementById('managerModal');
+            const modalTitle = document.getElementById('modalTitle');
+            const form = document.getElementById('managerForm');
+            
+            modalTitle.textContent = 'Agregar Encargado';
+            form.reset();
+            editingManagerId = null;
+            
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeManagerModal() {
+            const modal = document.getElementById('managerModal');
+            modal.classList.remove('active');
+            document.body.style.overflow = 'auto';
+            document.getElementById('managerForm').reset();
+            editingManagerId = null;
+        }
+
+        function editManager(managerId) {
+            const modal = document.getElementById('managerModal');
+            const modalTitle = document.getElementById('modalTitle');
+            
+            modalTitle.textContent = 'Editar Encargado';
+            editingManagerId = managerId;
+            
+            // Here you would load the manager data
+            // For demo purposes, we'll just show the modal
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+            
+            // Simulate loading data
+            if (managerId === 1) {
+                document.getElementById('managerName').value = 'Juan Pérez González';
+                document.getElementById('managerEmail').value = 'juan.perez@empresa.com';
+                document.getElementById('managerPhone').value = '+56 9 8765 4321';
+                document.getElementById('roleCompras').checked = true;
+                document.getElementById('roleSeguimiento').checked = true;
+            }
+        }
+
+        function deleteManager(managerId) {
+            if (confirm('¿Está seguro de eliminar este encargado?')) {
+                alert(`Encargado ${managerId} eliminado exitosamente.`);
+                // Here you would delete the manager from the backend
+                // For now, just reload the page
+                location.reload();
+            }
+        }
+
+        function saveManager(event) {
+            event.preventDefault();
+            
+            const formData = new FormData(event.target);
+            const selectedRoles = [];
+            const checkboxes = document.querySelectorAll('input[name="roles"]:checked');
+            
+            checkboxes.forEach(checkbox => {
+                selectedRoles.push(checkbox.value);
+            });
+            
+            if (selectedRoles.length === 0) {
+                alert('Debe seleccionar al menos un rol.');
+                return;
+            }
+            
+            const managerData = {
+                name: document.getElementById('managerName').value,
+                email: document.getElementById('managerEmail').value,
+                phone: document.getElementById('managerPhone').value,
+                roles: selectedRoles
+            };
+            
+            console.log('Manager data:', managerData);
+            
+            if (editingManagerId) {
+                alert('Encargado actualizado exitosamente.');
+            } else {
+                alert('Encargado agregado exitosamente.');
+            }
+            
+            closeManagerModal();
+            // Here you would save to the backend and reload the data
+            location.reload();
+        }
+
+        // Close modal on outside click
+        window.addEventListener('click', function(e) {
+            const managerModal = document.getElementById('managerModal');
+            
+            if (e.target === managerModal) {
+                closeManagerModal();
+            }
+        });
+
+        // Close modal on ESC key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                const managerModal = document.getElementById('managerModal');
+                
+                if (managerModal.classList.contains('active')) {
+                    closeManagerModal();
+                }
+            }
+        });
+
+        // Update date validation
+        document.getElementById('projectStartDate').addEventListener('change', function() {
+            const startDate = this.value;
+            const endDateInput = document.getElementById('projectEndDate');
+            endDateInput.min = startDate;
+            
+            if (endDateInput.value && endDateInput.value < startDate) {
+                endDateInput.value = '';
+            }
+        });
+    </script>
+</body>
+</html>

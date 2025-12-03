@@ -1,0 +1,2073 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nueva Solicitud - SSL v4.0</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Archivo CSS del menú separado -->
+    <link rel="stylesheet" href="../css/menu-styles.css">
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #667eea;
+            --accent-color: #764ba2;
+            --success-color: #27ae60;
+            --warning-color: #f39c12;
+            --error-color: #e74c3c;
+            --info-color: #17a2b8;
+            --text-color: #333;
+            --text-light: #ecf0f1;
+            --border-color: #ddd;
+            --hover-color: #5a52d5;
+            --active-color: #4a42b5;
+            --menu-width: 260px;
+            --menu-collapsed-width: 70px;
+            --header-height: 65px;
+            --transition-speed: 0.3s;
+            --card-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+            --hover-shadow: 0 5px 20px rgba(0, 0, 0, 0.12);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f8f9fa;
+            color: var(--text-color);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        /* Header */
+        .header {
+            background-color: white;
+            color: var(--text-color);
+            height: var(--header-height);
+            padding: 0 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo img {
+            height: 40px;
+        }
+
+        .logo-text {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .logo h1 {
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+
+        .portal-type {
+            font-size: 0.8rem;
+            color: var(--secondary-color);
+            font-weight: 500;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .header-date {
+            display: flex;
+            align-items: center;
+            font-size: 0.9rem;
+            color: #666;
+            padding: 0 15px;
+            border-right: 1px solid var(--border-color);
+            height: 35px;
+        }
+
+        .header-date i {
+            margin-right: 8px;
+            color: var(--secondary-color);
+        }
+
+        .notifications {
+            position: relative;
+            margin-right: 15px;
+        }
+
+        .notifications-button {
+            background: none;
+            border: none;
+            font-size: 1.2rem;
+            color: #666;
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 50%;
+            transition: all var(--transition-speed);
+        }
+
+        .notifications-button:hover {
+            background-color: #f0f0f0;
+            color: var(--secondary-color);
+        }
+
+        .notification-count {
+            position: absolute;
+            top: 0;
+            right: 0;
+            background-color: var(--error-color);
+            color: white;
+            border-radius: 50%;
+            font-size: 0.7rem;
+            width: 18px;
+            height: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+        }
+
+        .user-menu {
+            display: flex;
+            align-items: center;
+            margin-left: 10px;
+            cursor: pointer;
+            position: relative;
+            padding: 8px 12px;
+            border-radius: 8px;
+            transition: background-color var(--transition-speed);
+        }
+
+        .user-menu:hover {
+            background-color: #f0f0f0;
+        }
+
+        .user-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--secondary-color), var(--accent-color));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            margin-right: 10px;
+            font-weight: 600;
+        }
+
+        .user-name {
+            font-weight: 500;
+            margin-right: 8px;
+            color: var(--text-color);
+        }
+
+        .user-menu-arrow {
+            font-size: 0.8rem;
+            color: #666;
+            transition: transform var(--transition-speed);
+        }
+
+        .user-menu.active .user-menu-arrow {
+            transform: rotate(180deg);
+        }
+
+        /* User Dropdown */
+        .user-dropdown {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            margin-top: 10px;
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 5px 25px rgba(0, 0, 0, 0.15);
+            min-width: 220px;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: all var(--transition-speed);
+        }
+
+        .user-menu.active .user-dropdown {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .dropdown-header {
+            padding: 20px;
+            border-bottom: 1px solid var(--border-color);
+            background-color: #f8f9fa;
+            border-radius: 12px 12px 0 0;
+        }
+
+        .dropdown-user-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .dropdown-avatar {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--secondary-color), var(--accent-color));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+
+        .dropdown-user-details {
+            flex: 1;
+        }
+
+        .dropdown-user-name {
+            font-weight: 600;
+            color: var(--text-color);
+            font-size: 0.95rem;
+        }
+
+        .dropdown-user-email {
+            font-size: 0.85rem;
+            color: #666;
+        }
+
+        .dropdown-menu {
+            padding: 8px 0;
+        }
+
+        .dropdown-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 20px;
+            color: var(--text-color);
+            text-decoration: none;
+            transition: background-color var(--transition-speed);
+            cursor: pointer;
+        }
+
+        .dropdown-item:hover {
+            background-color: #f8f9fa;
+        }
+
+        .dropdown-item i {
+            margin-right: 12px;
+            width: 20px;
+            text-align: center;
+            color: #666;
+        }
+
+        .dropdown-divider {
+            height: 1px;
+            background-color: var(--border-color);
+            margin: 8px 0;
+        }
+
+        .dropdown-item.logout {
+            color: var(--error-color);
+        }
+
+        .dropdown-item.logout i {
+            color: var(--error-color);
+        }
+
+        /* Container */
+        .container {
+            display: flex;
+            flex: 1;
+            margin-top: var(--header-height);
+        }
+
+        /* Content */
+        .content {
+            flex: 1;
+            padding: 30px;
+            transition: margin-left var(--transition-speed);
+        }
+
+        .breadcrumb {
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            font-size: 0.9rem;
+        }
+
+        .breadcrumb-item {
+            display: inline-block;
+            color: #666;
+        }
+
+        .breadcrumb-item:not(:last-child)::after {
+            content: "/";
+            margin: 0 10px;
+            color: #ccc;
+        }
+
+        .breadcrumb-item a {
+            color: var(--secondary-color);
+            text-decoration: none;
+            transition: color var(--transition-speed);
+        }
+
+        .breadcrumb-item a:hover {
+            color: var(--accent-color);
+            text-decoration: underline;
+        }
+
+        .breadcrumb-item.active {
+            color: var(--text-color);
+            font-weight: 500;
+        }
+
+        .page-title {
+            font-size: 2rem;
+            margin-bottom: 10px;
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+
+        .version-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            font-size: 0.95rem;
+            color: #666;
+            margin-bottom: 30px;
+        }
+
+        .version-badge {
+            background: linear-gradient(135deg, var(--secondary-color), var(--accent-color));
+            color: white;
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-weight: 500;
+        }
+
+        /* Form Container */
+        .form-container {
+            background-color: white;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: var(--card-shadow);
+        }
+
+        .form-section {
+            margin-bottom: 35px;
+        }
+
+        .section-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 25px;
+            color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+
+        .section-title i {
+            margin-right: 10px;
+            color: var(--secondary-color);
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group label {
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .form-group label .required {
+            color: var(--error-color);
+        }
+
+        .form-control {
+            padding: 10px 15px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 0.95rem;
+            transition: all var(--transition-speed);
+            background-color: white;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--secondary-color);
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .form-control:disabled {
+            background-color: #f8f9fa;
+            cursor: not-allowed;
+            color: #666;
+        }
+
+        select.form-control {
+            appearance: none;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right .7em top 50%;
+            background-size: 1.2em;
+            padding-right: 2.5em;
+        }
+
+        textarea.form-control {
+            resize: vertical;
+            min-height: 100px;
+            line-height: 1.5;
+        }
+
+        /* Info Box */
+        .info-box {
+            background-color: #e8f4fd;
+            border-left: 4px solid var(--info-color);
+            border-radius: 8px;
+            padding: 15px 20px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: start;
+        }
+
+        .info-box i {
+            color: var(--info-color);
+            margin-right: 12px;
+            font-size: 1.1rem;
+            margin-top: 2px;
+        }
+
+        .info-box p {
+            margin: 0;
+            line-height: 1.5;
+        }
+
+        /* Products Table */
+        .products-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        .products-table th {
+            background-color: #f8f9fa;
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+            border-bottom: 2px solid var(--border-color);
+            color: var(--primary-color);
+        }
+
+        .products-table td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #f0f0f0;
+            position: relative;
+        }
+
+        .products-table tbody tr:hover {
+            background-color: #f8f9fa;
+        }
+
+        .products-table input {
+            width: 100%;
+            padding: 8px 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            font-size: 0.9rem;
+            transition: all var(--transition-speed);
+        }
+
+        .products-table input:focus {
+            outline: none;
+            border-color: var(--secondary-color);
+            box-shadow: 0 0 0 2px rgba(102, 126, 234, 0.1);
+        }
+
+        /* Autocomplete Dropdown */
+        .autocomplete-dropdown {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background-color: white;
+            border: 1px solid var(--border-color);
+            border-top: none;
+            border-radius: 0 0 8px 8px;
+            max-height: 200px;
+            overflow-y: auto;
+            z-index: 100;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            display: none;
+        }
+
+        .autocomplete-dropdown.active {
+            display: block;
+        }
+
+        .autocomplete-item {
+            padding: 10px 15px;
+            cursor: pointer;
+            transition: background-color var(--transition-speed);
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .autocomplete-item:last-child {
+            border-bottom: none;
+        }
+
+        .autocomplete-item:hover {
+            background-color: #f8f9fa;
+        }
+
+        .autocomplete-item.selected {
+            background-color: var(--secondary-color);
+            color: white;
+        }
+
+        .autocomplete-item-code {
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+
+        .autocomplete-item-description {
+            font-size: 0.9rem;
+            color: #666;
+            margin-top: 2px;
+        }
+
+        .autocomplete-item.selected .autocomplete-item-code,
+        .autocomplete-item.selected .autocomplete-item-description {
+            color: white;
+        }
+
+        .autocomplete-no-results {
+            padding: 15px;
+            text-align: center;
+            color: #999;
+            font-style: italic;
+        }
+
+        .product-search-input {
+            position: relative;
+        }
+
+        .product-new-indicator {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            background-color: var(--warning-color);
+            color: white;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            pointer-events: none;
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all var(--transition-speed);
+            display: inline-flex;
+            align-items: center;
+            text-decoration: none;
+            font-size: 0.95rem;
+        }
+
+        .btn i {
+            margin-right: 6px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--secondary-color), var(--accent-color));
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #27ae60, #2ecc71);
+            color: white;
+        }
+
+        .btn-success:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(39, 174, 96, 0.3);
+        }
+
+        .btn-warning {
+            background: linear-gradient(135deg, #f39c12, #f1c40f);
+            color: white;
+        }
+
+        .btn-warning:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(243, 156, 18, 0.3);
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, var(--error-color), #c0392b);
+            color: white;
+        }
+
+        .btn-danger:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(231, 76, 60, 0.3);
+        }
+
+        .btn-outline {
+            background-color: transparent;
+            border: 1px solid var(--border-color);
+            color: var(--text-color);
+        }
+
+        .btn-outline:hover {
+            background-color: #f0f0f0;
+            border-color: var(--secondary-color);
+            color: var(--secondary-color);
+        }
+
+        .btn-sm {
+            padding: 6px 12px;
+            font-size: 0.85rem;
+        }
+
+        .btn-icon {
+            padding: 6px 10px;
+        }
+
+        /* Product Actions */
+        .product-actions {
+            display: flex;
+            gap: 5px;
+            justify-content: center;
+        }
+
+        /* File Upload Area */
+        .file-upload-area {
+            border: 2px dashed var(--border-color);
+            border-radius: 12px;
+            padding: 30px;
+            text-align: center;
+            transition: all var(--transition-speed);
+            background-color: #f8f9fa;
+        }
+
+        .file-upload-area:hover {
+            border-color: var(--secondary-color);
+            background-color: #f0f0f0;
+        }
+
+        .file-upload-area.dragover {
+            border-color: var(--secondary-color);
+            background-color: #e8f4fd;
+        }
+
+        .file-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .file-item {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            transition: all var(--transition-speed);
+        }
+
+        .file-item:hover {
+            background-color: #e9ecef;
+            transform: translateY(-2px);
+        }
+
+        .file-item i {
+            margin-right: 12px;
+            font-size: 1.5rem;
+            color: var(--secondary-color);
+        }
+
+        .file-name {
+            flex: 1;
+            font-weight: 500;
+            color: var(--text-color);
+        }
+
+        .file-size {
+            color: #666;
+            font-size: 0.85rem;
+            margin-right: 15px;
+        }
+
+        .file-remove {
+            color: var(--error-color);
+            cursor: pointer;
+            transition: transform var(--transition-speed);
+        }
+
+        .file-remove:hover {
+            transform: scale(1.2);
+        }
+
+        /* Action Buttons */
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: flex-end;
+            margin-top: 40px;
+            padding-top: 30px;
+            border-top: 2px solid #f0f0f0;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(5px);
+        }
+
+        .modal-content {
+            background-color: white;
+            margin: 5% auto;
+            padding: 0;
+            border-radius: 12px;
+            width: 90%;
+            max-width: 600px;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 25px;
+            border-bottom: 1px solid var(--border-color);
+            background: linear-gradient(135deg, var(--secondary-color), var(--accent-color));
+            color: white;
+            border-radius: 12px 12px 0 0;
+        }
+
+        .modal-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+        }
+
+        .close {
+            color: white;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            line-height: 20px;
+            transition: transform var(--transition-speed);
+        }
+
+        .close:hover {
+            transform: rotate(90deg);
+        }
+
+        .modal-body {
+            padding: 25px;
+        }
+
+        .modal-footer {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            padding: 20px 25px;
+            border-top: 1px solid var(--border-color);
+            background-color: #f8f9fa;
+        }
+
+        /* Help Button */
+        .help-button-container {
+            margin: 0 15px;
+        }
+
+        .help-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 16px;
+            background-color: var(--secondary-color);
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: all var(--transition-speed);
+            position: relative;
+        }
+
+        .help-button:hover {
+            background-color: var(--hover-color);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+        }
+
+        .help-button i {
+            font-size: 1.1rem;
+        }
+
+        .help-text {
+            display: inline-block;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .user-name {
+                display: none;
+            }
+
+            .header-date {
+                display: none;
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .products-table {
+                font-size: 0.85rem;
+                overflow-x: auto;
+                display: block;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .file-list {
+                grid-template-columns: 1fr;
+            }
+
+            .form-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }   
+
+            .help-text {
+                display: none;
+            }
+            
+            .help-button {
+                padding: 8px 12px;
+            }                       
+        }
+
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-left">
+            <div class="menu-toggle" onclick="toggleMobileMenu()">
+                <i class="fas fa-bars"></i>
+            </div>
+            <div class="logo">
+                <img src="../PagWebLocal/logo_ssl.png" alt="SSL Logo">
+                <div class="logo-text">
+                    <h1>SSL v4.0</h1>
+                    <span class="portal-type">Portal Cliente</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="header-right">
+            <div class="header-date">
+                <i class="fas fa-calendar-alt"></i>
+                <span id="currentDate">Cargando...</span>
+            </div>
+            
+
+            <!-- AGREGAR ESTE BOTÓN DE AYUDA -->
+            <div class="help-button-container">
+                <a href="../cliente_navegacion.html" class="help-button" title="Ayuda y Navegación">
+                    <i class="fas fa-question-circle"></i>
+                    <span class="help-text">Ayuda</span>
+                </a>
+            </div>
+                        
+            <div class="notifications">
+                <button class="notifications-button" onclick="showNotifications()">
+                    <i class="fas fa-bell"></i>
+                </button>
+                <span class="notification-count">5</span>
+            </div>
+            
+            <div class="user-menu" id="userMenu">
+                <div class="user-avatar">
+                    <span id="userInitial">C</span>
+                </div>
+                <span class="user-name" id="userName">Empresa Demo S.A.</span>
+                <i class="fas fa-chevron-down user-menu-arrow"></i>
+                
+                <div class="user-dropdown">
+                    <div class="dropdown-header">
+                        <div class="dropdown-user-info">
+                            <div class="dropdown-avatar">
+                                <span id="dropdownUserInitial">C</span>
+                            </div>
+                            <div class="dropdown-user-details">
+                                <div class="dropdown-user-name" id="dropdownUserName">Empresa Demo S.A.</div>
+                                <div class="dropdown-user-email" id="dropdownUserEmail">cliente@demo.com</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="dropdown-menu">
+                        <a href="#" class="dropdown-item" onclick="goToProfile(event)">
+                            <i class="fas fa-user-circle"></i>
+                            <span>Mi Perfil</span>
+                        </a>
+                        <a href="#" class="dropdown-item" onclick="goToSettings(event)">
+                            <i class="fas fa-cog"></i>
+                            <span>Configuración</span>
+                        </a>
+                        <div class="dropdown-divider"></div>
+                        <a href="#" class="dropdown-item logout" onclick="logout(event)">
+                            <i class="fas fa-sign-out-alt"></i>
+                            <span>Cerrar Sesión</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+
+        <!-- Solicitudes de Pedido   -->
+        <nav class="sidebar" id="sidebar">
+            <ul class="menu">
+                <!-- Dashboard -->
+                <li class="menu-item">
+                    <div class="menu-header" onclick="toggleSubmenu(this)">
+                        <i class="fas fa-home"></i>
+                        <span>Dashboard</span>
+                        <div class="menu-tooltip">Dashboard</div>
+                    </div>
+                </li>
+
+                <!-- Central de Mensajería -->
+                <li class="menu-item">
+                    <div class="menu-header" onclick="window.location.href='../cliente_mensajeria/cliente_listado_mensajeria.html'">
+                        <i class="fas fa-comments"></i>
+                        <span>Central de Mensajería</span>
+                        <div class="menu-tooltip">Central de Mensajería</div>
+                    </div>
+                </li>
+
+                <!-- Solicitudes y Cotizaciones -->
+                <li class="menu-item active">
+                    <div class="menu-header active" onclick="toggleSubmenu(this)">
+                        <i class="fas fa-file-alt"></i>
+                        <span>Cotización y Compra</span>
+                        <i class="fas fa-chevron-right arrow"></i>
+                        <div class="menu-tooltip">Cotización y Compra</div>
+                    </div>
+                    <div class="submenu">
+                        <a href="cliente_listado_solicitudes.html" class="submenu-item active">
+                            <span class="full-text">Solicitudes de Pedido</span>
+                            <span class="siglas">SP</span>
+                            <div class="sigla-tooltip">Solicitudes de Pedido</div>
+                        </a>
+                        <a href="../cliente_cotizaciones/cliente_listado_cotizaciones.html" class="submenu-item">
+                            <span class="full-text">Cotizaciones</span>
+                            <span class="siglas">CO</span>
+                            <div class="sigla-tooltip">Cotizaciones</div>
+                        </a>
+                        <a href="../cliente_orden_compra/cliente_listado_ordenes_compra.html" class="submenu-item">
+                            <span class="full-text">Órdenes de Compra</span>
+                            <span class="siglas">OC</span>
+                            <div class="sigla-tooltip">Órdenes de Compra</div>
+                        </a>
+                    </div>
+                </li>
+
+                <!-- Control de Entregas -->
+                <li class="menu-item">
+                    <div class="menu-header" onclick="toggleSubmenu(this)">
+                        <i class="fas fa-truck"></i>
+                        <span>Control de Entregas</span>
+                        <i class="fas fa-chevron-right arrow"></i>
+                        <div class="menu-tooltip">Control de Entregas</div>
+                    </div>
+                    <div class="submenu">
+                        <a href="../cliente_control_entrega/cliente_listado_control_entregas.html" class="submenu-item">
+                            <span class="full-text">Control Entrega por OC</span>
+                            <span class="siglas">CEO</span>
+                            <div class="sigla-tooltip">Control Entrega por OC</div>
+                        </a>
+
+                        <a href="../cliente_modificaciones/cliente_listado_modificaciones.html" class="submenu-item">
+                            <span class="full-text">Modificaciones OC</span>
+                            <span class="siglas">MOC</span>
+                            <div class="sigla-tooltip">Modificaciones OC</div>
+                        </a>
+
+                        <a href="../cliente_control_recepcion/cliente_listado_despachos.html" class="submenu-item">
+                            <span class="full-text">Control Recepción</span>
+                            <span class="siglas">CRE</span>
+                            <div class="sigla-tooltip">Control Recepción</div>
+                        </a>
+
+                        <a href="../cliente_incidentes/cliente_listado_incidentes.html" class="submenu-item">
+                            <span class="full-text">Incidentes de Entrega</span>
+                            <span class="siglas">IEN</span>
+                            <div class="sigla-tooltip">Incidentes de Entrega</div>
+                        </a>                        
+                    </div>
+                </li>
+               
+                <!-- Pagos -->
+                <li class="menu-item">
+                    <div class="menu-header" onclick="toggleSubmenu(this)">
+                        <i class="fas fa-file-invoice-dollar"></i>
+                        <span>Pagos</span>
+                        <i class="fas fa-chevron-right arrow"></i>
+                        <div class="menu-tooltip">Pagos</div>
+                    </div>
+                    <div class="submenu">
+                        <a href="../cliente_pagos/cliente_listado_pagos.html" class="submenu-item">
+                            <span class="full-text">Estado de Pagos</span>
+                            <span class="siglas">EP</span>
+                            <div class="sigla-tooltip">Estado de Pagos</div>
+                        </a>                          
+                    </div>
+                </li>
+
+                <!-- Control Total de Obras -->
+                <li class="menu-item">
+                    <div class="menu-header" onclick="toggleSubmenu(this)">
+                        <i class="fas fa-hard-hat"></i>
+                        <span>Control Total de Obras</span>
+                        <i class="fas fa-chevron-right arrow"></i>
+                        <div class="menu-tooltip">Control Total de Obras</div>
+                    </div>
+                    <div class="submenu">
+                        <a href="../cliente_control_obra/cliente_listado_obras_control.html" class="submenu-item">
+                            <span class="full-text">Listado de Obras</span>
+                            <span class="siglas">LO</span>
+                            <div class="sigla-tooltip">Listado de Obras</div>
+                        </a>
+                    </div>
+                </li>
+                
+                <!-- Configuración -->
+                <li class="menu-item">
+                    <div class="menu-header" onclick="toggleSubmenu(this)">
+                        <i class="fas fa-cog"></i>
+                        <span>Configuración</span>
+                        <i class="fas fa-chevron-right arrow"></i>
+                        <div class="menu-tooltip">Configuración</div>
+                    </div>
+                    <div class="submenu">
+                        <a href="../cliente_configuracion/cliente_listado_obras.html" class="submenu-item">
+                            <span class="full-text">Administración de Obras / Proyectos</span>
+                            <span class="siglas">AOP</span>
+                            <div class="sigla-tooltip">Administración de Obras / Proyectos</div>
+                        </a>
+                        <a href="../cliente_configuracion/cliente_listado_usuarios.html" class="submenu-item">
+                            <span class="full-text">Administración de Usuarios</span>
+                            <span class="siglas">AU</span>
+                            <div class="sigla-tooltip">Administración de Usuarios</div>
+                        </a>
+                    </div>
+                </li>
+            </ul>
+        </nav>
+        
+        <!-- Toggle Button (fuera del sidebar) -->
+        <div class="sidebar-toggle" onclick="toggleSidebar()">
+            <i class="fas fa-chevron-left"></i>
+        </div>
+
+        <main class="content">
+            <div class="breadcrumb">
+                <div class="breadcrumb-item"><a href="../cliente_dashboard.html">Inicio</a></div>
+                <div class="breadcrumb-item"><a href="#">Solicitudes y Cotizaciones</a></div>
+                <div class="breadcrumb-item"><a href="cliente_listado_solicitudes.html">Listado de Solicitudes</a></div>
+                <div class="breadcrumb-item active">Nueva Solicitud</div>
+            </div>
+
+            <h1 class="page-title">Nueva Solicitud de Pedido</h1>
+            <div class="version-info">
+                <span>Número: <strong id="numeroSolicitud">SOL-2025-0001</strong></span>
+                <span class="version-badge">Versión 1</span>
+            </div>
+
+            <div class="form-container">
+                <form id="solicitudForm">
+                    <!-- Información General -->
+                    <div class="form-section">
+                        <h2 class="section-title">
+                            <i class="fas fa-info-circle"></i>
+                            Información General
+                        </h2>
+                        
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label for="obra">Obra <span class="required">*</span></label>
+                                <select id="obra" class="form-control" required onchange="cargarDatosObra()">
+                                    <option value="">Seleccione obra</option>
+                                    <option value="1">EDIFICIO PACIFIC BLUE</option>
+                                    <option value="2">TORRE ALMAGRO</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="direccionObra">Dirección de la Obra</label>
+                                <input type="text" id="direccionObra" class="form-control" 
+                                       placeholder="Se carga automáticamente" disabled>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="regionObra">Región de la Obra</label>
+                                <input type="text" id="regionObra" class="form-control" 
+                                       placeholder="Se carga automáticamente" disabled>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="docReferencia">Doc. Referencia Cliente<span class="required">*</span></label>
+                                <input type="text" id="docReferencia" class="form-control" 
+                                       placeholder="Ej: SOLPED-2025-001" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="fechaDocumento">Fecha Doc. Referencia Cliente<span class="required">*</span></label>
+                                <input type="date" id="fechaDocumento" class="form-control" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="subclasificacion">Subclasificación del Cliente</label>
+                                <select id="subclasificacion" class="form-control" onchange="toggleNumeroSubclasificacion()">
+                                    <option value="">Seleccione subclasificación</option>
+                                    <option value="PEP">PEP</option>
+                                    <option value="CO">CO (Centro Operación)</option>
+                                    <option value="CC">CC (Centro de Costo)</option>
+                                    <option value="Otro">Otro</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group" id="numeroSubclasificacionGroup" style="display: none;">
+                                <label for="numeroSubclasificacion">Número Subclasificación</label>
+                                <input type="text" id="numeroSubclasificacion" class="form-control" 
+                                       placeholder="Ingrese el número de subclasificación">
+                            </div>
+
+
+                            <div class="form-group">
+                                <label for="fechaRequerida">Fecha Requerida en Obra<span class="required">*</span></label>
+                                <input type="date" id="fechaRequerida" class="form-control" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="tipoFactura">Tipo de Factura <span class="required">*</span></label>
+                                <select id="tipoFactura" class="form-control" required>
+                                    <option value="">Seleccione tipo de factura</option>
+                                    <option value="AFECTA">Con Factura AFECTA</option>
+                                    <option value="EXENTA">Con Factura EXENTA</option>
+                                    <option value="Otro">Otro</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="solicitante">Solicitante del Cliente<span class="required">*</span></label>
+                                <input type="text" id="solicitante" class="form-control" 
+                                       placeholder="Nombre del solicitante" required>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <!-- Productos -->
+                    <div class="form-section">
+                        <h2 class="section-title">
+                            <i class="fas fa-boxes"></i>
+                            Listado de Productos
+                        </h2>
+
+                        <div class="info-box">
+                            <i class="fas fa-info-circle"></i>
+                            <div>
+                                <p>Ingrese los productos que necesita solicitar. SSL se encargará de asociar sus productos con los códigos internos correspondientes.</p>
+                            </div>
+                        </div>
+
+                        <button type="button" class="btn btn-primary" onclick="agregarFilaProducto()">
+                            <i class="fas fa-plus"></i> Agregar Producto
+                        </button>
+
+                        <table class="products-table" id="productsTable">
+                            <thead>
+                                <tr>
+                                    <th width="200">Código/Descripción</th>
+                                    <th width="250">Descripción Completa</th>
+                                    <th width="150">Modelo/Marca</th>
+                                    <th width="100">Cantidad</th>
+                                    <th width="80">Unidad</th>
+                                    <th width="120">Fecha Requerida</th>
+                                    <th width="100">Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody id="productTableBody">
+                                <!-- Las filas se agregarán dinámicamente -->
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Documentos Adjuntos -->
+                    <div class="form-section">
+                        <h2 class="section-title">
+                            <i class="fas fa-paperclip"></i>
+                            Documentos Adjuntos
+                        </h2>
+
+                        <div class="file-upload-area" ondrop="dropHandler(event);" ondragover="dragOverHandler(event);" 
+                             ondragenter="dragEnterHandler(event);" ondragleave="dragLeaveHandler(event);">
+                            <i class="fas fa-cloud-upload-alt" style="font-size: 3rem; color: var(--secondary-color); margin-bottom: 15px;"></i>
+                            <p>Arrastra archivos aquí o <button type="button" class="btn btn-primary" 
+                               onclick="document.getElementById('file-upload').click()">selecciona archivos</button></p>
+                            <input type="file" id="file-upload" multiple style="display: none;" 
+                                   onchange="handleFiles(this.files)" 
+                                   accept=".pdf,.doc,.docx,.xls,.xlsx,.jpg,.jpeg,.png">
+                            <p style="font-size: 0.9rem; color: #666; margin-top: 10px;">
+                                Formatos permitidos: PDF, Excel, Word, Imágenes | Máximo: 10MB por archivo
+                            </p>
+                        </div>
+
+                        <div class="file-list" id="fileList">
+                            <!-- Los archivos se mostrarán aquí -->
+                        </div>
+                    </div>
+
+                    <!-- Consideraciones Especiales -->
+                    <div class="form-section">
+                        <h2 class="section-title">
+                            <i class="fas fa-comment-alt"></i>
+                            Consideraciones Especiales
+                        </h2>
+
+                        <div class="form-group">
+                            <label for="consideraciones">Indique consideraciones especiales o específicas de la solicitud</label>
+                            <textarea id="consideraciones" class="form-control" rows="4" 
+                                      placeholder="Ingrese aquí cualquier consideración especial, instrucciones de entrega, condiciones específicas, etc."></textarea>
+                        </div>
+                    </div>
+
+                    <!-- Botones de Acción -->
+                    <div class="action-buttons">
+                        <button type="button" class="btn btn-outline" onclick="cancelarSolicitud()">
+                            <i class="fas fa-times"></i> Cancelar
+                        </button>
+                        <button type="button" class="btn btn-warning" onclick="guardarBorrador()">
+                            <i class="fas fa-save"></i> Guardar Borrador
+                        </button>
+                        <button type="submit" class="btn btn-success">
+                            <i class="fas fa-paper-plane"></i> Enviar Solicitud
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </main>
+    </div>
+
+    <!-- Modal de confirmación -->
+    <div id="modalConfirmacion" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">
+                    <i class="fas fa-check-circle"></i>
+                    Confirmar Envío
+                </h2>
+                <span class="close" onclick="cerrarModal()">&times;</span>
+            </div>
+            
+            <div class="modal-body">
+                <p style="font-size: 1.1rem; margin-bottom: 20px;">
+                    ¿Está seguro de enviar esta solicitud de pedido a SSL?
+                </p>
+                <div style="background-color: #f8f9fa; padding: 15px; border-radius: 8px;">
+                    <p style="margin: 5px 0;"><strong>Obra:</strong> <span id="confirmObra"></span></p>
+                    <p style="margin: 5px 0;"><strong>Documento:</strong> <span id="confirmDoc"></span></p>
+                    <p style="margin: 5px 0;"><strong>Productos:</strong> <span id="confirmProductos"></span> items</p>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline" onclick="cerrarModal()">
+                    <i class="fas fa-times"></i> Cancelar
+                </button>
+                <button type="button" class="btn btn-success" onclick="confirmarEnvio()">
+                    <i class="fas fa-check"></i> Confirmar y Enviar
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Variables globales
+        let productRowIndex = 0;
+        let userData = null;
+        let modoEdicion = 'nuevo';
+        let solicitudNumero = '';
+        let selectedAutocompleteIndex = -1;
+
+        // Base de productos simulada
+        const productosDB = [
+            { codigo: 'ELEC-001', descripcion: 'Cable eléctrico 3x10 AWG', unidad: 'MT' },
+            { codigo: 'ELEC-002', descripcion: 'Cable eléctrico 3x12 AWG', unidad: 'MT' },
+            { codigo: 'ELEC-003', descripcion: 'Cable eléctrico 3x14 AWG', unidad: 'MT' },
+            { codigo: 'TUB-001', descripcion: 'Tubería PVC 1/2"', unidad: 'UN' },
+            { codigo: 'TUB-002', descripcion: 'Tubería PVC 3/4"', unidad: 'UN' },
+            { codigo: 'TUB-003', descripcion: 'Tubería PVC 1"', unidad: 'UN' },
+            { codigo: 'CEM-001', descripcion: 'Cemento Portland 42.5kg', unidad: 'SC' },
+            { codigo: 'CEM-002', descripcion: 'Cemento Puzolánico 42.5kg', unidad: 'SC' },
+            { codigo: 'FIE-001', descripcion: 'Fierro construcción 8mm', unidad: 'BR' },
+            { codigo: 'FIE-002', descripcion: 'Fierro construcción 10mm', unidad: 'BR' },
+            { codigo: 'FIE-003', descripcion: 'Fierro construcción 12mm', unidad: 'BR' },
+            { codigo: 'LAD-001', descripcion: 'Ladrillo King Kong 18 huecos', unidad: 'ML' },
+            { codigo: 'LAD-002', descripcion: 'Ladrillo pandereta', unidad: 'ML' },
+            { codigo: 'PINT-001', descripcion: 'Pintura látex blanco', unidad: 'GL' },
+            { codigo: 'PINT-002', descripcion: 'Pintura esmalte sintético', unidad: 'GL' }
+        ];
+
+        // Datos de obras
+        const datosObras = {
+            '1': {
+                nombre: 'EDIFICIO PACIFIC BLUE',
+                direccion: 'Av. Las Condes 1234, Las Condes',
+                region: 'Región Metropolitana'
+            },
+            '2': {
+                nombre: 'TORRE ALMAGRO',
+                direccion: 'Av. Providencia 5678, Providencia',
+                region: 'Región Metropolitana'
+            }
+        };
+
+        // Inicialización
+        document.addEventListener('DOMContentLoaded', function() {
+            loadUserData();
+            updateDate();
+            initializeForm();
+            loadSidebarState();
+            
+            // Update date every minute
+            setInterval(updateDate, 60000);
+        });
+
+        // Initialize form
+        function initializeForm() {
+            // Check URL parameters
+            const urlParams = new URLSearchParams(window.location.search);
+            const modo = urlParams.get('modo');
+            const numero = urlParams.get('numero');
+            
+            if (modo && numero) {
+                modoEdicion = modo;
+                solicitudNumero = numero;
+                cargarSolicitud(numero, modo);
+            } else {
+                // Nueva solicitud
+                const today = new Date().toISOString().split('T')[0];
+                document.getElementById('fechaDocumento').value = today;
+                
+                // Fecha requerida por defecto (7 días después)
+                const fechaReq = new Date();
+                fechaReq.setDate(fechaReq.getDate() + 7);
+                document.getElementById('fechaRequerida').value = fechaReq.toISOString().split('T')[0];
+                
+                // Generar número de solicitud
+                solicitudNumero = generarNumeroSolicitud();
+                document.getElementById('numeroSolicitud').textContent = solicitudNumero;
+                
+                // Agregar primera fila de producto
+                agregarFilaProducto();
+            }
+        }
+
+        // Cargar solicitud existente
+        function cargarSolicitud(numero, modo) {
+            // Aquí se cargarían los datos desde el servidor
+            // Por ahora usamos datos de ejemplo
+            
+            if (modo === 'editar') {
+                document.querySelector('.page-title').textContent = 'Editar Solicitud de Pedido';
+                // Cargar datos de ejemplo
+                document.getElementById('obra').value = '1';
+                cargarDatosObra();
+                document.getElementById('docReferencia').value = 'SOLPED-2025-001';
+                document.getElementById('solicitante').value = 'Juan Pérez';
+                
+                // Agregar productos de ejemplo
+                agregarFilaProducto();
+                document.getElementById('searchProducto0').value = 'ELEC-001';
+                document.getElementById('descProducto0').value = 'Cable eléctrico 3x10 AWG';
+                document.getElementById('modeloProducto0').value = 'Indeco';
+                document.getElementById('cantidad0').value = '100';
+                document.getElementById('unidad0').value = 'MT';
+            } else if (modo === 'nueva-version') {
+                document.querySelector('.page-title').textContent = 'Nueva Versión de Solicitud';
+                const versionActual = parseInt(document.querySelector('.version-badge').textContent.split(' ')[1]) + 1;
+                document.querySelector('.version-badge').textContent = `Versión ${versionActual}`;
+                
+                // Generar nuevo número
+                solicitudNumero = generarNumeroSolicitud();
+                document.getElementById('numeroSolicitud').textContent = solicitudNumero;
+                
+                // Cargar datos de la versión anterior
+                // ... (cargar datos)
+            }
+        }
+
+        // Toggle sidebar collapse
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const toggleButton = document.querySelector('.sidebar-toggle');
+            const isCollapsed = sidebar.classList.contains('collapsed');
+            
+            if (isCollapsed) {
+                sidebar.classList.remove('collapsed');
+                localStorage.setItem('sidebarCollapsed', 'false');
+            } else {
+                sidebar.classList.add('collapsed');
+                localStorage.setItem('sidebarCollapsed', 'true');
+            }
+            
+            // Update button icon rotation
+            const icon = toggleButton.querySelector('i');
+            if (sidebar.classList.contains('collapsed')) {
+                icon.style.transform = 'rotate(180deg)';
+            } else {
+                icon.style.transform = 'rotate(0deg)';
+            }
+        }
+
+        // Load sidebar state from localStorage
+        function loadSidebarState() {
+            const isCollapsed = localStorage.getItem('sidebarCollapsed') === 'true';
+            const sidebar = document.getElementById('sidebar');
+            const toggleButton = document.querySelector('.sidebar-toggle');
+            const icon = toggleButton.querySelector('i');
+            
+            if (isCollapsed) {
+                sidebar.classList.add('collapsed');
+                icon.style.transform = 'rotate(180deg)';
+            }
+        }
+
+        // Toggle mobile menu
+        function toggleMobileMenu() {
+            const sidebar = document.getElementById('sidebar');
+            sidebar.classList.toggle('active');
+        }
+
+        // Toggle submenu
+        function toggleSubmenu(header) {
+            const menuItem = header.parentElement;
+            const sidebar = document.getElementById('sidebar');
+            const wasActive = menuItem.classList.contains('active');
+            
+            // If sidebar is collapsed and clicking on item with submenu, don't expand sidebar
+            // Just toggle the submenu
+            
+            // Close all submenus
+            document.querySelectorAll('.menu-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            
+            // Remove active from all headers
+            document.querySelectorAll('.menu-header').forEach(h => {
+                h.classList.remove('active');
+            });
+            
+            // If it wasn't active, open it
+            if (!wasActive && header.nextElementSibling) {
+                menuItem.classList.add('active');
+            }
+            
+            // Always keep the clicked header active if it's a main item
+            if (!header.querySelector('.arrow')) {
+                header.classList.add('active');
+            }
+        }
+
+        // User menu dropdown
+        const userMenu = document.getElementById('userMenu');
+        let isUserMenuOpen = false;
+
+        userMenu.addEventListener('click', function(e) {
+            e.stopPropagation();
+            isUserMenuOpen = !isUserMenuOpen;
+            this.classList.toggle('active');
+        });
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', function(e) {
+            if (!userMenu.contains(e.target) && isUserMenuOpen) {
+                userMenu.classList.remove('active');
+                isUserMenuOpen = false;
+            }
+        });
+
+        // Update date
+        function updateDate() {
+            const now = new Date();
+            const options = { 
+                weekday: 'long', 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric' 
+            };
+            const formattedDate = now.toLocaleDateString('es-CL', options);
+            const capitalizedDate = formattedDate.charAt(0).toUpperCase() + formattedDate.slice(1);
+            document.getElementById('currentDate').textContent = capitalizedDate;
+        }
+
+        // Load user data
+        function loadUserData() {
+            const userDataStr = sessionStorage.getItem('userData');
+            if (userDataStr) {
+                try {
+                    userData = JSON.parse(userDataStr);
+                    const userName = userData.name || 'Cliente';
+                    const userEmail = userData.email || 'cliente@demo.com';
+                    
+                    // Update UI
+                    document.getElementById('userName').textContent = userName;
+                    document.getElementById('dropdownUserName').textContent = userName;
+                    document.getElementById('dropdownUserEmail').textContent = userEmail;
+                    
+                    // Update initials
+                    const initial = userName.charAt(0).toUpperCase();
+                    document.getElementById('userInitial').textContent = initial;
+                    document.getElementById('dropdownUserInitial').textContent = initial;
+                } catch (e) {
+                    console.error('Error parsing user data:', e);
+                }
+            }
+        }
+
+        // Profile function
+        function goToProfile(e) {
+            e.preventDefault();
+            alert('Navegando al perfil de usuario...\nEsta funcionalidad estará disponible próximamente.');
+            userMenu.classList.remove('active');
+            isUserMenuOpen = false;
+        }
+
+        // Settings function
+        function goToSettings(e) {
+            e.preventDefault();
+            loadContent('configuracion');
+            userMenu.classList.remove('active');
+            isUserMenuOpen = false;
+        }
+
+        // Logout function
+        function logout(e) {
+            e.preventDefault();
+            if (confirm('¿Está seguro que desea cerrar sesión?')) {
+                sessionStorage.clear();
+                window.location.href = '../../index.html';
+            }
+        }
+
+        // Show notifications
+        function showNotifications() {
+            alert('Panel de notificaciones\n\nEsta funcionalidad estará disponible próximamente.');
+        }
+
+        // Load content (simulated)
+        function loadContent(section) {
+            const content = document.querySelector('.content');
+            const sectionTitles = {
+                'solicitudes': 'Listado de Solicitudes',
+                'cotizaciones': 'Listado de Cotizaciones',
+                'ordenes-compra': 'Listado de Órdenes de Compra',
+                'facturas': 'Listado de Facturas',
+                'admin-usuarios': 'Administración de Usuarios',
+                'nueva-solicitud': 'Nueva Solicitud',
+                'configuracion': 'Configuración'
+            };
+            
+            const title = sectionTitles[section] || 'Sección';
+            
+            // Update breadcrumb
+            const breadcrumb = `
+                <div class="breadcrumb-item"><a href="#" onclick="backToDashboard()">Inicio</a></div>
+                <div class="breadcrumb-item active">${title}</div>
+            `;
+            
+            // Update content
+            content.innerHTML = `
+                <div class="breadcrumb">${breadcrumb}</div>
+                <h1 class="page-title">${title}</h1>
+                <div style="background-color: white; border-radius: 12px; padding: 30px; box-shadow: var(--card-shadow);">
+                    <p style="color: #666; font-size: 1.1rem;">
+                        Esta sección está en desarrollo y estará disponible próximamente.
+                    </p>
+                    <button onclick="backToDashboard()" style="margin-top: 20px; padding: 10px 20px; background-color: var(--secondary-color); color: white; border: none; border-radius: 8px; cursor: pointer;">
+                        Volver al Dashboard
+                    </button>
+                </div>
+            `;
+            
+            // Update active menu
+            updateActiveMenu(section);
+            
+            // Close mobile menu if open
+            document.getElementById('sidebar').classList.remove('active');
+        }
+
+        // Cargar datos de obra
+        function cargarDatosObra() {
+            const obraId = document.getElementById('obra').value;
+            const direccionInput = document.getElementById('direccionObra');
+            const regionInput = document.getElementById('regionObra');
+            
+            if (obraId && datosObras[obraId]) {
+                const obra = datosObras[obraId];
+                direccionInput.value = obra.direccion;
+                regionInput.value = obra.region;
+            } else {
+                direccionInput.value = '';
+                regionInput.value = '';
+            }
+        }
+
+        // Toggle número subclasificación
+        function toggleNumeroSubclasificacion() {
+            const subclasificacion = document.getElementById('subclasificacion').value;
+            const numeroSubclasificacionGroup = document.getElementById('numeroSubclasificacionGroup');
+            const numeroSubclasificacionInput = document.getElementById('numeroSubclasificacion');
+            
+            if (subclasificacion) {
+                numeroSubclasificacionGroup.style.display = 'block';
+                numeroSubclasificacionInput.required = true;
+            } else {
+                numeroSubclasificacionGroup.style.display = 'none';
+                numeroSubclasificacionInput.required = false;
+                numeroSubclasificacionInput.value = '';
+            }
+        }
+
+        // Agregar fila de producto
+        function agregarFilaProducto() {
+            const tbody = document.getElementById('productTableBody');
+            const row = document.createElement('tr');
+            row.id = `productRow${productRowIndex}`;
+            
+            row.innerHTML = `
+                <td class="product-search-input">
+                    <input type="text" class="form-control" id="searchProducto${productRowIndex}" 
+                           placeholder="Buscar por código o descripción..." 
+                           onkeyup="buscarProducto(${productRowIndex}, this.value)"
+                           onfocus="mostrarDropdown(${productRowIndex})"
+                           onblur="ocultarDropdown(${productRowIndex})"
+                           autocomplete="off">
+                    <div class="autocomplete-dropdown" id="dropdown${productRowIndex}"></div>
+                    <span class="product-new-indicator" id="newIndicator${productRowIndex}" style="display: none;">NUEVO</span>
+                </td>
+                <td>
+                    <input type="text" class="form-control" id="descProducto${productRowIndex}" 
+                           placeholder="Descripción completa del producto" required>
+                </td>
+                <td>
+                    <input type="text" class="form-control" id="modeloProducto${productRowIndex}" 
+                           placeholder="Ej: Indeco, 3M, etc.">
+                </td>
+                <td>
+                    <input type="number" class="form-control" id="cantidad${productRowIndex}" 
+                           min="1" placeholder="0" required>
+                </td>
+                <td>
+                    <input type="text" class="form-control" id="unidad${productRowIndex}" 
+                           placeholder="UN, MT, KG..." required>
+                </td>
+                <td>
+                    <input type="date" class="form-control" id="fechaReq${productRowIndex}" required>
+                </td>
+                <td>
+                    <div class="product-actions">
+                        <button type="button" class="btn btn-danger btn-sm btn-icon" 
+                                onclick="eliminarFilaProducto(${productRowIndex})" title="Eliminar">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                </td>
+            `;
+            
+            tbody.appendChild(row);
+            
+            // Set default date
+            const fechaReqInput = document.getElementById(`fechaReq${productRowIndex}`);
+            const fechaRequerida = document.getElementById('fechaRequerida').value;
+            fechaReqInput.value = fechaRequerida || new Date().toISOString().split('T')[0];
+            
+            productRowIndex++;
+        }
+
+        // Buscar producto
+        function buscarProducto(rowIndex, searchTerm) {
+            const dropdown = document.getElementById(`dropdown${rowIndex}`);
+            const newIndicator = document.getElementById(`newIndicator${rowIndex}`);
+            
+            if (searchTerm.length < 2) {
+                dropdown.classList.remove('active');
+                newIndicator.style.display = 'none';
+                return;
+            }
+            
+            const searchLower = searchTerm.toLowerCase();
+            const resultados = productosDB.filter(producto => 
+                producto.codigo.toLowerCase().includes(searchLower) || 
+                producto.descripcion.toLowerCase().includes(searchLower)
+            );
+            
+            dropdown.innerHTML = '';
+            
+            if (resultados.length > 0) {
+                resultados.forEach((producto, index) => {
+                    const item = document.createElement('div');
+                    item.className = 'autocomplete-item';
+                    item.innerHTML = `
+                        <div class="autocomplete-item-code">${producto.codigo}</div>
+                        <div class="autocomplete-item-description">${producto.descripcion}</div>
+                    `;
+                    item.onmousedown = function(e) {
+                        e.preventDefault();
+                        seleccionarProducto(rowIndex, producto);
+                    };
+                    dropdown.appendChild(item);
+                });
+                dropdown.classList.add('active');
+                newIndicator.style.display = 'none';
+            } else {
+                // No hay resultados, mostrar mensaje
+                dropdown.innerHTML = '<div class="autocomplete-no-results">No se encontraron productos. Se creará como nuevo.</div>';
+                dropdown.classList.add('active');
+                
+                // Mostrar indicador de nuevo producto
+                newIndicator.style.display = 'block';
+                
+                // Limpiar campos relacionados
+                document.getElementById(`descProducto${rowIndex}`).value = searchTerm;
+                document.getElementById(`unidad${rowIndex}`).value = '';
+            }
+        }
+
+        // Seleccionar producto del dropdown
+        function seleccionarProducto(rowIndex, producto) {
+            document.getElementById(`searchProducto${rowIndex}`).value = producto.codigo;
+            document.getElementById(`descProducto${rowIndex}`).value = producto.descripcion;
+            document.getElementById(`unidad${rowIndex}`).value = producto.unidad;
+            document.getElementById(`dropdown${rowIndex}`).classList.remove('active');
+            document.getElementById(`newIndicator${rowIndex}`).style.display = 'none';
+            
+            // Focus en el campo de modelo/marca
+            document.getElementById(`modeloProducto${rowIndex}`).focus();
+        }
+
+        // Mostrar dropdown
+        function mostrarDropdown(rowIndex) {
+            const searchValue = document.getElementById(`searchProducto${rowIndex}`).value;
+            if (searchValue.length >= 2) {
+                buscarProducto(rowIndex, searchValue);
+            }
+        }
+
+        // Ocultar dropdown con delay para permitir clicks
+        function ocultarDropdown(rowIndex) {
+            setTimeout(() => {
+                document.getElementById(`dropdown${rowIndex}`).classList.remove('active');
+            }, 200);
+        }
+
+        // Eliminar fila de producto
+        function eliminarFilaProducto(rowIndex) {
+            const tbody = document.getElementById('productTableBody');
+            const rows = tbody.getElementsByTagName('tr');
+            
+            if (rows.length > 1) {
+                if (confirm('¿Está seguro de eliminar este producto?')) {
+                    document.getElementById(`productRow${rowIndex}`).remove();
+                }
+            } else {
+                alert('Debe mantener al menos un producto en la solicitud.');
+            }
+        }
+
+        // Manejo de archivos
+        function dragOverHandler(ev) {
+            ev.preventDefault();
+            ev.currentTarget.classList.add('dragover');
+        }
+
+        function dragEnterHandler(ev) {
+            ev.preventDefault();
+            ev.currentTarget.classList.add('dragover');
+        }
+
+        function dragLeaveHandler(ev) {
+            ev.preventDefault();
+            ev.currentTarget.classList.remove('dragover');
+        }
+
+        function dropHandler(ev) {
+            ev.preventDefault();
+            ev.currentTarget.classList.remove('dragover');
+            
+            const files = ev.dataTransfer.files;
+            handleFiles(files);
+        }
+
+        function handleFiles(files) {
+            const fileList = document.getElementById('fileList');
+            
+            for (let i = 0; i < files.length; i++) {
+                const file = files[i];
+                
+                // Validar tamaño (máximo 10MB)
+                if (file.size > 10 * 1024 * 1024) {
+                    alert(`El archivo ${file.name} excede el tamaño máximo de 10MB.`);
+                    continue;
+                }
+                
+                const fileItem = document.createElement('div');
+                fileItem.className = 'file-item';
+                fileItem.id = `file-${Date.now()}-${i}`;
+                
+                const fileIcon = getFileIcon(file.name);
+                const fileSize = formatFileSize(file.size);
+                
+                fileItem.innerHTML = `
+                    <i class="${fileIcon}"></i>
+                    <span class="file-name">${file.name}</span>
+                    <span class="file-size">${fileSize}</span>
+                    <span class="file-remove" onclick="removeFile('${fileItem.id}')">
+                        <i class="fas fa-times"></i>
+                    </span>
+                `;
+                
+                fileList.appendChild(fileItem);
+            }
+        }
+
+        function getFileIcon(fileName) {
+            const extension = fileName.split('.').pop().toLowerCase();
+            switch (extension) {
+                case 'pdf':
+                    return 'fas fa-file-pdf';
+                case 'doc':
+                case 'docx':
+                    return 'fas fa-file-word';
+                case 'xls':
+                case 'xlsx':
+                    return 'fas fa-file-excel';
+                case 'jpg':
+                case 'jpeg':
+                case 'png':
+                    return 'fas fa-file-image';
+                default:
+                    return 'fas fa-file';
+            }
+        }
+
+        function formatFileSize(bytes) {
+            if (bytes === 0) return '0 Bytes';
+            const k = 1024;
+            const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+        }
+
+        function removeFile(fileId) {
+            document.getElementById(fileId).remove();
+        }
+
+        // Generar número de solicitud
+        function generarNumeroSolicitud() {
+            const now = new Date();
+            const year = now.getFullYear();
+            const random = Math.floor(Math.random() * 9000) + 1000;
+            return `SOL-${year}-${random}`;
+        }
+
+        // Cancelar solicitud
+        function cancelarSolicitud() {
+            if (confirm('¿Está seguro de cancelar? Se perderán todos los datos ingresados.')) {
+                window.location.href = 'cliente_listado_solicitudes.html';
+            }
+        }
+
+        // Guardar borrador
+        function guardarBorrador() {
+            // Aquí se implementaría la lógica para guardar el borrador
+            alert('Borrador guardado exitosamente.\n\nPodrá continuar editando esta solicitud más tarde desde el listado de solicitudes.');
+        }
+
+        // Submit form
+        document.getElementById('solicitudForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Validar subclasificación
+            const subclasificacion = document.getElementById('subclasificacion').value;
+            const numeroSubclasificacion = document.getElementById('numeroSubclasificacion').value;
+            
+            if (subclasificacion && !numeroSubclasificacion) {
+                alert('Por favor ingrese el número de subclasificación');
+                document.getElementById('numeroSubclasificacion').focus();
+                return;
+            }
+            
+            // Validar que haya al menos un producto
+            const productRows = document.querySelectorAll('#productTableBody tr');
+            if (productRows.length === 0) {
+                alert('Debe agregar al menos un producto a la solicitud');
+                return;
+            }
+            
+            // Validar productos
+            let productosValidos = true;
+            let cantidadProductos = 0;
+            
+            productRows.forEach((row) => {
+                const searchInput = row.querySelector('input[id^="searchProducto"]').value;
+                const descripcion = row.querySelector('input[id^="descProducto"]').value;
+                const cantidad = row.querySelector('input[id^="cantidad"]').value;
+                const unidad = row.querySelector('input[id^="unidad"]').value;
+                const fechaReq = row.querySelector('input[id^="fechaReq"]').value;
+                
+                if (!searchInput || !descripcion || !cantidad || !unidad || !fechaReq) {
+                    productosValidos = false;
+                } else {
+                    cantidadProductos++;
+                }
+            });
+            
+            if (!productosValidos) {
+                alert('Por favor complete todos los campos de los productos');
+                return;
+            }
+            
+            // Mostrar modal de confirmación
+            const obra = document.getElementById('obra');
+            document.getElementById('confirmObra').textContent = obra.options[obra.selectedIndex].text;
+            document.getElementById('confirmDoc').textContent = document.getElementById('docReferencia').value;
+            document.getElementById('confirmProductos').textContent = cantidadProductos;
+            
+            document.getElementById('modalConfirmacion').style.display = 'block';
+        });
+
+        // Cerrar modal
+        function cerrarModal() {
+            document.getElementById('modalConfirmacion').style.display = 'none';
+        }
+
+        // Confirmar envío
+        function confirmarEnvio() {
+            cerrarModal();
+            
+            // Aquí se enviaría la solicitud al servidor
+            alert(`Solicitud ${solicitudNumero} enviada exitosamente.\n\nSSL procesará su solicitud y le enviará una cotización a la brevedad.`);
+            
+            // Redireccionar al listado
+            setTimeout(() => {
+                window.location.href = 'cliente_listado_solicitudes.html';
+            }, 1000);
+        }
+
+        // Cerrar modales al hacer clic fuera
+        window.onclick = function(event) {
+            if (event.target.classList.contains('modal')) {
+                event.target.style.display = 'none';
+            }
+        }
+
+        // Back to dashboard
+        function backToDashboard() {
+            location.reload();
+        }
+
+        // Update active menu
+        function updateActiveMenu(section) {
+            // Remove all active classes
+            document.querySelectorAll('.menu-header, .submenu-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            
+            // Find and activate the correct menu item
+            document.querySelectorAll('.submenu-item').forEach(item => {
+                if (item.getAttribute('onclick') && item.getAttribute('onclick').includes(section)) {
+                    item.classList.add('active');
+                    // Also activate parent
+                    const parent = item.closest('.menu-item');
+                    if (parent) {
+                        parent.classList.add('active');
+                    }
+                }
+            });
+        }
+    </script>
+</body>
+</html>                

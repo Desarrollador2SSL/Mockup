@@ -1,0 +1,1126 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detalle Control de Obra - SSL v4.0</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Archivo CSS del menú separado -->
+    <link rel="stylesheet" href="../css/menu-styles.css">
+    <link rel="stylesheet" href="css/cliente-detalle-obra-control-styles.css">
+</head>
+<body>
+    <header class="header">
+        <div class="header-left">
+            <div class="menu-toggle" onclick="toggleMobileMenu()">
+                <i class="fas fa-bars"></i>
+            </div>
+            <div class="logo">
+                <img src="../../PagWebLocal/logo_ssl.png" alt="SSL Logo">
+                <div class="logo-text">
+                    <h1>SSL v4.0</h1>
+                    <span class="portal-type">Portal Cliente</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="header-right">
+            <div class="header-date">
+                <i class="fas fa-calendar-alt"></i>
+                <span id="currentDate">Cargando...</span>
+            </div>
+
+            <!-- BOTÓN DE AYUDA -->
+            <div class="help-button-container">
+                <a href="../cliente_navegacion.html" class="help-button" title="Ayuda y Navegación">
+                    <i class="fas fa-question-circle"></i>
+                    <span class="help-text">Ayuda</span>
+                </a>
+            </div>
+
+            <div class="notifications">
+                <button class="notifications-button" onclick="showNotifications()">
+                    <i class="fas fa-bell"></i>
+                </button>
+                <span class="notification-count">8</span>
+            </div>
+            
+            <div class="user-menu" id="userMenu">
+                <div class="user-avatar">
+                    <span id="userInitial">C</span>
+                </div>
+                <span class="user-name" id="userName">Empresa Demo S.A.</span>
+                <i class="fas fa-chevron-down user-menu-arrow"></i>
+                
+                <div class="user-dropdown">
+                    <div class="dropdown-header">
+                        <div class="dropdown-user-info">
+                            <div class="dropdown-avatar">
+                                <span id="dropdownUserInitial">C</span>
+                            </div>
+                            <div class="dropdown-user-details">
+                                <div class="dropdown-user-name" id="dropdownUserName">Empresa Demo S.A.</div>
+                                <div class="dropdown-user-email" id="dropdownUserEmail">cliente@demo.com</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="dropdown-menu">
+                        <a href="#" class="dropdown-item" onclick="goToProfile(event)">
+                            <i class="fas fa-user-circle"></i>
+                            <span>Mi Perfil</span>
+                        </a>
+                        <a href="#" class="dropdown-item" onclick="goToSettings(event)">
+                            <i class="fas fa-cog"></i>
+                            <span>Configuración</span>
+                        </a>
+                        <div class="dropdown-divider"></div>
+                        <a href="#" class="dropdown-item logout" onclick="logout(event)">
+                            <i class="fas fa-sign-out-alt"></i>
+                            <span>Cerrar Sesión</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+ 
+        <!-- Control Obras de Control -->
+        <nav class="sidebar" id="sidebar">
+            <ul class="menu">
+
+                <!-- Dashboard -->
+                <li class="menu-item">
+                    <div class="menu-header" onclick="window.location.href='../cliente_dashboard.html'">
+                        <i class="fas fa-home"></i>
+                        <span>Dashboard</span>
+                        <div class="menu-tooltip">Dashboard</div>
+                    </div>
+                </li>
+
+                <!-- Central de Mensajería -->
+                <li class="menu-item">
+                    <div class="menu-header" onclick="window.location.href='../cliente_mensajeria/cliente_listado_mensajeria.html'">
+                        <i class="fas fa-comments"></i>
+                        <span>Central de Mensajería</span>
+                        <div class="menu-tooltip">Central de Mensajería</div>
+                    </div>
+                </li>
+
+                <!-- Solicitudes y Cotizaciones -->
+                <li class="menu-item">
+                    <div class="menu-header" onclick="toggleSubmenu(this)">
+                        <i class="fas fa-file-alt"></i>
+                        <span>Cotización y Compra</span>
+                        <i class="fas fa-chevron-right arrow"></i>
+                        <div class="menu-tooltip">Cotización y Compra</div>
+                    </div>
+                    <div class="submenu">
+                        <a href="cliente_listado_solicitudes.html" class="submenu-item">
+                            <span class="full-text">Solicitudes de Pedido</span>
+                            <span class="siglas">SP</span>
+                            <div class="sigla-tooltip">Solicitudes de Pedido</div>
+                        </a>
+                        <a href="../cliente_cotizaciones/cliente_listado_cotizaciones.html" class="submenu-item">
+                            <span class="full-text">Cotizaciones</span>
+                            <span class="siglas">CO</span>
+                            <div class="sigla-tooltip">Cotizaciones</div>
+                        </a>
+                        <a href="../cliente_orden_compra/cliente_listado_ordenes_compra.html" class="submenu-item">
+                            <span class="full-text">Órdenes de Compra</span>
+                            <span class="siglas">OC</span>
+                            <div class="sigla-tooltip">Órdenes de Compra</div>
+                        </a>
+                    </div>
+                </li>
+
+                <!-- Control de Entregas -->
+                <li class="menu-item">
+                    <div class="menu-header" onclick="toggleSubmenu(this)">
+                        <i class="fas fa-truck"></i>
+                        <span>Control de Entregas</span>
+                        <i class="fas fa-chevron-right arrow"></i>
+                        <div class="menu-tooltip">Control de Entregas</div>
+                    </div>
+                    <div class="submenu">
+                        <a href="../cliente_control_entrega/cliente_listado_control_entregas.html" class="submenu-item">
+                            <span class="full-text">Control Entrega por OC</span>
+                            <span class="siglas">CEO</span>
+                            <div class="sigla-tooltip">Control Entrega por OC</div>
+                        </a>
+
+                        <a href="../cliente_modificaciones/cliente_listado_modificaciones.html" class="submenu-item">
+                            <span class="full-text">Modificaciones OC</span>
+                            <span class="siglas">MOC</span>
+                            <div class="sigla-tooltip">Modificaciones OC</div>
+                        </a>
+
+                        <a href="../cliente_control_recepcion/cliente_listado_despachos.html" class="submenu-item">
+                            <span class="full-text">Control Recepción</span>
+                            <span class="siglas">CRE</span>
+                            <div class="sigla-tooltip">Control Recepción</div>
+                        </a>
+
+                        <a href="../cliente_incidentes/cliente_listado_incidentes.html" class="submenu-item">
+                            <span class="full-text">Incidentes de Entrega</span>
+                            <span class="siglas">IEN</span>
+                            <div class="sigla-tooltip">Incidentes de Entrega</div>
+                        </a>                        
+                    </div>
+                </li>
+               
+                <!-- Pagos -->
+                <li class="menu-item">
+                    <div class="menu-header" onclick="toggleSubmenu(this)">
+                        <i class="fas fa-file-invoice-dollar"></i>
+                        <span>Pagos</span>
+                        <i class="fas fa-chevron-right arrow"></i>
+                        <div class="menu-tooltip">Pagos</div>
+                    </div>
+                    <div class="submenu">
+                        <a href="../cliente_pagos/cliente_listado_pagos.html" class="submenu-item">
+                            <span class="full-text">Estado de Pagos</span>
+                            <span class="siglas">EP</span>
+                            <div class="sigla-tooltip">Estado de Pagos</div>
+                        </a>                          
+                    </div>
+                </li>
+
+                <!-- Control Total de Obras (active) -->
+                <li class="menu-item active">
+                    <div class="menu-header active" onclick="toggleSubmenu(this)">
+                        <i class="fas fa-hard-hat"></i>
+                        <span>Control Total de Obras</span>
+                        <i class="fas fa-chevron-right arrow"></i>
+                        <div class="menu-tooltip">Control Total de Obras</div>
+                    </div>
+                    <div class="submenu">
+                        <a href="../cliente_control_obra/cliente_listado_obras_control.html" class="submenu-item active">
+                            <span class="full-text">Listado de Obras</span>
+                            <span class="siglas">LO</span>
+                            <div class="sigla-tooltip">Listado de Obras</div>
+                        </a>
+                    </div>
+                </li>
+                
+                <!-- Configuración -->
+                <li class="menu-item">
+                    <div class="menu-header" onclick="toggleSubmenu(this)">
+                        <i class="fas fa-cog"></i>
+                        <span>Configuración</span>
+                        <i class="fas fa-chevron-right arrow"></i>
+                        <div class="menu-tooltip">Configuración</div>
+                    </div>
+                    <div class="submenu">
+                        <a href="../cliente_configuracion/cliente_listado_obras.html" class="submenu-item">
+                            <span class="full-text">Administración de Obras / Proyectos</span>
+                            <span class="siglas">AOP</span>
+                            <div class="sigla-tooltip">Administración de Obras / Proyectos</div>
+                        </a>
+                        <a href="../cliente_configuracion/cliente_listado_usuarios.html" class="submenu-item">
+                            <span class="full-text">Administración de Usuarios</span>
+                            <span class="siglas">AU</span>
+                            <div class="sigla-tooltip">Administración de Usuarios</div>
+                        </a>
+                    </div>
+                </li>
+            </ul>
+        </nav>
+
+
+        <!-- Toggle Button (fuera del sidebar) -->
+        <div class="sidebar-toggle" onclick="toggleSidebar()">
+            <i class="fas fa-chevron-left"></i>
+        </div>
+
+        <main class="content">
+            <div class="breadcrumb">
+                <div class="breadcrumb-item"><a href="../cliente_dashboard.html">Inicio</a></div>
+                <div class="breadcrumb-item"><a href="#">Control Total de Obras</a></div>
+                <div class="breadcrumb-item"><a href="cliente_listado_obras_control.html">Listado de Obras</a></div>
+                <div class="breadcrumb-item active">Torre Providencia - Edificio A</div>
+            </div>
+
+            <div class="page-header">
+                <div class="obra-header-info">
+                    <h1 class="page-title">Torre Providencia - Edificio A</h1>
+                    <div class="obra-details-header">
+                        <span class="obra-code">Código: OBR-2025-001</span>
+                        <span class="obra-status activa">
+                            <i class="fas fa-circle"></i>
+                            Obra Activa
+                        </span>
+                    </div>
+                </div>
+                <div class="page-actions">
+                    <button class="btn btn-secondary" onclick="exportarInforme()">
+                        <i class="fas fa-file-pdf"></i>
+                        Informe PDF
+                    </button>
+                    <button class="btn btn-primary" onclick="exportarExcel()">
+                        <i class="fas fa-file-excel"></i>
+                        Exportar Excel
+                    </button>
+                </div>
+            </div>
+
+            <!-- Información General de la Obra -->
+            <div class="obra-info-section">
+                <div class="info-grid">
+                    <div class="info-item">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <div>
+                            <label>Ubicación</label>
+                            <span>Santiago, Providencia</span>
+                        </div>
+                    </div>
+                    <div class="info-item">
+                        <i class="fas fa-user-hard-hat"></i>
+                        <div>
+                            <label>Jefe de Obra</label>
+                            <span>Ing. Carlos Mendoza</span>
+                        </div>
+                    </div>
+                    <div class="info-item">
+                        <i class="fas fa-calendar-alt"></i>
+                        <div>
+                            <label>Fecha Inicio</label>
+                            <span>15/01/2025</span>
+                        </div>
+                    </div>
+                    <div class="info-item">
+                        <i class="fas fa-calendar-check"></i>
+                        <div>
+                            <label>Fecha Estimada Fin</label>
+                            <span>15/12/2025</span>
+                        </div>
+                    </div>
+                    <div class="info-item">
+                        <i class="fas fa-dollar-sign"></i>
+                        <div>
+                            <label>Presupuesto Materiales</label>
+                            <span>$8,500,000 USD</span>
+                        </div>
+                    </div>
+                    <div class="info-item">
+                        <i class="fas fa-percentage"></i>
+                        <div>
+                            <label>Avance General</label>
+                            <span>65%</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Resumen de Control de Materiales -->
+            <div class="control-summary">
+                <h2 class="section-title">
+                    <i class="fas fa-chart-pie"></i>
+                    Resumen Control de Materiales
+                </h2>
+                <div class="summary-cards">
+                    <div class="summary-card">
+                        <div class="card-icon blue">
+                            <i class="fas fa-clipboard-list"></i>
+                        </div>
+                        <div class="card-content">
+                            <div class="card-value">156</div>
+                            <div class="card-label">Productos Requeridos</div>
+                            <div class="card-detail">Total en solicitudes</div>
+                        </div>
+                    </div>
+                    <div class="summary-card">
+                        <div class="card-icon purple">
+                            <i class="fas fa-file-alt"></i>
+                        </div>
+                        <div class="card-content">
+                            <div class="card-value">12</div>
+                            <div class="card-label">Solicitudes de Pedido</div>
+                            <div class="card-detail">Generadas</div>
+                        </div>
+                    </div>
+                    <div class="summary-card">
+                        <div class="card-icon green">
+                            <i class="fas fa-shopping-cart"></i>
+                        </div>
+                        <div class="card-content">
+                            <div class="card-value">142</div>
+                            <div class="card-label">Productos Comprados</div>
+                            <div class="card-detail">Con OC emitida</div>
+                        </div>
+                    </div>
+                    <div class="summary-card">
+                        <div class="card-icon orange">
+                            <i class="fas fa-truck"></i>
+                        </div>
+                        <div class="card-content">
+                            <div class="card-value">98</div>
+                            <div class="card-label">Productos Entregados</div>
+                            <div class="card-detail">Recepcionados en obra</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Gráfico de Progreso -->
+            <div class="progress-chart-section">
+                <h2 class="section-title">
+                    <i class="fas fa-chart-line"></i>
+                    Estado de Avance de Materiales
+                </h2>
+                <div class="progress-bars">
+                    <div class="progress-item">
+                        <div class="progress-header">
+                            <span class="progress-label">Materiales Solicitados vs Requeridos</span>
+                            <span class="progress-value">91%</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 91%"></div>
+                        </div>
+                        <div class="progress-detail">142 de 156 productos</div>
+                    </div>
+                    <div class="progress-item">
+                        <div class="progress-header">
+                            <span class="progress-label">Materiales Comprados vs Solicitados</span>
+                            <span class="progress-value">100%</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill success" style="width: 100%"></div>
+                        </div>
+                        <div class="progress-detail">142 de 142 productos</div>
+                    </div>
+                    <div class="progress-item">
+                        <div class="progress-header">
+                            <span class="progress-label">Materiales Entregados vs Comprados</span>
+                            <span class="progress-value">69%</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill warning" style="width: 69%"></div>
+                        </div>
+                        <div class="progress-detail">98 de 142 productos</div>
+                    </div>
+                    <div class="progress-item">
+                        <div class="progress-header">
+                            <span class="progress-label">Materiales con Planificación de Entrega</span>
+                            <span class="progress-value">85%</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill info" style="width: 85%"></div>
+                        </div>
+                        <div class="progress-detail">37 de 44 productos pendientes</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tabs de Control -->
+            <div class="tabs-container">
+                <div class="tabs-header">
+                    <button class="tab-button active" onclick="showTab('materiales')">
+                        <i class="fas fa-boxes"></i>
+                        Control de Materiales
+                    </button>
+                    <button class="tab-button" onclick="showTab('solicitudes')">
+                        <i class="fas fa-file-alt"></i>
+                        Solicitudes de Pedido
+                    </button>
+                    <button class="tab-button" onclick="showTab('ordenes')">
+                        <i class="fas fa-file-invoice"></i>
+                        Órdenes de Compra
+                    </button>
+                    <button class="tab-button" onclick="showTab('entregas')">
+                        <i class="fas fa-truck-loading"></i>
+                        Planificación de Entregas
+                    </button>
+                </div>
+
+                <!-- Tab 1: Control de Materiales -->
+                <div id="materiales-tab" class="tab-content active">
+                    <!-- Filtros -->
+                    <div class="filters-bar">
+                        <div class="filter-group">
+                            <input type="text" placeholder="Buscar producto..." id="searchProducto" class="search-input">
+                        </div>
+                        <div class="filter-group">
+                            <select id="filterCategoria">
+                                <option value="">Todas las categorías</option>
+                                <option value="hormigon">Hormigón</option>
+                                <option value="acero">Acero</option>
+                                <option value="tuberia">Tubería</option>
+                                <option value="electrico">Eléctrico</option>
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <select id="filterEstado">
+                                <option value="">Todos los estados</option>
+                                <option value="requerido">Solo Requerido</option>
+                                <option value="solicitado">Solicitado</option>
+                                <option value="comprado">Comprado</option>
+                                <option value="entregado">Entregado</option>
+                                <option value="pendiente">Pendiente Entrega</option>
+                            </select>
+                        </div>
+                        <button class="btn btn-primary" onclick="aplicarFiltros()">
+                            <i class="fas fa-filter"></i>
+                            Aplicar Filtros
+                        </button>
+                    </div>
+
+                    <!-- Tabla de Control de Materiales -->
+                    <div class="table-container">
+                        <table class="control-table">
+                            <thead>
+                                <tr>
+                                    <th>Código</th>
+                                    <th>Descripción</th>
+                                    <th>Categoría</th>
+                                    <th>U.M.</th>
+                                    <th>Cant. Requerida</th>
+                                    <th>Cant. Solicitada</th>
+                                    <th>Cant. Comprada</th>
+                                    <th>Cant. Entregada</th>
+                                    <th>Cant. Pendiente</th>
+                                    <th>Estado</th>
+                                    <th>Próxima Entrega</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>HOR-H25-001</td>
+                                    <td>Hormigón H25</td>
+                                    <td><span class="category-badge hormigon">Hormigón</span></td>
+                                    <td>m³</td>
+                                    <td class="text-center">250</td>
+                                    <td class="text-center">250</td>
+                                    <td class="text-center text-success">250</td>
+                                    <td class="text-center text-success">150</td>
+                                    <td class="text-center text-warning">100</td>
+                                    <td>
+                                        <span class="status-badge parcial">
+                                            <i class="fas fa-truck-moving"></i> Entrega Parcial
+                                        </span>
+                                    </td>
+                                    <td>30/07/2025</td>
+                                    <td>
+                                        <button class="btn-icon" onclick="verDetalle('HOR-H25-001')" title="Ver detalle">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>HOR-H30-001</td>
+                                    <td>Hormigón H30</td>
+                                    <td><span class="category-badge hormigon">Hormigón</span></td>
+                                    <td>m³</td>
+                                    <td class="text-center">100</td>
+                                    <td class="text-center">100</td>
+                                    <td class="text-center text-success">100</td>
+                                    <td class="text-center text-success">100</td>
+                                    <td class="text-center">-</td>
+                                    <td>
+                                        <span class="status-badge completo">
+                                            <i class="fas fa-check-circle"></i> Completo
+                                        </span>
+                                    </td>
+                                    <td>-</td>
+                                    <td>
+                                        <button class="btn-icon" onclick="verDetalle('HOR-H30-001')" title="Ver detalle">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>BAR-10MM</td>
+                                    <td>Barra de Acero 10mm</td>
+                                    <td><span class="category-badge acero">Acero</span></td>
+                                    <td>un</td>
+                                    <td class="text-center">400</td>
+                                    <td class="text-center">400</td>
+                                    <td class="text-center text-success">400</td>
+                                    <td class="text-center text-success">200</td>
+                                    <td class="text-center text-warning">200</td>
+                                    <td>
+                                        <span class="status-badge parcial">
+                                            <i class="fas fa-truck-moving"></i> Entrega Parcial
+                                        </span>
+                                    </td>
+                                    <td>15/09/2025</td>
+                                    <td>
+                                        <button class="btn-icon" onclick="verDetalle('BAR-10MM')" title="Ver detalle">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>BAR-12MM</td>
+                                    <td>Barra de Acero 12mm</td>
+                                    <td><span class="category-badge acero">Acero</span></td>
+                                    <td>un</td>
+                                    <td class="text-center">400</td>
+                                    <td class="text-center">400</td>
+                                    <td class="text-center text-success">400</td>
+                                    <td class="text-center text-success">200</td>
+                                    <td class="text-center text-warning">200</td>
+                                    <td>
+                                        <span class="status-badge parcial">
+                                            <i class="fas fa-truck-moving"></i> Entrega Parcial
+                                        </span>
+                                    </td>
+                                    <td>15/09/2025</td>
+                                    <td>
+                                        <button class="btn-icon" onclick="verDetalle('BAR-12MM')" title="Ver detalle">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>TUB-PVC-110</td>
+                                    <td>Tubo PVC 110mm</td>
+                                    <td><span class="category-badge tuberia">Tubería</span></td>
+                                    <td>un</td>
+                                    <td class="text-center">30</td>
+                                    <td class="text-center">30</td>
+                                    <td class="text-center text-success">30</td>
+                                    <td class="text-center text-warning">12</td>
+                                    <td class="text-center text-warning">18</td>
+                                    <td>
+                                        <span class="status-badge programado">
+                                            <i class="fas fa-calendar-check"></i> Programado
+                                        </span>
+                                    </td>
+                                    <td>25/08/2025</td>
+                                    <td>
+                                        <button class="btn-icon" onclick="verDetalle('TUB-PVC-110')" title="Ver detalle">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>TUB-PVC-160</td>
+                                    <td>Tubo PVC 160mm</td>
+                                    <td><span class="category-badge tuberia">Tubería</span></td>
+                                    <td>un</td>
+                                    <td class="text-center">20</td>
+                                    <td class="text-center">20</td>
+                                    <td class="text-center text-success">20</td>
+                                    <td class="text-center">-</td>
+                                    <td class="text-center text-warning">20</td>
+                                    <td>
+                                        <span class="status-badge programado">
+                                            <i class="fas fa-calendar-check"></i> Programado
+                                        </span>
+                                    </td>
+                                    <td>25/08/2025</td>
+                                    <td>
+                                        <button class="btn-icon" onclick="verDetalle('TUB-PVC-160')" title="Ver detalle">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>CAB-ELEC-16</td>
+                                    <td>Cable Eléctrico 16mm²</td>
+                                    <td><span class="category-badge electrico">Eléctrico</span></td>
+                                    <td>m</td>
+                                    <td class="text-center">500</td>
+                                    <td class="text-center text-danger">-</td>
+                                    <td class="text-center">-</td>
+                                    <td class="text-center">-</td>
+                                    <td class="text-center text-danger">500</td>
+                                    <td>
+                                        <span class="status-badge pendiente">
+                                            <i class="fas fa-exclamation-circle"></i> Por Solicitar
+                                        </span>
+                                    </td>
+                                    <td>-</td>
+                                    <td>
+                                        <button class="btn-icon warning" onclick="crearSolicitud('CAB-ELEC-16')" title="Crear solicitud">
+                                            <i class="fas fa-plus-circle"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Resumen por Categorías -->
+                    <div class="category-summary">
+                        <h3>Resumen por Categorías</h3>
+                        <div class="category-grid">
+                            <div class="category-card">
+                                <div class="category-header hormigon">
+                                    <i class="fas fa-cube"></i>
+                                    Hormigón
+                                </div>
+                                <div class="category-stats">
+                                    <div class="stat">
+                                        <span class="stat-label">Productos:</span>
+                                        <span class="stat-value">2</span>
+                                    </div>
+                                    <div class="stat">
+                                        <span class="stat-label">Completado:</span>
+                                        <span class="stat-value">75%</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="category-card">
+                                <div class="category-header acero">
+                                    <i class="fas fa-bars"></i>
+                                    Acero
+                                </div>
+                                <div class="category-stats">
+                                    <div class="stat">
+                                        <span class="stat-label">Productos:</span>
+                                        <span class="stat-value">2</span>
+                                    </div>
+                                    <div class="stat">
+                                        <span class="stat-label">Completado:</span>
+                                        <span class="stat-value">50%</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="category-card">
+                                <div class="category-header tuberia">
+                                    <i class="fas fa-water"></i>
+                                    Tubería
+                                </div>
+                                <div class="category-stats">
+                                    <div class="stat">
+                                        <span class="stat-label">Productos:</span>
+                                        <span class="stat-value">2</span>
+                                    </div>
+                                    <div class="stat">
+                                        <span class="stat-label">Completado:</span>
+                                        <span class="stat-value">20%</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="category-card">
+                                <div class="category-header electrico">
+                                    <i class="fas fa-bolt"></i>
+                                    Eléctrico
+                                </div>
+                                <div class="category-stats">
+                                    <div class="stat">
+                                        <span class="stat-label">Productos:</span>
+                                        <span class="stat-value">1</span>
+                                    </div>
+                                    <div class="stat">
+                                        <span class="stat-label">Completado:</span>
+                                        <span class="stat-value">0%</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tab 2: Solicitudes de Pedido -->
+                <div id="solicitudes-tab" class="tab-content">
+                    <div class="section-header">
+                        <h3>Solicitudes de Pedido de la Obra</h3>
+                        <button class="btn btn-primary" onclick="nuevaSolicitud()">
+                            <i class="fas fa-plus"></i>
+                            Nueva Solicitud
+                        </button>
+                    </div>
+
+                    <div class="table-container">
+                        <table class="control-table">
+                            <thead>
+                                <tr>
+                                    <th>N° Solicitud</th>
+                                    <th>Fecha</th>
+                                    <th>Creado por</th>
+                                    <th>Cant. Productos</th>
+                                    <th>Estado</th>
+                                    <th>N° Cotización</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>SOL-2025-0234</td>
+                                    <td>15/06/2025</td>
+                                    <td>Carlos Mendoza</td>
+                                    <td class="text-center">15</td>
+                                    <td>
+                                        <span class="status-badge completo">
+                                            <i class="fas fa-check-circle"></i> Completado
+                                        </span>
+                                    </td>
+                                    <td><a href="#">COT-2025-0145</a></td>
+                                    <td>
+                                        <button class="btn-icon" onclick="verSolicitud('SOL-2025-0234')" title="Ver solicitud">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>SOL-2025-0238</td>
+                                    <td>20/06/2025</td>
+                                    <td>María González</td>
+                                    <td class="text-center">8</td>
+                                    <td>
+                                        <span class="status-badge en-proceso">
+                                            <i class="fas fa-sync"></i> En Cotización
+                                        </span>
+                                    </td>
+                                    <td>-</td>
+                                    <td>
+                                        <button class="btn-icon" onclick="verSolicitud('SOL-2025-0238')" title="Ver solicitud">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>SOL-2025-0245</td>
+                                    <td>28/07/2025</td>
+                                    <td>Carlos Mendoza</td>
+                                    <td class="text-center">12</td>
+                                    <td>
+                                        <span class="status-badge borrador">
+                                            <i class="fas fa-edit"></i> Borrador
+                                        </span>
+                                    </td>
+                                    <td>-</td>
+                                    <td>
+                                        <button class="btn-icon" onclick="editarSolicitud('SOL-2025-0245')" title="Editar solicitud">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Tab 3: Órdenes de Compra -->
+                <div id="ordenes-tab" class="tab-content">
+                    <div class="section-header">
+                        <h3>Órdenes de Compra de la Obra</h3>
+                    </div>
+
+                    <div class="table-container">
+                        <table class="control-table">
+                            <thead>
+                                <tr>
+                                    <th>N° OC Cliente</th>
+                                    <th>N° OC SSL</th>
+                                    <th>Fecha</th>
+                                    <th>Proveedor</th>
+                                    <th>Monto Total</th>
+                                    <th>Estado</th>
+                                    <th>% Entregado</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>4500873120</td>
+                                    <td>OC-2025-0145</td>
+                                    <td>20/06/2025</td>
+                                    <td>SSL</td>
+                                    <td class="text-right">$125,000</td>
+                                    <td>
+                                        <span class="status-badge activa">
+                                            <i class="fas fa-check"></i> Activa
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <div class="progress-cell">
+                                            <div class="progress-bar-small">
+                                                <div class="progress-fill-small" style="width: 65%"></div>
+                                            </div>
+                                            <span class="progress-text">65%</span>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <button class="btn-icon" onclick="verOC('OC-2025-0145')" title="Ver OC">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                        <button class="btn-icon" onclick="verControlEntrega('OC-2025-0145')" title="Control entrega">
+                                            <i class="fas fa-truck"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>4500873156</td>
+                                    <td>OC-2025-0189</td>
+                                    <td>15/07/2025</td>
+                                    <td>SSL</td>
+                                    <td class="text-right">$87,500</td>
+                                    <td>
+                                        <span class="status-badge activa">
+                                            <i class="fas fa-check"></i> Activa
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <div class="progress-cell">
+                                            <div class="progress-bar-small">
+                                                <div class="progress-fill-small" style="width: 30%"></div>
+                                            </div>
+                                            <span class="progress-text">30%</span>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <button class="btn-icon" onclick="verOC('OC-2025-0189')" title="Ver OC">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                        <button class="btn-icon" onclick="verControlEntrega('OC-2025-0189')" title="Control entrega">
+                                            <i class="fas fa-truck"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Resumen financiero -->
+                    <div class="financial-summary">
+                        <h3>Resumen Financiero</h3>
+                        <div class="summary-grid">
+                            <div class="summary-item">
+                                <label>Total OC Emitidas:</label>
+                                <span class="value">$212,500 USD</span>
+                            </div>
+                            <div class="summary-item">
+                                <label>Total Facturado:</label>
+                                <span class="value">$145,625 USD</span>
+                            </div>
+                            <div class="summary-item">
+                                <label>Total Pagado:</label>
+                                <span class="value success">$125,000 USD</span>
+                            </div>
+                            <div class="summary-item">
+                                <label>Pendiente de Pago:</label>
+                                <span class="value warning">$20,625 USD</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tab 4: Planificación de Entregas -->
+                <div id="entregas-tab" class="tab-content">
+                    <div class="section-header">
+                        <h3>Planificación de Entregas</h3>
+                        <div class="view-options">
+                            <button class="view-btn active" onclick="changeView('calendario')">
+                                <i class="fas fa-calendar"></i>
+                                Vista Calendario
+                            </button>
+                            <button class="view-btn" onclick="changeView('lista')">
+                                <i class="fas fa-list"></i>
+                                Vista Lista
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Vista Calendario -->
+                    <div id="vista-calendario" class="delivery-view active">
+                        <div class="calendar-header">
+                            <button class="btn-icon" onclick="previousMonth()">
+                                <i class="fas fa-chevron-left"></i>
+                            </button>
+                            <h3>Agosto 2025</h3>
+                            <button class="btn-icon" onclick="nextMonth()">
+                                <i class="fas fa-chevron-right"></i>
+                            </button>
+                        </div>
+                        
+                        <div class="calendar-legend">
+                            <div class="legend-item">
+                                <span class="legend-color confirmada"></span>
+                                Entrega Confirmada
+                            </div>
+                            <div class="legend-item">
+                                <span class="legend-color programada"></span>
+                                Entrega Programada
+                            </div>
+                            <div class="legend-item">
+                                <span class="legend-color completada"></span>
+                                Entrega Completada
+                            </div>
+                        </div>
+
+                        <div class="calendar-grid">
+                            <!-- Aquí iría el calendario real -->
+                            <div class="calendar-day">
+                                <div class="day-number">5</div>
+                                <div class="delivery-item confirmada">
+                                    <span class="time">09:00</span>
+                                    <span class="product">Hormigón H25 - 50m³</span>
+                                </div>
+                            </div>
+                            <div class="calendar-day">
+                                <div class="day-number">12</div>
+                                <div class="delivery-item programada">
+                                    <span class="time">14:00</span>
+                                    <span class="product">Barras Acero - 100un</span>
+                                </div>
+                            </div>
+                            <div class="calendar-day today">
+                                <div class="day-number">20</div>
+                                <div class="delivery-item completada">
+                                    <span class="time">10:00</span>
+                                    <span class="product">Tubos PVC - 12un</span>
+                                </div>
+                            </div>
+                            <div class="calendar-day">
+                                <div class="day-number">25</div>
+                                <div class="delivery-item programada">
+                                    <span class="time">08:00</span>
+                                    <span class="product">Tubos PVC 110mm - 18un</span>
+                                </div>
+                                <div class="delivery-item programada">
+                                    <span class="time">10:00</span>
+                                    <span class="product">Tubos PVC 160mm - 20un</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Vista Lista -->
+                    <div id="vista-lista" class="delivery-view">
+                        <div class="delivery-filters">
+                            <select id="filterMes">
+                                <option value="">Todos los meses</option>
+                                <option value="08">Agosto 2025</option>
+                                <option value="09">Septiembre 2025</option>
+                                <option value="10">Octubre 2025</option>
+                            </select>
+                            <select id="filterEstadoEntrega">
+                                <option value="">Todos los estados</option>
+                                <option value="confirmada">Confirmada</option>
+                                <option value="programada">Programada</option>
+                                <option value="completada">Completada</option>
+                            </select>
+                        </div>
+
+                        <div class="table-container">
+                            <table class="control-table">
+                                <thead>
+                                    <tr>
+                                        <th>Fecha</th>
+                                        <th>Hora</th>
+                                        <th>Producto</th>
+                                        <th>Cantidad</th>
+                                        <th>N° OC</th>
+                                        <th>Proveedor</th>
+                                        <th>Estado</th>
+                                        <th>Responsable</th>
+                                        <th>Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>05/08/2025</td>
+                                        <td>09:00</td>
+                                        <td>Hormigón H25</td>
+                                        <td>50 m³</td>
+                                        <td>OC-2025-0145</td>
+                                        <td>SSL</td>
+                                        <td>
+                                            <span class="status-badge confirmada">
+                                                <i class="fas fa-check"></i> Confirmada
+                                            </span>
+                                        </td>
+                                        <td>Carlos Mendoza</td>
+                                        <td>
+                                            <button class="btn-icon" onclick="verDetalleEntrega('ENT-001')" title="Ver detalle">
+                                                <i class="fas fa-eye"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>25/08/2025</td>
+                                        <td>08:00</td>
+                                        <td>Tubos PVC 110mm</td>
+                                        <td>18 un</td>
+                                        <td>OC-2025-0189</td>
+                                        <td>SSL</td>
+                                        <td>
+                                            <span class="status-badge programada">
+                                                <i class="fas fa-calendar"></i> Programada
+                                            </span>
+                                        </td>
+                                        <td>Nelson Andrade</td>
+                                        <td>
+                                            <button class="btn-icon" onclick="confirmarEntrega('ENT-002')" title="Confirmar">
+                                                <i class="fas fa-check-circle"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>25/08/2025</td>
+                                        <td>10:00</td>
+                                        <td>Tubos PVC 160mm</td>
+                                        <td>20 un</td>
+                                        <td>OC-2025-0189</td>
+                                        <td>SSL</td>
+                                        <td>
+                                            <span class="status-badge programada">
+                                                <i class="fas fa-calendar"></i> Programada
+                                            </span>
+                                        </td>
+                                        <td>Nelson Andrade</td>
+                                        <td>
+                                            <button class="btn-icon" onclick="confirmarEntrega('ENT-003')" title="Confirmar">
+                                                <i class="fas fa-check-circle"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>15/09/2025</td>
+                                        <td>Por definir</td>
+                                        <td>Barras Acero 10mm</td>
+                                        <td>200 un</td>
+                                        <td>OC-2025-0145</td>
+                                        <td>SSL</td>
+                                        <td>
+                                            <span class="status-badge sin-programar">
+                                                <i class="fas fa-clock"></i> Por Programar
+                                            </span>
+                                        </td>
+                                        <td>-</td>
+                                        <td>
+                                            <button class="btn-icon warning" onclick="programarEntrega('ENT-004')" title="Programar">
+                                                <i class="fas fa-calendar-plus"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Alertas de entregas -->
+                    <div class="delivery-alerts">
+                        <h3>Alertas y Notificaciones</h3>
+                        <div class="alert-list">
+                            <div class="alert-item warning">
+                                <i class="fas fa-exclamation-triangle"></i>
+                                <div class="alert-content">
+                                    <strong>5 entregas próximas sin confirmar</strong>
+                                    <p>Hay entregas programadas para los próximos 7 días que requieren confirmación del proveedor.</p>
+                                </div>
+                            </div>
+                            <div class="alert-item info">
+                                <i class="fas fa-info-circle"></i>
+                                <div class="alert-content">
+                                    <strong>Espacio en bodega limitado</strong>
+                                    <p>Considerar el espacio disponible para las entregas de la próxima semana.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Scripts -->
+    <script src="js/cliente_detalle_obra_control.js"></script>
+</body>
+</html>

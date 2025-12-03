@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detalle de Incidente - SSL v4.0</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../css/menu-styles.css">
+    <link rel="stylesheet" href="css/cliente-incidente-styles.css">
+</head>
+<body>
+    <header class="header">
+        <div class="header-left">
+            <div class="menu-toggle" onclick="toggleMobileMenu()">
+                <i class="fas fa-bars"></i>
+            </div>
+            <div class="logo">
+                <img src="../../PagWebLocal/logo_ssl.png" alt="SSL Logo">
+                <div class="logo-text">
+                    <h1>SSL v4.0</h1>
+                    <span class="portal-type">Portal Cliente</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="header-right">
+            <div class="header-date">
+                <i class="fas fa-calendar-alt"></i>
+                <span id="currentDate">Cargando...</span>
+            </div>
+
+            <div class="help-button-container">
+                <a href="../cliente_navegacion.html" class="help-button" title="Ayuda y Navegación">
+                    <i class="fas fa-question-circle"></i>
+                    <span class="help-text">Ayuda</span>
+                </a>
+            </div>
+
+            <div class="notifications">
+                <button class="notifications-button" onclick="showNotifications()">
+                    <i class="fas fa-bell"></i>
+                </button>
+                <span class="notification-count">3</span>
+            </div>
+            
+            <div class="user-menu" id="userMenu">
+                <div class="user-avatar">
+                    <span id="userInitial">C</span>
+                </div>
+                <span class="user-name" id="userName">Empresa Demo S.A.</span>
+                <i class="fas fa-chevron-down user-menu-arrow"></i>
+                
+                <div class="user-dropdown">
+                    <div class="dropdown-header">
+                        <div class="dropdown-user-info">
+                            <div class="dropdown-avatar">
+                                <span id="dropdownUserInitial">C</span>
+                            </div>
+                            <div class="dropdown-user-details">
+                                <div class="dropdown-user-name" id="dropdownUserName">Empresa Demo S.A.</div>
+                                <div class="dropdown-user-email" id="dropdownUserEmail">cliente@demo.com</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="dropdown-menu">
+                        <a href="#" class="dropdown-item" onclick="goToProfile(event)">
+                            <i class="fas fa-user-circle"></i>
+                            <span>Mi Perfil</span>
+                        </a>
+                        <a href="#" class="dropdown-item" onclick="goToSettings(event)">
+                            <i class="fas fa-cog"></i>
+                            <span>Configuración</span>
+                        </a>
+                        <div class="dropdown-divider"></div>
+                        <a href="#" class="dropdown-item logout" onclick="logout(event)">
+                            <i class="fas fa-sign-out-alt"></i>
+                            <span>Cerrar Sesión</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+
+        <!-- Incidente   -->
+        <nav class="sidebar" id="sidebar">
+            <ul class="menu">
+                
+                <!-- Dashboard -->
+                <li class="menu-item">
+                    <div class="menu-header" onclick="window.location.href='../cliente_dashboard.html'">
+                        <i class="fas fa-home"></i>
+                        <span>Dashboard</span>
+                        <div class="menu-tooltip">Dashboard</div>
+                    </div>
+                </li>
+
+                <!-- Central de Mensajería -->
+                <li class="menu-item">
+                    <div class="menu-header" onclick="window.location.href='../cliente_mensajeria/cliente_listado_mensajeria.html'">
+                        <i class="fas fa-comments"></i>
+                        <span>Central de Mensajería</span>
+                        <div class="menu-tooltip">Central de Mensajería</div>
+                    </div>
+                </li>
+
+                <!-- Solicitudes y Cotizaciones -->
+                <li class="menu-item">
+                    <div class="menu-header" onclick="toggleSubmenu(this)">
+                        <i class="fas fa-file-alt"></i>
+                        <span>Cotización y Compra</span>
+                        <i class="fas fa-chevron-right arrow"></i>
+                        <div class="menu-tooltip">Cotización y Compra</div>
+                    </div>
+                    <div class="submenu">
+                        <a href="cliente_listado_solicitudes.html" class="submenu-item">
+                            <span class="full-text">Solicitudes de Pedido</span>
+                            <span class="siglas">SP</span>
+                            <div class="sigla-tooltip">Solicitudes de Pedido</div>
+                        </a>
+                        <a href="../cliente_cotizaciones/cliente_listado_cotizaciones.html" class="submenu-item">
+                            <span class="full-text">Cotizaciones</span>
+                            <span class="siglas">CO</span>
+                            <div class="sigla-tooltip">Cotizaciones</div>
+                        </a>
+                        <a href="../cliente_orden_compra/cliente_listado_ordenes_compra.html" class="submenu-item">
+                            <span class="full-text">Órdenes de Compra</span>
+                            <span class="siglas">OC</span>
+                            <div class="sigla-tooltip">Órdenes de Compra</div>
+                        </a>
+                    </div>
+                </li>
+
+                <!-- Control de Entregas (active) -->
+                <li class="menu-item active">
+                    <div class="menu-header active" onclick="toggleSubmenu(this)">
+                        <i class="fas fa-truck"></i>
+                        <span>Control de Entregas</span>
+                        <i class="fas fa-chevron-right arrow"></i>
+                        <div class="menu-tooltip">Control de Entregas</div>
+                    </div>
+                    <div class="submenu">
+                        <a href="../cliente_control_entrega/cliente_listado_control_entregas.html" class="submenu-item">
+                            <span class="full-text">Control Entrega por OC</span>
+                            <span class="siglas">CEO</span>
+                            <div class="sigla-tooltip">Control Entrega por OC</div>
+                        </a>
+
+                        <a href="../cliente_modificaciones/cliente_listado_modificaciones.html" class="submenu-item">
+                            <span class="full-text">Modificaciones OC</span>
+                            <span class="siglas">MOC</span>
+                            <div class="sigla-tooltip">Modificaciones OC</div>
+                        </a>
+
+                        <a href="../cliente_control_recepcion/cliente_listado_despachos.html" class="submenu-item">
+                            <span class="full-text">Control Recepción</span>
+                            <span class="siglas">CRE</span>
+                            <div class="sigla-tooltip">Control Recepción</div>
+                        </a>
+
+                        <a href="cliente_listado_incidentes.html" class="submenu-item active">
+                            <span class="full-text">Incidentes de Entrega</span>
+                            <span class="siglas">IEN</span>
+                            <div class="sigla-tooltip">Incidentes de Entrega</div>
+                        </a>                        
+                    </div>
+                </li>
+               
+                <!-- Pagos -->
+                <li class="menu-item">
+                    <div class="menu-header" onclick="toggleSubmenu(this)">
+                        <i class="fas fa-file-invoice-dollar"></i>
+                        <span>Pagos</span>
+                        <i class="fas fa-chevron-right arrow"></i>
+                        <div class="menu-tooltip">Pagos</div>
+                    </div>
+                    <div class="submenu">
+                        <a href="../cliente_pagos/cliente_listado_pagos.html" class="submenu-item">
+                            <span class="full-text">Estado de Pagos</span>
+                            <span class="siglas">EP</span>
+                            <div class="sigla-tooltip">Estado de Pagos</div>
+                        </a>                          
+                    </div>
+                </li>
+
+                <!-- Control Total de Obras -->
+                <li class="menu-item">
+                    <div class="menu-header" onclick="toggleSubmenu(this)">
+                        <i class="fas fa-hard-hat"></i>
+                        <span>Control Total de Obras</span>
+                        <i class="fas fa-chevron-right arrow"></i>
+                        <div class="menu-tooltip">Control Total de Obras</div>
+                    </div>
+                    <div class="submenu">
+                        <a href="../cliente_control_obra/cliente_listado_obras_control.html" class="submenu-item">
+                            <span class="full-text">Listado de Obras</span>
+                            <span class="siglas">LO</span>
+                            <div class="sigla-tooltip">Listado de Obras</div>
+                        </a>
+                    </div>
+                </li>
+                
+                <!-- Configuración -->
+                <li class="menu-item">
+                    <div class="menu-header" onclick="toggleSubmenu(this)">
+                        <i class="fas fa-cog"></i>
+                        <span>Configuración</span>
+                        <i class="fas fa-chevron-right arrow"></i>
+                        <div class="menu-tooltip">Configuración</div>
+                    </div>
+                    <div class="submenu">
+                        <a href="../cliente_configuracion/cliente_listado_obras.html" class="submenu-item">
+                            <span class="full-text">Administración de Obras / Proyectos</span>
+                            <span class="siglas">AOP</span>
+                            <div class="sigla-tooltip">Administración de Obras / Proyectos</div>
+                        </a>
+                        <a href="../cliente_configuracion/cliente_listado_usuarios.html" class="submenu-item">
+                            <span class="full-text">Administración de Usuarios</span>
+                            <span class="siglas">AU</span>
+                            <div class="sigla-tooltip">Administración de Usuarios</div>
+                        </a>
+                    </div>
+                </li>
+            </ul>
+        </nav>
+
+        <!-- Toggle Button -->
+        <div class="sidebar-toggle" onclick="toggleSidebar()">
+            <i class="fas fa-chevron-left"></i>
+        </div>
+
+        <main class="content">
+            <!-- Breadcrumb -->
+            <div class="breadcrumb">
+                <div class="breadcrumb-item"><a href="../cliente_dashboard.html">Inicio</a></div>
+                <div class="breadcrumb-item"><a href="#">Control de Entregas</a></div>
+                <div class="breadcrumb-item"><a href="cliente_listado_incidentes.html">Incidentes</a></div>
+                <div class="breadcrumb-item active">INC-2025-0152</div>
+            </div>
+
+            <!-- Page Header -->
+            <div class="page-header">
+                <h1 class="page-title">Detalle de Incidente - INC-2025-0152</h1>
+                <div class="page-actions">
+                    <button class="btn btn-secondary" onclick="window.location.href='cliente_listado_incidentes.html'">
+                        <i class="fas fa-arrow-left"></i>
+                        Volver al Listado
+                    </button>
+                    <button class="btn btn-primary" onclick="printIncident()">
+                        <i class="fas fa-print"></i>
+                        Imprimir
+                    </button>
+                </div>
+            </div>
+
+            <!-- Incident Status Alert -->
+            <div class="alert alert-warning">
+                <i class="fas fa-exclamation-triangle"></i>
+                <strong>Incidente Pendiente:</strong> Este incidente está pendiente de revisión por parte del equipo de SSL.
+            </div>
+
+            <!-- Main Content Grid -->
+            <div class="detail-grid">
+                <!-- Left Column -->
+                <div class="detail-column">
+                    <!-- Basic Information -->
+                    <div class="detail-card">
+                        <div class="detail-card-header">
+                            <h3><i class="fas fa-info-circle"></i> Información General</h3>
+                        </div>
+                        <div class="detail-card-body">
+                            <div class="info-row">
+                                <div class="info-label">N° Incidente:</div>
+                                <div class="info-value">
+                                    <strong>INC-2025-0152</strong>
+                                </div>
+                            </div>
+                            <div class="info-row">
+                                <div class="info-label">Estado:</div>
+                                <div class="info-value">
+                                    <span class="badge badge-pendiente">Pendiente</span>
+                                </div>
+                            </div>
+                            <div class="info-row">
+                                <div class="info-label">Prioridad:</div>
+                                <div class="info-value">
+                                    <span class="priority high">Alta</span>
+                                </div>
+                            </div>
+                            <div class="info-row">
+                                <div class="info-label">Tipo de Incidente:</div>
+                                <div class="info-value">Material Dañado</div>
+                            </div>
+                            <div class="info-row">
+                                <div class="info-label">Fecha de Reporte:</div>
+                                <div class="info-value">28/11/2024 14:30</div>
+                            </div>
+                            <div class="info-row">
+                                <div class="info-label">Reportado por:</div>
+                                <div class="info-value">Juan Pérez - Supervisor de Obra</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Related Documents -->
+                    <div class="detail-card">
+                        <div class="detail-card-header">
+                            <h3><i class="fas fa-link"></i> Documentos Relacionados</h3>
+                        </div>
+                        <div class="detail-card-body">
+                            <div class="info-row">
+                                <div class="info-label">N° Despacho:</div>
+                                <div class="info-value">
+                                    <a href="../cliente_control_recepcion/cliente_detalle_despacho.html?lpe=LPE-2025-0234" class="link">
+                                        <i class="fas fa-truck"></i> LPE-2025-0234
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="info-row">
+                                <div class="info-label">N° Orden de Compra:</div>
+                                <div class="info-value">
+                                    <a href="../cliente_orden_compra/cliente_detalle_orden_compra.html?oc=OC-2025-0089" class="link">
+                                        <i class="fas fa-file-alt"></i> OC-2025-0089
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="info-row">
+                                <div class="info-label">Obra/Proyecto:</div>
+                                <div class="info-value">Torre Pacífico</div>
+                            </div>
+                            <div class="info-row">
+                                <div class="info-label">Proveedor:</div>
+                                <div class="info-value">Aceros del Pacífico S.A.</div>
+                            </div>
+                            <div class="info-row">
+                                <div class="info-label">Transportista:</div>
+                                <div class="info-value">Transportes Rápidos Ltda.</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Incident Description -->
+                    <div class="detail-card">
+                        <div class="detail-card-header">
+                            <h3><i class="fas fa-file-alt"></i> Descripción del Incidente</h3>
+                        </div>
+                        <div class="detail-card-body">
+                            <div class="description-box">
+                                <p>Durante la recepción del despacho LPE-2025-0234 se detectó que aproximadamente el 15% del material (barras de acero corrugado de 12mm) presentaba daños visibles por oxidación avanzada.</p>
+                                <p>El material fue recibido el día 28/11/2024 a las 14:00 hrs en la obra Torre Pacífico. El supervisor de obra procedió a realizar la inspección rutinaria y detectó los siguientes problemas:</p>
+                                <ul>
+                                    <li>25 barras con oxidación severa en los extremos</li>
+                                    <li>10 barras con deformaciones visibles</li>
+                                    <li>Material no cumple con especificaciones técnicas requeridas</li>
+                                </ul>
+                                <p>Se procedió a separar el material dañado y se notificó inmediatamente al proveedor a través del sistema.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Column -->
+                <div class="detail-column">
+                    <!-- Status Actions -->
+                    <div class="detail-card">
+                        <div class="detail-card-header">
+                            <h3><i class="fas fa-tasks"></i> Acciones del Incidente</h3>
+                        </div>
+                        <div class="detail-card-body">
+                            <div class="action-buttons-vertical">
+                                <button class="btn btn-warning" onclick="changeStatus('revision')">
+                                    <i class="fas fa-clock"></i> Enviar a Revisión
+                                </button>
+                                <button class="btn btn-success" onclick="openCloseModal()">
+                                    <i class="fas fa-check-circle"></i> Cerrar Incidente
+                                </button>
+                                <button class="btn btn-danger" onclick="openCancelModal()">
+                                    <i class="fas fa-times-circle"></i> Cancelar Incidente
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Material Details -->
+                    <div class="detail-card">
+                        <div class="detail-card-header">
+                            <h3><i class="fas fa-boxes"></i> Detalle del Material Afectado</h3>
+                        </div>
+                        <div class="detail-card-body">
+                            <div class="material-table">
+                                <table class="simple-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Material</th>
+                                            <th>Cantidad</th>
+                                            <th>Unidad</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>Barra Acero Corrugado 12mm</td>
+                                            <td class="text-right">35</td>
+                                            <td>Unidades</td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="3" class="text-muted">
+                                                <small>Peso total afectado: 315 kg</small>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Attached Evidence -->
+                    <div class="detail-card">
+                        <div class="detail-card-header">
+                            <h3><i class="fas fa-paperclip"></i> Evidencia Adjunta</h3>
+                            <button class="btn-text" onclick="addEvidence()">
+                                <i class="fas fa-plus"></i> Agregar
+                            </button>
+                        </div>
+                        <div class="detail-card-body">
+                            <div class="attachments-list">
+                                <div class="attachment-item">
+                                    <i class="fas fa-image file-icon"></i>
+                                    <div class="attachment-info">
+                                        <div class="attachment-name">foto_material_danado_01.jpg</div>
+                                        <div class="attachment-meta">2.5 MB - 28/11/2024</div>
+                                    </div>
+                                    <button class="btn-icon" onclick="viewAttachment('foto_material_danado_01.jpg')">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                </div>
+                                <div class="attachment-item">
+                                    <i class="fas fa-image file-icon"></i>
+                                    <div class="attachment-info">
+                                        <div class="attachment-name">foto_material_danado_02.jpg</div>
+                                        <div class="attachment-meta">3.1 MB - 28/11/2024</div>
+                                    </div>
+                                    <button class="btn-icon" onclick="viewAttachment('foto_material_danado_02.jpg')">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                </div>
+                                <div class="attachment-item">
+                                    <i class="fas fa-file-pdf file-icon pdf"></i>
+                                    <div class="attachment-info">
+                                        <div class="attachment-name">informe_recepcion.pdf</div>
+                                        <div class="attachment-meta">450 KB - 28/11/2024</div>
+                                    </div>
+                                    <button class="btn-icon" onclick="downloadAttachment('informe_recepcion.pdf')">
+                                        <i class="fas fa-download"></i>
+                                    </button>
+                                </div>
+                                <div class="attachment-item">
+                                    <i class="fas fa-video file-icon video"></i>
+                                    <div class="attachment-info">
+                                        <div class="attachment-name">video_descarga.mp4</div>
+                                        <div class="attachment-meta">25.3 MB - 28/11/2024</div>
+                                    </div>
+                                    <button class="btn-icon" onclick="viewAttachment('video_descarga.mp4')">
+                                        <i class="fas fa-play"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Timeline Section -->
+            <div class="detail-card full-width">
+                <div class="detail-card-header">
+                    <h3><i class="fas fa-history"></i> Historial del Incidente</h3>
+                </div>
+                <div class="detail-card-body">
+                    <div class="incident-timeline">
+                        <div class="timeline-item">
+                            <div class="timeline-marker active"></div>
+                            <div class="timeline-content">
+                                <div class="timeline-header">
+                                    <strong>Incidente Reportado</strong>
+                                    <span class="timeline-date">28/11/2024 14:30</span>
+                                </div>
+                                <div class="timeline-body">
+                                    <p>Juan Pérez reportó el incidente desde la obra Torre Pacífico.</p>
+                                    <p class="text-muted">Se detectó material dañado durante la recepción del despacho LPE-2025-0234.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="timeline-item">
+                            <div class="timeline-marker"></div>
+                            <div class="timeline-content">
+                                <div class="timeline-header">
+                                    <strong>Notificación Enviada</strong>
+                                    <span class="timeline-date">28/11/2024 14:45</span>
+                                </div>
+                                <div class="timeline-body">
+                                    <p>Sistema automático envió notificación al proveedor y equipo SSL.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="timeline-item">
+                            <div class="timeline-marker"></div>
+                            <div class="timeline-content">
+                                <div class="timeline-header">
+                                    <strong>Evidencia Adjuntada</strong>
+                                    <span class="timeline-date">28/11/2024 15:00</span>
+                                </div>
+                                <div class="timeline-body">
+                                    <p>Se adjuntaron 4 archivos de evidencia (fotos y video).</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="timeline-item pending">
+                            <div class="timeline-marker"></div>
+                            <div class="timeline-content">
+                                <div class="timeline-header">
+                                    <strong>Pendiente de Revisión</strong>
+                                    <span class="timeline-date">-</span>
+                                </div>
+                                <div class="timeline-body">
+                                    <p class="text-muted">Esperando revisión por parte del equipo de SSL.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Communication Section -->
+            <div class="detail-card full-width">
+                <div class="detail-card-header">
+                    <h3><i class="fas fa-comments"></i> Comunicación y Seguimiento</h3>
+                    <button class="btn btn-primary btn-sm" onclick="addComment()">
+                        <i class="fas fa-plus"></i> Agregar Comentario
+                    </button>
+                </div>
+                <div class="detail-card-body">
+                    <div class="comments-section">
+                        <div class="comment-item">
+                            <div class="comment-header">
+                                <div class="comment-author">
+                                    <i class="fas fa-user-circle"></i>
+                                    <strong>Juan Pérez</strong>
+                                    <span class="comment-role">Supervisor de Obra</span>
+                                </div>
+                                <span class="comment-date">28/11/2024 14:35</span>
+                            </div>
+                            <div class="comment-body">
+                                <p>Material recibido con daños evidentes. Se procedió a separar el material afectado del resto del despacho. Solicito revisión urgente por parte del proveedor.</p>
+                            </div>
+                        </div>
+                        <div class="comment-item ssl">
+                            <div class="comment-header">
+                                <div class="comment-author">
+                                    <i class="fas fa-building"></i>
+                                    <strong>Sistema SSL</strong>
+                                    <span class="comment-role">Notificación Automática</span>
+                                </div>
+                                <span class="comment-date">28/11/2024 14:45</span>
+                            </div>
+                            <div class="comment-body">
+                                <p>Incidente registrado exitosamente. Se ha notificado al proveedor Aceros del Pacífico S.A. y al equipo de gestión de SSL.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Modal para Cerrar Incidente -->
+    <div id="closeModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Cerrar Incidente</h3>
+                <span class="close" onclick="closeModal('closeModal')">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>Resolución del Incidente <span class="required">*</span></label>
+                    <textarea class="form-control" rows="4" placeholder="Describa cómo se resolvió el incidente..."></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Acciones Tomadas <span class="required">*</span></label>
+                    <textarea class="form-control" rows="3" placeholder="Detalle las acciones correctivas..."></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Adjuntar Documentación de Cierre</label>
+                    <input type="file" class="form-control" multiple>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal('closeModal')">Cancelar</button>
+                <button class="btn btn-success" onclick="confirmClose()">
+                    <i class="fas fa-check"></i> Confirmar Cierre
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal para Cancelar Incidente -->
+    <div id="cancelModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Cancelar Incidente</h3>
+                <span class="close" onclick="closeModal('cancelModal')">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div class="alert alert-warning">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <strong>Atención:</strong> Está a punto de cancelar este incidente. Esta acción requiere justificación.
+                </div>
+                <div class="form-group">
+                    <label>Motivo de Cancelación <span class="required">*</span></label>
+                    <select class="form-control">
+                        <option value="">Seleccione un motivo...</option>
+                        <option value="error">Error en el reporte</option>
+                        <option value="duplicado">Incidente duplicado</option>
+                        <option value="resuelto">Resuelto directamente con proveedor</option>
+                        <option value="otro">Otro motivo</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Justificación <span class="required">*</span></label>
+                    <textarea class="form-control" rows="4" placeholder="Explique el motivo de la cancelación..."></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal('cancelModal')">Volver</button>
+                <button class="btn btn-danger" onclick="confirmCancel()">
+                    <i class="fas fa-times"></i> Confirmar Cancelación
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="../js/cliente_dashboard.js"></script>
+    <script src="js/cliente_incidente.js"></script>
+</body>
+</html>

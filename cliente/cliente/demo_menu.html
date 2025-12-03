@@ -1,0 +1,776 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portal Cliente - SSL v4.0</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* =============================================
+           ESTILOS DEL MENÚ LATERAL - SSL v4.0
+           ============================================= */
+
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #667eea;
+            --accent-color: #764ba2;
+            --success-color: #27ae60;
+            --warning-color: #f39c12;
+            --error-color: #e74c3c;
+            --text-color: #333;
+            --text-light: #ecf0f1;
+            --border-color: #ddd;
+            --hover-color: #5a52d5;
+            --active-color: #4a42b5;
+            --menu-width: 260px;
+            --menu-collapsed-width: 70px;
+            --header-height: 65px;
+            --transition-speed: 0.3s;
+            --card-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+            --hover-shadow: 0 5px 20px rgba(0, 0, 0, 0.12);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f8f9fa;
+            color: var(--text-color);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        /* Sidebar Container */
+        .sidebar {
+            width: var(--menu-width);
+            background-color: white;
+            border-right: 1px solid var(--border-color);
+            height: calc(100vh - var(--header-height));
+            position: fixed;
+            overflow-y: auto;
+            transition: width var(--transition-speed);
+            z-index: 900;
+        }
+
+        .sidebar.collapsed {
+            width: var(--menu-collapsed-width);
+        }
+
+        /* Collapse Toggle Button */
+        .sidebar-toggle {
+            position: fixed;
+            top: calc(var(--header-height) + 20px);
+            left: calc(var(--menu-width) - 15px);
+            width: 30px;
+            height: 30px;
+            background-color: var(--secondary-color);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 1100;
+            transition: all var(--transition-speed);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+        }
+
+        .sidebar.collapsed ~ .sidebar-toggle {
+            left: calc(var(--menu-collapsed-width) - 15px);
+        }
+
+        .sidebar-toggle:hover {
+            background-color: var(--hover-color);
+            transform: scale(1.1);
+        }
+
+        .sidebar-toggle i {
+            font-size: 0.8rem;
+            transition: transform var(--transition-speed);
+        }
+
+        /* Menu List */
+        .menu {
+            list-style: none;
+            padding: 20px 0;
+        }
+
+        .menu-item {
+            margin-bottom: 5px;
+        }
+
+        /* Menu Header */
+        .menu-header {
+            display: flex;
+            align-items: center;
+            padding: 15px 20px;
+            cursor: pointer;
+            color: var(--text-color);
+            font-weight: 500;
+            transition: all var(--transition-speed);
+            border-radius: 0;
+            position: relative;
+            white-space: nowrap;
+            overflow: hidden;
+        }
+
+        .sidebar.collapsed .menu-header {
+            padding: 15px 10px;
+            justify-content: center;
+        }
+
+        .menu-header:hover {
+            background-color: #f8f9fa;
+            color: var(--secondary-color);
+        }
+
+        .menu-header.active {
+            background: linear-gradient(to right, var(--secondary-color), var(--accent-color));
+            color: white;
+        }
+
+        .menu-header.active::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            background-color: var(--accent-color);
+        }
+
+        .menu-header i {
+            margin-right: 12px;
+            width: 20px;
+            text-align: center;
+            font-size: 1.1rem;
+            flex-shrink: 0;
+        }
+
+        .sidebar.collapsed .menu-header i {
+            margin-right: 0;
+        }
+
+        .menu-header span {
+            opacity: 1;
+            transition: opacity var(--transition-speed);
+        }
+
+        .sidebar.collapsed .menu-header span {
+            opacity: 0;
+            visibility: hidden;
+            width: 0;
+        }
+
+        .menu-header .arrow {
+            margin-left: auto;
+            transition: transform var(--transition-speed), opacity var(--transition-speed);
+            font-size: 0.8rem;
+        }
+
+        .sidebar.collapsed .menu-header .arrow {
+            opacity: 0;
+            width: 0;
+        }
+
+        /* Submenu */
+        .submenu {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height var(--transition-speed);
+            background-color: #f8f9fa;
+        }
+
+        .menu-item.active .submenu {
+            max-height: 500px;
+        }
+
+        .menu-item.active .arrow {
+            transform: rotate(90deg);
+        }
+
+        /* Submenu Items */
+        .submenu-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 20px 12px 52px;
+            cursor: pointer;
+            transition: all var(--transition-speed);
+            font-size: 0.95rem;
+            color: var(--text-color);
+            text-decoration: none;
+            position: relative;
+            white-space: nowrap;
+            overflow: hidden;
+        }
+
+        /* Texto completo del submenu (visible cuando expandido) */
+        .submenu-item .full-text {
+            display: inline;
+        }
+
+        /* Siglas del submenu (ocultas cuando expandido) */
+        .submenu-item .siglas {
+            display: none;
+        }
+
+        /* Submenu Items - Collapsed Sidebar */
+        .sidebar.collapsed .submenu-item {
+            padding: 12px 0;
+            justify-content: center;
+            background-color: #f8f9fa;
+        }
+
+        /* Cuando el sidebar está colapsado, mostrar solo siglas */
+        .sidebar.collapsed .submenu-item .full-text {
+            display: none;
+        }
+
+        .sidebar.collapsed .submenu-item .siglas {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 36px;
+            height: 36px;
+            background-color: white;
+            border-radius: 8px;
+            font-weight: 600;
+            color: var(--secondary-color);
+            font-size: 0.85rem;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            transition: all 0.2s;
+        }
+
+        .submenu-item:hover {
+            background-color: #e9ecef;
+            color: var(--secondary-color);
+            padding-left: 56px;
+        }
+
+        .sidebar.collapsed .submenu-item:hover {
+            padding: 12px 0;
+            background-color: #e9ecef;
+        }
+
+        .sidebar.collapsed .submenu-item:hover .siglas {
+            background-color: var(--secondary-color);
+            color: white;
+            transform: scale(1.1);
+            box-shadow: 0 4px 8px rgba(102, 126, 234, 0.3);
+        }
+
+        .submenu-item.active {
+            background-color: #e8eafd;
+            color: var(--secondary-color);
+            font-weight: 500;
+        }
+
+        .sidebar.collapsed .submenu-item.active .siglas {
+            background-color: var(--secondary-color);
+            color: white;
+        }
+
+        .submenu-item.active::before {
+            content: '';
+            position: absolute;
+            left: 35px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 6px;
+            height: 6px;
+            background-color: var(--secondary-color);
+            border-radius: 50%;
+        }
+
+        .sidebar.collapsed .submenu-item.active::before {
+            display: none;
+        }
+
+        /* Tooltip for collapsed menu */
+        .menu-tooltip {
+            position: absolute;
+            left: 100%;
+            top: 50%;
+            transform: translateY(-50%);
+            margin-left: 15px;
+            background-color: var(--primary-color);
+            color: white;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            white-space: nowrap;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.2s;
+            pointer-events: none;
+            z-index: 1002;
+        }
+
+        .menu-tooltip::before {
+            content: '';
+            position: absolute;
+            right: 100%;
+            top: 50%;
+            transform: translateY(-50%);
+            border: 6px solid transparent;
+            border-right-color: var(--primary-color);
+        }
+
+        .sidebar.collapsed .menu-header:hover .menu-tooltip {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        /* Tooltip para siglas */
+        .sigla-tooltip {
+            position: absolute;
+            left: calc(100% + 10px);
+            top: 50%;
+            transform: translateY(-50%);
+            background-color: var(--primary-color);
+            color: white;
+            padding: 6px 10px;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            white-space: nowrap;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.2s;
+            pointer-events: none;
+            z-index: 1003;
+        }
+
+        .sigla-tooltip::before {
+            content: '';
+            position: absolute;
+            right: 100%;
+            top: 50%;
+            transform: translateY(-50%);
+            border: 6px solid transparent;
+            border-right-color: var(--primary-color);
+        }
+
+        .sidebar.collapsed .submenu-item:hover .sigla-tooltip {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        /* Menu Toggle for Mobile */
+        .menu-toggle {
+            display: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--primary-color);
+        }
+
+        /* Content Adjustment */
+        .content {
+            margin-left: var(--menu-width);
+            transition: margin-left var(--transition-speed);
+        }
+
+        .sidebar.collapsed ~ .content {
+            margin-left: var(--menu-collapsed-width);
+        }
+
+        /* Header */
+        .header {
+            background-color: white;
+            color: var(--text-color);
+            height: var(--header-height);
+            padding: 0 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo img {
+            height: 40px;
+        }
+
+        .logo-text {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .logo h1 {
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+
+        .portal-type {
+            font-size: 0.8rem;
+            color: var(--secondary-color);
+            font-weight: 500;
+        }
+
+        /* Container */
+        .container {
+            display: flex;
+            flex: 1;
+            margin-top: var(--header-height);
+        }
+
+        /* Dashboard Content */
+        .dashboard-demo {
+            padding: 30px;
+            background-color: #f8f9fa;
+            min-height: calc(100vh - var(--header-height));
+        }
+
+        .dashboard-title {
+            font-size: 2rem;
+            color: var(--primary-color);
+            margin-bottom: 30px;
+        }
+
+        .demo-card {
+            background-color: white;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: var(--card-shadow);
+            margin-bottom: 20px;
+        }
+
+        .demo-card h3 {
+            color: var(--secondary-color);
+            margin-bottom: 15px;
+        }
+
+        .demo-card p {
+            color: #666;
+            line-height: 1.6;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .menu-toggle {
+                display: block;
+            }
+
+            .sidebar {
+                transform: translateX(-100%);
+            }
+
+            .sidebar.active {
+                transform: translateX(0);
+            }
+
+            .sidebar-toggle {
+                display: none;
+            }
+
+            .content {
+                margin-left: 0 !important;
+            }
+
+            /* En móvil, mantener comportamiento normal */
+            .sidebar.collapsed .submenu-item .full-text {
+                display: inline;
+            }
+
+            .sidebar.collapsed .submenu-item .siglas {
+                display: none;
+            }
+
+            .sidebar.collapsed .submenu-item {
+                padding: 12px 20px 12px 52px;
+                justify-content: flex-start;
+            }
+
+            .sidebar.collapsed .menu-header {
+                padding: 15px 20px;
+                justify-content: flex-start;
+            }
+
+            .sidebar.collapsed .menu-header i {
+                margin-right: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-left">
+            <div class="menu-toggle" onclick="toggleMobileMenu()">
+                <i class="fas fa-bars"></i>
+            </div>
+            <div class="logo">
+                <img src="../PagWebLocal/logo_ssl.png" alt="SSL Logo">
+                <div class="logo-text">
+                    <h1>SSL v4.0</h1>
+                    <span class="portal-type">Portal Cliente</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <!-- Sidebar Menu -->
+        <nav class="sidebar" id="sidebar">
+            <ul class="menu">
+                <!-- Dashboard -->
+                <li class="menu-item active">
+                    <div class="menu-header active" onclick="toggleSubmenu(this)">
+                        <i class="fas fa-home"></i>
+                        <span>Dashboard</span>
+                        <div class="menu-tooltip">Dashboard</div>
+                    </div>
+                </li>
+
+                <!-- Solicitudes y Cotizaciones -->
+                <li class="menu-item">
+                    <div class="menu-header" onclick="toggleSubmenu(this)">
+                        <i class="fas fa-file-alt"></i>
+                        <span>Cotización y Compra</span>
+                        <i class="fas fa-chevron-right arrow"></i>
+                        <div class="menu-tooltip">Cotización y Compra</div>
+                    </div>
+                    <div class="submenu">
+                        <a href="#" class="submenu-item">
+                            <span class="full-text">Solicitudes de Pedido</span>
+                            <span class="siglas">SP</span>
+                            <div class="sigla-tooltip">Solicitudes de Pedido</div>
+                        </a>
+                        <a href="#" class="submenu-item">
+                            <span class="full-text">Cotizaciones</span>
+                            <span class="siglas">CO</span>
+                            <div class="sigla-tooltip">Cotizaciones</div>
+                        </a>
+                        <a href="#" class="submenu-item">
+                            <span class="full-text">Órdenes de Compra</span>
+                            <span class="siglas">OC</span>
+                            <div class="sigla-tooltip">Órdenes de Compra</div>
+                        </a>
+                    </div>
+                </li>
+
+                <!-- Control de Entregas -->
+                <li class="menu-item">
+                    <div class="menu-header" onclick="toggleSubmenu(this)">
+                        <i class="fas fa-truck"></i>
+                        <span>Control de Entregas</span>
+                        <i class="fas fa-chevron-right arrow"></i>
+                        <div class="menu-tooltip">Control de Entregas</div>
+                    </div>
+                    <div class="submenu">
+                        <a href="#" class="submenu-item">
+                            <span class="full-text">Control Entrega por OC</span>
+                            <span class="siglas">CEO</span>
+                            <div class="sigla-tooltip">Control Entrega por OC</div>
+                        </a>
+                        <a href="#" class="submenu-item">
+                            <span class="full-text">Control Entrega por Despacho</span>
+                            <span class="siglas">CED</span>
+                            <div class="sigla-tooltip">Control Entrega por Despacho</div>
+                        </a>
+                    </div>
+                </li>
+                
+                <!-- Pagos -->
+                <li class="menu-item">
+                    <div class="menu-header" onclick="toggleSubmenu(this)">
+                        <i class="fas fa-file-invoice-dollar"></i>
+                        <span>Pagos</span>
+                        <i class="fas fa-chevron-right arrow"></i>
+                        <div class="menu-tooltip">Pagos</div>
+                    </div>
+                    <div class="submenu">
+                        <a href="#" class="submenu-item">
+                            <span class="full-text">Estado de Pagos</span>
+                            <span class="siglas">EP</span>
+                            <div class="sigla-tooltip">Estado de Pagos</div>
+                        </a>                          
+                    </div>
+                </li>
+
+                <!-- Configuración -->
+                <li class="menu-item">
+                    <div class="menu-header" onclick="toggleSubmenu(this)">
+                        <i class="fas fa-cog"></i>
+                        <span>Configuración</span>
+                        <i class="fas fa-chevron-right arrow"></i>
+                        <div class="menu-tooltip">Configuración</div>
+                    </div>
+                    <div class="submenu">
+                        <a href="#" class="submenu-item">
+                            <span class="full-text">Administración de Obras / Proyectos</span>
+                            <span class="siglas">AOP</span>
+                            <div class="sigla-tooltip">Administración de Obras / Proyectos</div>
+                        </a>
+                        <a href="#" class="submenu-item">
+                            <span class="full-text">Administración de Usuarios</span>
+                            <span class="siglas">AU</span>
+                            <div class="sigla-tooltip">Administración de Usuarios</div>
+                        </a>
+                    </div>
+                </li>
+            </ul>
+        </nav>
+
+        <!-- Toggle Button -->
+        <div class="sidebar-toggle" onclick="toggleSidebar()">
+            <i class="fas fa-chevron-left"></i>
+        </div>
+
+        <main class="content">
+            <div class="dashboard-demo">
+                <h1 class="dashboard-title">Menú con Siglas Integradas</h1>
+                
+                <div class="demo-card">
+                    <h3>Instrucciones</h3>
+                    <p>1. Haz clic en el botón circular azul para colapsar/expandir el menú lateral.</p>
+                    <p>2. Cuando el menú esté colapsado, abre cualquier sección con submenús.</p>
+                    <p>3. Los submenús ahora se muestran dentro de la misma barra lateral con las siguientes siglas:</p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li><strong>SP</strong> - Solicitudes de Pedido</li>
+                        <li><strong>CO</strong> - Cotizaciones</li>
+                        <li><strong>OC</strong> - Órdenes de Compra</li>
+                        <li><strong>CEO</strong> - Control Entrega por OC</li>
+                        <li><strong>CED</strong> - Control Entrega por Despacho</li>
+                        <li><strong>EP</strong> - Estado de Pagos</li>
+                        <li><strong>AOP</strong> - Administración de Obras/Proyectos</li>
+                        <li><strong>AU</strong> - Administración de Usuarios</li>
+                    </ul>
+                    <p style="margin-top: 10px;">4. Pasa el cursor sobre las siglas para ver un tooltip con el nombre completo.</p>
+                </div>
+
+                <div class="demo-card">
+                    <h3>Características del Nuevo Diseño</h3>
+                    <p>✓ Los submenús permanecen dentro de la barra lateral cuando está colapsada</p>
+                    <p>✓ Las siglas aparecen en cajas redondeadas con efecto hover</p>
+                    <p>✓ Transición suave entre texto completo y siglas</p>
+                    <p>✓ Tooltips informativos al pasar sobre las siglas</p>
+                    <p>✓ Diseño consistente y limpio</p>
+                    <p>✓ En móviles se mantiene el texto completo para mejor legibilidad</p>
+                </div>
+
+                <div class="demo-card">
+                    <h3>Ventajas de este Diseño</h3>
+                    <p>• <strong>Mayor claridad:</strong> Los submenús siguen la misma estructura visual del menú principal</p>
+                    <p>• <strong>Mejor uso del espacio:</strong> No hay elementos flotantes que puedan solaparse</p>
+                    <p>• <strong>Experiencia consistente:</strong> El comportamiento es predecible y fácil de entender</p>
+                    <p>• <strong>Accesibilidad mejorada:</strong> Las siglas son claras y los tooltips ayudan a identificar cada opción</p>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Toggle sidebar collapse
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const toggleButton = document.querySelector('.sidebar-toggle');
+            const icon = toggleButton.querySelector('i');
+            
+            sidebar.classList.toggle('collapsed');
+            
+            // Save state
+            localStorage.setItem('sidebarCollapsed', sidebar.classList.contains('collapsed'));
+            
+            // Update icon rotation
+            if (sidebar.classList.contains('collapsed')) {
+                icon.style.transform = 'rotate(180deg)';
+            } else {
+                icon.style.transform = 'rotate(0deg)';
+            }
+        }
+
+        // Load sidebar state from localStorage
+        function loadSidebarState() {
+            const isCollapsed = localStorage.getItem('sidebarCollapsed') === 'true';
+            const sidebar = document.getElementById('sidebar');
+            const toggleButton = document.querySelector('.sidebar-toggle');
+            const icon = toggleButton.querySelector('i');
+            
+            if (isCollapsed) {
+                sidebar.classList.add('collapsed');
+                icon.style.transform = 'rotate(180deg)';
+            }
+        }
+
+        // Toggle mobile menu
+        function toggleMobileMenu() {
+            const sidebar = document.getElementById('sidebar');
+            sidebar.classList.toggle('active');
+        }
+
+        // Toggle submenu
+        function toggleSubmenu(header) {
+            const menuItem = header.parentElement;
+            const wasActive = menuItem.classList.contains('active');
+            
+            // Close all submenus
+            document.querySelectorAll('.menu-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            
+            // Remove active from all headers
+            document.querySelectorAll('.menu-header').forEach(h => {
+                h.classList.remove('active');
+            });
+            
+            // If it wasn't active, open it
+            if (!wasActive && header.nextElementSibling) {
+                menuItem.classList.add('active');
+            }
+            
+            // Always keep the clicked header active if it's a main item
+            if (!header.querySelector('.arrow')) {
+                header.classList.add('active');
+            }
+        }
+
+        // Handle submenu item clicks
+        document.querySelectorAll('.submenu-item').forEach(item => {
+            item.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                // Remove active from all submenu items
+                document.querySelectorAll('.submenu-item').forEach(subItem => {
+                    subItem.classList.remove('active');
+                });
+                
+                // Add active to clicked item
+                this.classList.add('active');
+            });
+        });
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            loadSidebarState();
+        });
+
+        // Close submenus when clicking outside
+        document.addEventListener('click', function(e) {
+            if (!e.target.closest('.sidebar') && !e.target.closest('.sidebar-toggle')) {
+                // Optional: close all submenus when clicking outside
+            }
+        });
+    </script>
+</body>
+</html>

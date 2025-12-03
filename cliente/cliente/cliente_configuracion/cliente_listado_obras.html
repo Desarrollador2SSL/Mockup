@@ -1,0 +1,1412 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Listado de Obras/Proyectos - SSL v4.0</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Archivo CSS del menú separado -->
+    <link rel="stylesheet" href="../css/menu-styles.css">
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #667eea;
+            --accent-color: #764ba2;
+            --success-color: #27ae60;
+            --warning-color: #f39c12;
+            --error-color: #e74c3c;
+            --text-color: #333;
+            --text-light: #ecf0f1;
+            --border-color: #ddd;
+            --hover-color: #5a52d5;
+            --active-color: #4a42b5;
+            --menu-width: 260px;
+            --menu-collapsed-width: 70px;
+            --header-height: 65px;
+            --transition-speed: 0.3s;
+            --card-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+            --hover-shadow: 0 5px 20px rgba(0, 0, 0, 0.12);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f8f9fa;
+            color: var(--text-color);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        /* Header */
+        .header {
+            background-color: white;
+            color: var(--text-color);
+            height: var(--header-height);
+            padding: 0 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo img {
+            height: 40px;
+        }
+
+        .logo-text {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .logo h1 {
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+
+        .portal-type {
+            font-size: 0.8rem;
+            color: var(--secondary-color);
+            font-weight: 500;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .header-date {
+            display: flex;
+            align-items: center;
+            font-size: 0.9rem;
+            color: #666;
+            padding: 0 15px;
+            border-right: 1px solid var(--border-color);
+            height: 35px;
+        }
+
+        .header-date i {
+            margin-right: 8px;
+            color: var(--secondary-color);
+        }
+
+        .notifications {
+            position: relative;
+            margin-right: 15px;
+        }
+
+        .notifications-button {
+            background: none;
+            border: none;
+            font-size: 1.2rem;
+            color: #666;
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 50%;
+            transition: all var(--transition-speed);
+        }
+
+        .notifications-button:hover {
+            background-color: #f0f0f0;
+            color: var(--secondary-color);
+        }
+
+        .notification-count {
+            position: absolute;
+            top: 0;
+            right: 0;
+            background-color: var(--error-color);
+            color: white;
+            border-radius: 50%;
+            font-size: 0.7rem;
+            width: 18px;
+            height: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+        }
+
+        .user-menu {
+            display: flex;
+            align-items: center;
+            margin-left: 10px;
+            cursor: pointer;
+            position: relative;
+            padding: 8px 12px;
+            border-radius: 8px;
+            transition: background-color var(--transition-speed);
+        }
+
+        .user-menu:hover {
+            background-color: #f0f0f0;
+        }
+
+        .user-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--secondary-color), var(--accent-color));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            margin-right: 10px;
+            font-weight: 600;
+        }
+
+        .user-name {
+            font-weight: 500;
+            margin-right: 8px;
+            color: var(--text-color);
+        }
+
+        .user-menu-arrow {
+            font-size: 0.8rem;
+            color: #666;
+            transition: transform var(--transition-speed);
+        }
+
+        .user-menu.active .user-menu-arrow {
+            transform: rotate(180deg);
+        }
+
+        /* User Dropdown */
+        .user-dropdown {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            margin-top: 10px;
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 5px 25px rgba(0, 0, 0, 0.15);
+            min-width: 220px;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: all var(--transition-speed);
+        }
+
+        .user-menu.active .user-dropdown {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .dropdown-header {
+            padding: 20px;
+            border-bottom: 1px solid var(--border-color);
+            background-color: #f8f9fa;
+            border-radius: 12px 12px 0 0;
+        }
+
+        .dropdown-user-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .dropdown-avatar {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--secondary-color), var(--accent-color));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+
+        .dropdown-user-details {
+            flex: 1;
+        }
+
+        .dropdown-user-name {
+            font-weight: 600;
+            color: var(--text-color);
+            font-size: 0.95rem;
+        }
+
+        .dropdown-user-email {
+            font-size: 0.85rem;
+            color: #666;
+        }
+
+        .dropdown-menu {
+            padding: 8px 0;
+        }
+
+        .dropdown-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 20px;
+            color: var(--text-color);
+            text-decoration: none;
+            transition: background-color var(--transition-speed);
+            cursor: pointer;
+        }
+
+        .dropdown-item:hover {
+            background-color: #f8f9fa;
+        }
+
+        .dropdown-item i {
+            margin-right: 12px;
+            width: 20px;
+            text-align: center;
+            color: #666;
+        }
+
+        .dropdown-divider {
+            height: 1px;
+            background-color: var(--border-color);
+            margin: 8px 0;
+        }
+
+        .dropdown-item.logout {
+            color: var(--error-color);
+        }
+
+        .dropdown-item.logout i {
+            color: var(--error-color);
+        }
+
+        /* Container */
+        .container {
+            display: flex;
+            flex: 1;
+            margin-top: var(--header-height);
+        }
+
+        /* Content */
+        .content {
+            flex: 1;
+            padding: 30px;
+            margin-left: var(--menu-width);
+            transition: margin-left var(--transition-speed);
+        }
+
+        .sidebar.collapsed ~ .content {
+            margin-left: var(--menu-collapsed-width);
+        }
+
+        .breadcrumb {
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            font-size: 0.9rem;
+        }
+
+        .breadcrumb-item {
+            display: inline-block;
+            color: #666;
+        }
+
+        .breadcrumb-item:not(:last-child)::after {
+            content: "/";
+            margin: 0 10px;
+            color: #ccc;
+        }
+
+        .breadcrumb-item a {
+            color: var(--secondary-color);
+            text-decoration: none;
+            transition: color var(--transition-speed);
+        }
+
+        .breadcrumb-item a:hover {
+            color: var(--accent-color);
+            text-decoration: underline;
+        }
+
+        .breadcrumb-item.active {
+            color: var(--text-color);
+            font-weight: 500;
+        }
+
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .page-title {
+            font-size: 2rem;
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+
+        /* Action Buttons */
+        .btn-primary {
+            padding: 12px 24px;
+            background: linear-gradient(135deg, var(--secondary-color), var(--accent-color));
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all var(--transition-speed);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+            font-size: 0.95rem;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        /* Search and Filters */
+        .controls-section {
+            background-color: white;
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: var(--card-shadow);
+        }
+
+        .controls-row {
+            display: flex;
+            gap: 20px;
+            align-items: flex-end;
+            flex-wrap: wrap;
+        }
+
+        .control-group {
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .control-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: var(--text-color);
+            font-size: 0.9rem;
+        }
+
+        .control-group input,
+        .control-group select {
+            width: 100%;
+            padding: 10px 15px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 0.95rem;
+            transition: all var(--transition-speed);
+        }
+
+        .control-group input:focus,
+        .control-group select:focus {
+            outline: none;
+            border-color: var(--secondary-color);
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .btn-search {
+            padding: 10px 25px;
+            background: linear-gradient(135deg, var(--secondary-color), var(--accent-color));
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all var(--transition-speed);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-search:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        /* Project Grid */
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+
+        .project-card {
+            background-color: white;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: var(--card-shadow);
+            transition: all var(--transition-speed);
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .project-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--hover-shadow);
+        }
+
+        .project-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(to right, var(--secondary-color), var(--accent-color));
+        }
+
+        .project-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 20px;
+        }
+
+        .project-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--primary-color);
+            margin-bottom: 5px;
+        }
+
+        .project-code {
+            font-size: 0.85rem;
+            color: #666;
+        }
+
+        .project-status {
+            display: inline-flex;
+            align-items: center;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            gap: 6px;
+        }
+
+        .project-status.active {
+            background-color: #d4edda;
+            color: #155724;
+        }
+
+        .project-status.inactive {
+            background-color: #e2e3e5;
+            color: #383d41;
+        }
+
+        .project-info {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .info-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .info-row i {
+            width: 20px;
+            color: var(--secondary-color);
+        }
+
+        .project-stats {
+            display: flex;
+            gap: 20px;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .stat-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            flex: 1;
+        }
+
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+
+        .stat-label {
+            font-size: 0.8rem;
+            color: #666;
+            margin-top: 5px;
+        }
+
+        .project-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .btn-action {
+            flex: 1;
+            padding: 10px 20px;
+            border: 1px solid var(--border-color);
+            background-color: white;
+            color: var(--text-color);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all var(--transition-speed);
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            text-decoration: none;
+        }
+
+        .btn-action:hover {
+            background-color: var(--secondary-color);
+            color: white;
+            border-color: var(--secondary-color);
+        }
+
+        .btn-action.primary {
+            background-color: var(--secondary-color);
+            color: white;
+            border-color: var(--secondary-color);
+        }
+
+        .btn-action.primary:hover {
+            background-color: var(--hover-color);
+            border-color: var(--hover-color);
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: var(--card-shadow);
+        }
+
+        .empty-state i {
+            font-size: 4rem;
+            color: #ddd;
+            margin-bottom: 20px;
+        }
+
+        .empty-state h3 {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+            color: var(--text-color);
+        }
+
+        .empty-state p {
+            font-size: 1rem;
+            margin-bottom: 20px;
+            color: #666;
+        }
+
+        /* Help Button */
+        .help-button-container {
+            margin: 0 15px;
+        }
+
+        .help-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 16px;
+            background-color: var(--secondary-color);
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: all var(--transition-speed);
+            position: relative;
+        }
+
+        .help-button:hover {
+            background-color: var(--hover-color);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+        }
+
+        .help-button i {
+            font-size: 1.1rem;
+        }
+
+        .help-text {
+            display: inline-block;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .content {
+                margin-left: 0 !important;
+                padding: 20px;
+            }
+
+            .user-name {
+                display: none;
+            }
+
+            .header-date {
+                display: none;
+            }
+
+            .page-header {
+                flex-direction: column;
+                gap: 20px;
+                align-items: flex-start;
+            }
+
+            .controls-row {
+                flex-direction: column;
+            }
+
+            .control-group {
+                width: 100%;
+            }
+
+            .projects-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .project-stats {
+                flex-wrap: wrap;
+            }
+
+            .project-actions {
+                flex-direction: column;
+            }
+
+            .help-text {
+                display: none;
+            }
+            
+            .help-button {
+                padding: 8px 12px;
+            }                
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-left">
+            <div class="menu-toggle" onclick="toggleMobileMenu()">
+                <i class="fas fa-bars"></i>
+            </div>
+            <div class="logo">
+                <img src="../PagWebLocal/logo_ssl.png" alt="SSL Logo">
+                <div class="logo-text">
+                    <h1>SSL v4.0</h1>
+                    <span class="portal-type">Portal Cliente</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="header-right">
+            <div class="header-date">
+                <i class="fas fa-calendar-alt"></i>
+                <span id="currentDate">Cargando...</span>
+            </div>
+
+            <!-- AGREGAR ESTE BOTÓN DE AYUDA -->
+            <div class="help-button-container">
+                <a href="../cliente_navegacion.html" class="help-button" title="Ayuda y Navegación">
+                    <i class="fas fa-question-circle"></i>
+                    <span class="help-text">Ayuda</span>
+                </a>
+            </div>
+                        
+            <div class="notifications">
+                <button class="notifications-button" onclick="showNotifications()">
+                    <i class="fas fa-bell"></i>
+                </button>
+                <span class="notification-count">5</span>
+            </div>
+            
+            <div class="user-menu" id="userMenu">
+                <div class="user-avatar">
+                    <span id="userInitial">C</span>
+                </div>
+                <span class="user-name" id="userName">Empresa Demo S.A.</span>
+                <i class="fas fa-chevron-down user-menu-arrow"></i>
+                
+                <div class="user-dropdown">
+                    <div class="dropdown-header">
+                        <div class="dropdown-user-info">
+                            <div class="dropdown-avatar">
+                                <span id="dropdownUserInitial">C</span>
+                            </div>
+                            <div class="dropdown-user-details">
+                                <div class="dropdown-user-name" id="dropdownUserName">Empresa Demo S.A.</div>
+                                <div class="dropdown-user-email" id="dropdownUserEmail">cliente@demo.com</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="dropdown-menu">
+                        <a href="#" class="dropdown-item" onclick="goToProfile(event)">
+                            <i class="fas fa-user-circle"></i>
+                            <span>Mi Perfil</span>
+                        </a>
+                        <a href="#" class="dropdown-item" onclick="goToSettings(event)">
+                            <i class="fas fa-cog"></i>
+                            <span>Configuración</span>
+                        </a>
+                        <div class="dropdown-divider"></div>
+                        <a href="#" class="dropdown-item logout" onclick="logout(event)">
+                            <i class="fas fa-sign-out-alt"></i>
+                            <span>Cerrar Sesión</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        
+        <!-- Administración de Obras / Proyectos -->
+        <nav class="sidebar" id="sidebar">
+            <ul class="menu">
+
+                <!-- Dashboard -->
+                <li class="menu-item">
+                    <div class="menu-header" onclick="window.location.href='../cliente_dashboard.html'">
+                        <i class="fas fa-home"></i>
+                        <span>Dashboard</span>
+                        <div class="menu-tooltip">Dashboard</div>
+                    </div>
+                </li>
+
+                <!-- Central de Mensajería -->
+                <li class="menu-item">
+                    <div class="menu-header" onclick="window.location.href='../cliente_mensajeria/cliente_listado_mensajeria.html'">
+                        <i class="fas fa-comments"></i>
+                        <span>Central de Mensajería</span>
+                        <div class="menu-tooltip">Central de Mensajería</div>
+                    </div>
+                </li>
+
+                <!-- Solicitudes y Cotizaciones  -->
+                <li class="menu-item">
+                    <div class="menu-header" onclick="toggleSubmenu(this)">
+                        <i class="fas fa-file-alt"></i>
+                        <span>Cotización y Compra</span>
+                        <i class="fas fa-chevron-right arrow"></i>
+                        <div class="menu-tooltip">Cotización y Compra</div>
+                    </div>
+                    <div class="submenu">
+                        <a href="cliente_listado_solicitudes.html" class="submenu-item">
+                            <span class="full-text">Solicitudes de Pedido</span>
+                            <span class="siglas">SP</span>
+                            <div class="sigla-tooltip">Solicitudes de Pedido</div>
+                        </a>
+                        <a href="../cliente_cotizaciones/cliente_listado_cotizaciones.html" class="submenu-item">
+                            <span class="full-text">Cotizaciones</span>
+                            <span class="siglas">CO</span>
+                            <div class="sigla-tooltip">Cotizaciones</div>
+                        </a>
+                        <a href="../cliente_orden_compra/cliente_listado_ordenes_compra.html" class="submenu-item">
+                            <span class="full-text">Órdenes de Compra</span>
+                            <span class="siglas">OC</span>
+                            <div class="sigla-tooltip">Órdenes de Compra</div>
+                        </a>
+                    </div>
+                </li>
+
+                <!-- Control de Entregas -->
+                <li class="menu-item">
+                    <div class="menu-header" onclick="toggleSubmenu(this)">
+                        <i class="fas fa-truck"></i>
+                        <span>Control de Entregas</span>
+                        <i class="fas fa-chevron-right arrow"></i>
+                        <div class="menu-tooltip">Control de Entregas</div>
+                    </div>
+                    <div class="submenu">
+                        <a href="../cliente_control_entrega/cliente_listado_control_entregas.html" class="submenu-item">
+                            <span class="full-text">Control Entrega por OC</span>
+                            <span class="siglas">CEO</span>
+                            <div class="sigla-tooltip">Control Entrega por OC</div>
+                        </a>
+
+                        <a href="../cliente_modificaciones/cliente_listado_modificaciones.html" class="submenu-item">
+                            <span class="full-text">Modificaciones OC</span>
+                            <span class="siglas">MOC</span>
+                            <div class="sigla-tooltip">Modificaciones OC</div>
+                        </a>
+
+                        <a href="../cliente_control_recepcion/cliente_listado_despachos.html" class="submenu-item">
+                            <span class="full-text">Control Recepción</span>
+                            <span class="siglas">CRE</span>
+                            <div class="sigla-tooltip">Control Recepción</div>
+                        </a>
+
+                        <a href="../cliente_incidentes/cliente_listado_incidentes.html" class="submenu-item">
+                            <span class="full-text">Incidentes de Entrega</span>
+                            <span class="siglas">IEN</span>
+                            <div class="sigla-tooltip">Incidentes de Entrega</div>
+                        </a>                        
+                    </div>
+                </li>
+               
+                <!-- Pagos -->
+                <li class="menu-item">
+                    <div class="menu-header" onclick="toggleSubmenu(this)">
+                        <i class="fas fa-file-invoice-dollar"></i>
+                        <span>Pagos</span>
+                        <i class="fas fa-chevron-right arrow"></i>
+                        <div class="menu-tooltip">Pagos</div>
+                    </div>
+                    <div class="submenu">
+                        <a href="../cliente_pagos/cliente_listado_pagos.html" class="submenu-item">
+                            <span class="full-text">Estado de Pagos</span>
+                            <span class="siglas">EP</span>
+                            <div class="sigla-tooltip">Estado de Pagos</div>
+                        </a>                          
+                    </div>
+                </li>
+
+                <!-- Control Total de Obras -->
+                <li class="menu-item">
+                    <div class="menu-header" onclick="toggleSubmenu(this)">
+                        <i class="fas fa-hard-hat"></i>
+                        <span>Control Total de Obras</span>
+                        <i class="fas fa-chevron-right arrow"></i>
+                        <div class="menu-tooltip">Control Total de Obras</div>
+                    </div>
+                    <div class="submenu">
+                        <a href="../cliente_control_obra/cliente_listado_obras_control.html" class="submenu-item">
+                            <span class="full-text">Listado de Obras</span>
+                            <span class="siglas">LO</span>
+                            <div class="sigla-tooltip">Listado de Obras</div>
+                        </a>
+                    </div>
+                </li>
+                
+                <!-- Configuración (active) -->
+                <li class="menu-item active">
+                    <div class="menu-header active" onclick="toggleSubmenu(this)">
+                        <i class="fas fa-cog"></i>
+                        <span>Configuración</span>
+                        <i class="fas fa-chevron-right arrow"></i>
+                        <div class="menu-tooltip">Configuración</div>
+                    </div>
+                    <div class="submenu">
+                        <a href="../cliente_configuracion/cliente_listado_obras.html" class="submenu-item active">
+                            <span class="full-text">Administración de Obras / Proyectos</span>
+                            <span class="siglas">AOP</span>
+                            <div class="sigla-tooltip">Administración de Obras / Proyectos</div>
+                        </a>
+                        <a href="../cliente_configuracion/cliente_listado_usuarios.html" class="submenu-item">
+                            <span class="full-text">Administración de Usuarios</span>
+                            <span class="siglas">AU</span>
+                            <div class="sigla-tooltip">Administración de Usuarios</div>
+                        </a>
+                    </div>
+                </li>
+            </ul>
+        </nav>
+
+        <!-- Toggle Button (fuera del sidebar) -->
+        <div class="sidebar-toggle" onclick="toggleSidebar()">
+            <i class="fas fa-chevron-left"></i>
+        </div>
+
+        <main class="content">
+            <div class="breadcrumb">
+                <div class="breadcrumb-item"><a href="../cliente_dashboard.html">Inicio</a></div>
+                <div class="breadcrumb-item"><a href="#">Configuración</a></div>
+                <div class="breadcrumb-item active">Administración de Obras / Proyectos</div>
+            </div>
+
+            <div class="page-header">
+                <h1 class="page-title">Administración de Obras / Proyectos</h1>
+                <button class="btn-primary" onclick="createNewProject()">
+                    <i class="fas fa-plus"></i>
+                    Nueva Obra/Proyecto
+                </button>
+            </div>
+
+            <!-- Search and Filters -->
+            <div class="controls-section">
+                <div class="controls-row">
+                    <div class="control-group">
+                        <label for="searchProject">Buscar por nombre</label>
+                        <input type="text" id="searchProject" placeholder="Ej: Torre Pacífico">
+                    </div>
+                    <div class="control-group">
+                        <label for="filterRegion">Región</label>
+                        <select id="filterRegion">
+                            <option value="">Todas las regiones</option>
+                            <option value="rm">Región Metropolitana</option>
+                            <option value="valparaiso">Región de Valparaíso</option>
+                            <option value="biobio">Región del Biobío</option>
+                            <option value="araucania">Región de La Araucanía</option>
+                            <option value="loslagos">Región de Los Lagos</option>
+                        </select>
+                    </div>
+                    <div class="control-group">
+                        <label for="filterStatus">Estado</label>
+                        <select id="filterStatus">
+                            <option value="">Todos</option>
+                            <option value="active">Activo</option>
+                            <option value="inactive">Inactivo</option>
+                        </select>
+                    </div>
+                    <button class="btn-search" onclick="filterProjects()">
+                        <i class="fas fa-search"></i>
+                        Buscar
+                    </button>
+                </div>
+            </div>
+
+            <!-- Projects Grid -->
+            <div class="projects-grid">
+                <!-- Project Card 1 -->
+                <div class="project-card" onclick="viewProjectDetail('PRY-2025-001')">
+                    <div class="project-header">
+                        <div>
+                            <h3 class="project-title">Torre Pacífico</h3>
+                            <p class="project-code">PRY-2025-001</p>
+                        </div>
+                        <span class="project-status active">
+                            <i class="fas fa-circle"></i>
+                            Activo
+                        </span>
+                    </div>
+                    
+                    <div class="project-info">
+                        <div class="info-row">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <span>Av. Providencia 1234, Providencia</span>
+                        </div>
+                        <div class="info-row">
+                            <i class="fas fa-globe-americas"></i>
+                            <span>Región Metropolitana</span>
+                        </div>
+                        <div class="info-row">
+                            <i class="fas fa-users"></i>
+                            <span>5 encargados asignados</span>
+                        </div>
+                    </div>
+
+                    <div class="project-stats">
+                        <div class="stat-item">
+                            <div class="stat-value">24</div>
+                            <div class="stat-label">Solicitudes</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">18</div>
+                            <div class="stat-label">OC Activas</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">$12.4M</div>
+                            <div class="stat-label">Facturado</div>
+                        </div>
+                    </div>
+
+                    <div class="project-actions">
+                        <a href="#" onclick="viewProjectDetail('PRY-2025-001'); event.stopPropagation();" class="btn-action primary">
+                            <i class="fas fa-eye"></i>
+                            Ver Detalle
+                        </a>
+                        <button class="btn-action" onclick="editProject(event, 'PRY-2025-001')">
+                            <i class="fas fa-edit"></i>
+                            Editar
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Project Card 2 -->
+                <div class="project-card" onclick="viewProjectDetail('PRY-2025-002')">
+                    <div class="project-header">
+                        <div>
+                            <h3 class="project-title">Edificio Los Leones</h3>
+                            <p class="project-code">PRY-2025-002</p>
+                        </div>
+                        <span class="project-status active">
+                            <i class="fas fa-circle"></i>
+                            Activo
+                        </span>
+                    </div>
+                    
+                    <div class="project-info">
+                        <div class="info-row">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <span>Av. Los Leones 567, Las Condes</span>
+                        </div>
+                        <div class="info-row">
+                            <i class="fas fa-globe-americas"></i>
+                            <span>Región Metropolitana</span>
+                        </div>
+                        <div class="info-row">
+                            <i class="fas fa-users"></i>
+                            <span>3 encargados asignados</span>
+                        </div>
+                    </div>
+
+                    <div class="project-stats">
+                        <div class="stat-item">
+                            <div class="stat-value">15</div>
+                            <div class="stat-label">Solicitudes</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">12</div>
+                            <div class="stat-label">OC Activas</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">$8.7M</div>
+                            <div class="stat-label">Facturado</div>
+                        </div>
+                    </div>
+
+                    <div class="project-actions">
+                        <a href="#" onclick="viewProjectDetail('PRY-2025-002'); event.stopPropagation();" class="btn-action primary">
+                            <i class="fas fa-eye"></i>
+                            Ver Detalle
+                        </a>
+                        <button class="btn-action" onclick="editProject(event, 'PRY-2025-002')">
+                            <i class="fas fa-edit"></i>
+                            Editar
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Project Card 3 -->
+                <div class="project-card" onclick="viewProjectDetail('PRY-2025-003')">
+                    <div class="project-header">
+                        <div>
+                            <h3 class="project-title">Condominio Viña Marina</h3>
+                            <p class="project-code">PRY-2025-003</p>
+                        </div>
+                        <span class="project-status active">
+                            <i class="fas fa-circle"></i>
+                            Activo
+                        </span>
+                    </div>
+                    
+                    <div class="project-info">
+                        <div class="info-row">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <span>Av. Marina 890, Viña del Mar</span>
+                        </div>
+                        <div class="info-row">
+                            <i class="fas fa-globe-americas"></i>
+                            <span>Región de Valparaíso</span>
+                        </div>
+                        <div class="info-row">
+                            <i class="fas fa-users"></i>
+                            <span>4 encargados asignados</span>
+                        </div>
+                    </div>
+
+                    <div class="project-stats">
+                        <div class="stat-item">
+                            <div class="stat-value">31</div>
+                            <div class="stat-label">Solicitudes</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">22</div>
+                            <div class="stat-label">OC Activas</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">$15.2M</div>
+                            <div class="stat-label">Facturado</div>
+                        </div>
+                    </div>
+
+                    <div class="project-actions">
+                        <a href="#" onclick="viewProjectDetail('PRY-2025-003'); event.stopPropagation();" class="btn-action primary">
+                            <i class="fas fa-eye"></i>
+                            Ver Detalle
+                        </a>
+                        <button class="btn-action" onclick="editProject(event, 'PRY-2025-003')">
+                            <i class="fas fa-edit"></i>
+                            Editar
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Project Card 4 (Inactive) -->
+                <div class="project-card" onclick="viewProjectDetail('PRY-2024-089')">
+                    <div class="project-header">
+                        <div>
+                            <h3 class="project-title">Centro Comercial Sur</h3>
+                            <p class="project-code">PRY-2024-089</p>
+                        </div>
+                        <span class="project-status inactive">
+                            <i class="fas fa-circle"></i>
+                            Inactivo
+                        </span>
+                    </div>
+                    
+                    <div class="project-info">
+                        <div class="info-row">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <span>Av. Pajaritos 2345, Maipú</span>
+                        </div>
+                        <div class="info-row">
+                            <i class="fas fa-globe-americas"></i>
+                            <span>Región Metropolitana</span>
+                        </div>
+                        <div class="info-row">
+                            <i class="fas fa-users"></i>
+                            <span>2 encargados asignados</span>
+                        </div>
+                    </div>
+
+                    <div class="project-stats">
+                        <div class="stat-item">
+                            <div class="stat-value">45</div>
+                            <div class="stat-label">Solicitudes</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">0</div>
+                            <div class="stat-label">OC Activas</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">$28.5M</div>
+                            <div class="stat-label">Facturado</div>
+                        </div>
+                    </div>
+
+                    <div class="project-actions">
+                        <a href="#" onclick="viewProjectDetail('PRY-2024-089'); event.stopPropagation();" class="btn-action primary">
+                            <i class="fas fa-eye"></i>
+                            Ver Detalle
+                        </a>
+                        <button class="btn-action" onclick="editProject(event, 'PRY-2024-089')">
+                            <i class="fas fa-edit"></i>
+                            Editar
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Toggle sidebar collapse
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const toggleButton = document.querySelector('.sidebar-toggle');
+            const isCollapsed = sidebar.classList.contains('collapsed');
+            
+            if (isCollapsed) {
+                sidebar.classList.remove('collapsed');
+                localStorage.setItem('sidebarCollapsed', 'false');
+            } else {
+                sidebar.classList.add('collapsed');
+                localStorage.setItem('sidebarCollapsed', 'true');
+            }
+            
+            // Update button icon rotation
+            const icon = toggleButton.querySelector('i');
+            if (sidebar.classList.contains('collapsed')) {
+                icon.style.transform = 'rotate(180deg)';
+            } else {
+                icon.style.transform = 'rotate(0deg)';
+            }
+        }
+
+        // Load sidebar state from localStorage
+        function loadSidebarState() {
+            const isCollapsed = localStorage.getItem('sidebarCollapsed') === 'true';
+            const sidebar = document.getElementById('sidebar');
+            const toggleButton = document.querySelector('.sidebar-toggle');
+            const icon = toggleButton.querySelector('i');
+            
+            if (isCollapsed) {
+                sidebar.classList.add('collapsed');
+                icon.style.transform = 'rotate(180deg)';
+            }
+        }
+
+        // Toggle mobile menu
+        function toggleMobileMenu() {
+            const sidebar = document.getElementById('sidebar');
+            sidebar.classList.toggle('active');
+        }
+
+        // Toggle submenu
+        function toggleSubmenu(header) {
+            const menuItem = header.parentElement;
+            const sidebar = document.getElementById('sidebar');
+            const wasActive = menuItem.classList.contains('active');
+            
+            // If sidebar is collapsed and clicking on item with submenu, don't expand sidebar
+            // Just toggle the submenu
+            
+            // Close all submenus
+            document.querySelectorAll('.menu-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            
+            // Remove active from all headers
+            document.querySelectorAll('.menu-header').forEach(h => {
+                h.classList.remove('active');
+            });
+            
+            // If it wasn't active, open it
+            if (!wasActive && header.nextElementSibling) {
+                menuItem.classList.add('active');
+            }
+            
+            // Always keep the clicked header active if it's a main item
+            if (!header.querySelector('.arrow')) {
+                header.classList.add('active');
+            }
+        }
+
+        // User menu dropdown
+        const userMenu = document.getElementById('userMenu');
+        let isUserMenuOpen = false;
+
+        userMenu.addEventListener('click', function(e) {
+            e.stopPropagation();
+            isUserMenuOpen = !isUserMenuOpen;
+            this.classList.toggle('active');
+        });
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', function(e) {
+            if (!userMenu.contains(e.target) && isUserMenuOpen) {
+                userMenu.classList.remove('active');
+                isUserMenuOpen = false;
+            }
+        });
+
+        // Update date
+        function updateDate() {
+            const now = new Date();
+            const options = { 
+                weekday: 'long', 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric' 
+            };
+            const formattedDate = now.toLocaleDateString('es-CL', options);
+            const capitalizedDate = formattedDate.charAt(0).toUpperCase() + formattedDate.slice(1);
+            document.getElementById('currentDate').textContent = capitalizedDate;
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            updateDate();
+            loadUserData();
+            loadSidebarState();
+            
+            // Update date every minute
+            setInterval(updateDate, 60000);
+        });
+
+        // Load user data
+        function loadUserData() {
+            const userData = sessionStorage.getItem('userData');
+            if (userData) {
+                try {
+                    const user = JSON.parse(userData);
+                    const userName = user.name || 'Cliente';
+                    const userEmail = user.email || 'cliente@demo.com';
+                    
+                    // Update UI
+                    document.getElementById('userName').textContent = userName;
+                    document.getElementById('dropdownUserName').textContent = userName;
+                    document.getElementById('dropdownUserEmail').textContent = userEmail;
+                    
+                    // Update initials
+                    const initial = userName.charAt(0).toUpperCase();
+                    document.getElementById('userInitial').textContent = initial;
+                    document.getElementById('dropdownUserInitial').textContent = initial;
+                } catch (e) {
+                    console.error('Error parsing user data:', e);
+                }
+            }
+        }
+
+        // Profile function
+        function goToProfile(e) {
+            e.preventDefault();
+            alert('Navegando al perfil de usuario...\nEsta funcionalidad estará disponible próximamente.');
+            userMenu.classList.remove('active');
+            isUserMenuOpen = false;
+        }
+
+        // Settings function
+        function goToSettings(e) {
+            e.preventDefault();
+            alert('Navegando a configuración...\nEsta funcionalidad estará disponible próximamente.');
+            userMenu.classList.remove('active');
+            isUserMenuOpen = false;
+        }
+
+        // Logout function
+        function logout(e) {
+            e.preventDefault();
+            if (confirm('¿Está seguro que desea cerrar sesión?')) {
+                sessionStorage.clear();
+                window.location.href = '../../index.html';
+            }
+        }
+
+        // Show notifications
+        function showNotifications() {
+            alert('Panel de notificaciones\n\nEsta funcionalidad estará disponible próximamente.');
+        }
+
+        // Create new project - Redirect to detail page in create mode
+        function createNewProject() {
+            window.location.href = 'cliente_detalle_obra.html?mode=create';
+        }
+
+        // View project detail
+        function viewProjectDetail(projectId) {
+            window.location.href = `cliente_detalle_obra.html?id=${projectId}`;
+        }
+
+        // Edit project - Redirect to detail page in edit mode
+        function editProject(event, projectId) {
+            event.stopPropagation();
+            window.location.href = `cliente_detalle_obra.html?id=${projectId}&mode=edit`;
+        }
+
+        // Filter projects
+        function filterProjects() {
+            alert('Aplicando filtros...\nEsta funcionalidad se conectará con el backend.');
+        }
+    </script>
+</body>
+</html>
