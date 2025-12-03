@@ -1,0 +1,331 @@
+/* ssl_ea_listado_cuadro_comparativo.css - Estilos específicos para la página de Cuadros Comparativos */
+
+/* Ajuste del margen para el contenido cuando el sidebar está colapsado */
+.sidebar.collapsed ~ .content {
+    margin-left: var(--menu-collapsed-width);
+}
+
+/* Contenedor principal de la página */
+.main-container {
+    background-color: white;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+    border: 1px solid var(--border-color);
+}
+
+/* Sección de filtros */
+.filter-section {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 20px;
+    padding: 15px;
+    background-color: #f8f9fa;
+    border-radius: 6px;
+    flex-wrap: wrap;
+    align-items: flex-end;
+}
+
+.filter-group {
+    flex: 1;
+    min-width: 200px;
+}
+
+.filter-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: 500;
+    font-size: 0.9rem;
+}
+
+.filter-control {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    background-color: white;
+}
+
+/* Tarjetas de estadísticas */
+.stats-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 15px;
+    margin-bottom: 25px;
+}
+
+.stat-card {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.stat-card.warning {
+    background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+}
+
+.stat-card.success {
+    background: linear-gradient(135deg, #84fab0 0%, #8fd3f4 100%);
+}
+
+.stat-card.info {
+    background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+}
+
+.stat-number {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 5px;
+}
+
+.stat-label {
+    font-size: 0.9rem;
+    opacity: 0.9;
+}
+
+/* Tabla de cuadros comparativos */
+.comparatives-list {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.95rem;
+}
+
+.comparatives-list th {
+    background-color: var(--table-header);
+    padding: 12px;
+    text-align: left;
+    font-weight: 600;
+    border-bottom: 2px solid var(--border-color);
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+.comparatives-list td {
+    padding: 12px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.comparatives-list tbody tr:hover {
+    background-color: var(--table-row-hover);
+}
+
+/* Filas expandibles */
+.expandable-row {
+    cursor: pointer;
+    transition: background-color var(--transition-speed);
+}
+
+.expandable-row:hover {
+    background-color: #e8f4f8;
+}
+
+.expand-icon {
+    transition: transform var(--transition-speed);
+    margin-right: 10px;
+    color: var(--secondary-color);
+}
+
+.expanded .expand-icon {
+    transform: rotate(90deg);
+}
+
+/* Sub-tabla (contenido expandido) */
+.sub-table {
+    display: none;
+    background-color: #f8f9fa;
+}
+
+.sub-table td {
+    padding: 10px 20px;
+}
+
+.sub-table-content {
+    width: 100%;
+    margin: 10px 0;
+}
+
+.sub-table-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px;
+    border-bottom: 1px solid #e9ecef;
+    align-items: center;
+}
+
+.sub-table-row:last-child {
+    border-bottom: none;
+}
+
+/* Badges de estado */
+.status-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 500;
+}
+
+.status-pending {
+    background-color: #fff3cd;
+    color: #856404;
+}
+
+.status-review {
+    background-color: #cce5ff;
+    color: #004085;
+}
+
+.status-approved {
+    background-color: #d4edda;
+    color: #155724;
+}
+
+.status-incomplete {
+    background-color: #f8d7da;
+    color: #721c24;
+}
+
+/* Botones de acción */
+.action-buttons {
+    display: flex;
+    gap: 8px;
+}
+
+.btn-sm {
+    padding: 6px 12px;
+    font-size: 0.85rem;
+}
+
+/* Información adicional */
+.provider-count {
+    display: inline-flex;
+    align-items: center;
+    margin-left: 10px;
+    font-size: 0.85rem;
+    color: #6c757d;
+}
+
+.quote-progress {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.progress-bar {
+    width: 100px;
+    height: 6px;
+    background-color: #e9ecef;
+    border-radius: 3px;
+    overflow: hidden;
+}
+
+.progress-fill {
+    height: 100%;
+    background-color: var(--success-color);
+    transition: width var(--transition-speed);
+}
+
+.client-info {
+    font-weight: 600;
+    color: var(--primary-color);
+}
+
+.date-info {
+    font-size: 0.85rem;
+    color: #6c757d;
+}
+
+.amount-info {
+    font-weight: 600;
+    color: var(--success-color);
+}
+
+/* Paginación */
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+    gap: 10px;
+}
+
+.pagination-btn {
+    padding: 8px 12px;
+    border: 1px solid var(--border-color);
+    background-color: white;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all var(--transition-speed);
+}
+
+.pagination-btn:hover:not(.active) {
+    background-color: #f0f4f8;
+    border-color: var(--secondary-color);
+}
+
+.pagination-btn.active {
+    background-color: var(--secondary-color);
+    color: white;
+    border-color: var(--secondary-color);
+}
+
+.pagination-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* Media Queries */
+@media (max-width: 1200px) {
+    .filter-section {
+        flex-direction: column;
+    }
+
+    .filter-group {
+        width: 100%;
+    }
+}
+
+@media (max-width: 768px) {
+    .action-buttons {
+        flex-direction: column;
+        width: 100%;
+    }
+
+    .btn-sm {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .comparatives-list {
+        font-size: 0.8rem;
+    }
+
+    .comparatives-list th,
+    .comparatives-list td {
+        padding: 8px;
+    }
+
+    .stats-cards {
+        grid-template-columns: 1fr;
+    }
+
+    .quote-progress {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 5px;
+    }
+
+    .progress-bar {
+        width: 100%;
+    }
+
+    .sub-table-row {
+        flex-direction: column;
+        gap: 10px;
+        align-items: flex-start;
+    }
+}

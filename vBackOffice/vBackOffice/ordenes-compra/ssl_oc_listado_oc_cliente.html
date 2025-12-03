@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SSL v4.0 - Órdenes de Compra Cliente</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- CSS del menú reutilizable -->
+    <link rel="stylesheet" href="../css/ssl-menu.css">
+    <link rel="stylesheet" href="../css/ssl-general.css">
+    
+    <!-- Estilos específicos de la página -->
+    <link rel="stylesheet" href="../css/ssl-oc-cliente.css">
+    <!--link rel="stylesheet" href="../css/ssl-oc-listado-oc-proveedor.css"-->
+</head>
+<body>
+    <!-- Contenedor para el menú que será generado por JavaScript -->
+    <div id="menu-container"></div>
+
+    <main class="content" style="margin-left: var(--menu-width);">
+        <!-- Breadcrumb -->
+        <div class="breadcrumb">
+            <div class="breadcrumb-item"><a href="../inicio/ssl_menu.html">Inicio</a></div>
+            <div class="breadcrumb-item"><a href="#">Órdenes de Compra</a></div>
+            <div class="breadcrumb-item active">OC Cliente</div>
+        </div>
+
+        <!-- Page Header -->
+        <div class="page-header">
+            <h1 class="page-title">
+                Órdenes de Compra - Cliente</h1>
+            <div class="header-actions">
+                <button class="btn btn-success" onclick="SSLOCCliente.openNewOCModal()">
+                    <i class="fas fa-plus"></i> Nueva OC Cliente
+                </button>
+            </div>
+        </div>            
+
+        <!-- Filtros -->
+        <div class="filter-container">        
+            <h2 class="filter-title">
+                <i class="fas fa-filter"></i>
+                Filtros de Búsqueda
+            </h2>            
+            
+            <div class="filter-grid">
+                <div class="form-group">
+                    <label for="filter-cliente">Cliente</label>
+                    <select id="filter-cliente" class="form-control">
+                        <option value="">Todos los clientes</option>
+                        <option value="1">CONSTRUCTORA ALMAGRO S.A.</option>
+                        <option value="2">INMOBILIARIA INGEVEC</option>
+                        <option value="3">CONSTRUCTORA MOLLER Y PÉREZ-COTAPOS</option>
+                    </select>                    
+                </div>
+                <div class="form-group">
+                    <label for="filter-estado">Estado</label>
+                    <select id="filter-estado" class="form-control">
+                        <option value="">Todos</option>
+                        <option value="pending">Pendiente</option>
+                        <option value="approved">Aprobada</option>
+                        <option value="rejected">Rechazada</option>
+                        <option value="adjustment">En Ajuste</option>
+                    </select>                    
+                </div>
+                <div class="form-group">
+                    <label for="filter-origen">Origen</label>
+                    <select id="filter-origen" class="form-control">
+                        <option value="">Todos</option>
+                        <option value="api">API</option>
+                        <option value="email">Email</option>
+                        <option value="physical">Física</option>
+                    </select>                    
+                </div>
+                <div class="form-group">
+                    <label for="filter-fecha-desde">Fecha Desde</label>
+                    <input type="date" id="filter-fecha-desde" class="form-control">                    
+                </div>
+                <div class="form-group">
+                    <label for="filter-fecha-hasta">Fecha Hasta</label>
+                    <input type="date" id="filter-fecha-hasta" class="form-control">                    
+                </div>               
+            </div>
+            <div class="filter-actions">
+                <button type="button" class="btn btn-outline" onclick="SSLOCCliente.clearFilters()">
+                    <i class="fas fa-times"></i> Limpiar
+                </button>
+                <button type="button" class="btn btn-primary" onclick="SSLOCCliente.applyFilters()">
+                    <i class="fas fa-search"></i> Buscar
+                </button>
+            </div>
+        </div>
+
+
+        <div class="results-container">
+            <!-- Barra de acciones -->
+            <div class="results-header">
+                <div>
+                    <h2 class="results-title">
+                        <i class="fas fa-list"></i>
+                        Listado de Órdenes de Compra
+                    </h2>
+                    <div class="results-count">Mostrando 8 de 8 órdenes</div>
+                </div>
+            </div>
+
+            <!-- Tabla de OC -->
+            <div class="table-container">
+                <table class="oc-table" id="oc-table">
+                    <thead>
+                        <tr>
+                            <th width="5%"></th>
+                            <th width="10%">Nro. OC</th>
+                            <th width="10%">Fecha</th>
+                            <th width="20%">Cliente</th>
+                            <th width="15%">Cotización Ref.</th>
+                            <th width="10%">Monto</th>
+                            <th width="8%">Origen</th>
+                            <th width="10%">Estado</th>
+                            <th width="12%">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="oc-tbody">
+                        <!-- El contenido se cargará dinámicamente con JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Paginación -->
+            <div class="pagination" id="pagination">
+                <!-- La paginación se generará dinámicamente -->
+            </div>
+        </div>
+    </main>
+
+    <!-- Modal para nueva OC -->
+    <div class="modal" id="newOCModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">
+                    <i class="fas fa-file-invoice"></i>
+                    Nueva Orden de Compra - Cliente
+                </h2>
+                <span class="modal-close" onclick="SSLOCCliente.closeModal('newOCModal')">&times;</span>
+            </div>
+            
+            <form id="newOCForm">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="ocNumber">Número de OC <span class="required">*</span></label>
+                        <input type="text" class="form-control" id="ocNumber" placeholder="Ej: OC-2025-0124" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="ocDate">Fecha de OC <span class="required">*</span></label>
+                        <input type="date" class="form-control" id="ocDate" required>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="client">Cliente <span class="required">*</span></label>
+                        <select class="form-control" id="client" required onchange="SSLOCCliente.loadClientProjects()">
+                            <option value="">Seleccione cliente</option>
+                            <option value="1">CONSTRUCTORA ALMAGRO S.A.</option>
+                            <option value="2">INMOBILIARIA INGEVEC</option>
+                            <option value="3">CONSTRUCTORA MOLLER Y PÉREZ-COTAPOS</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="project">Obra/Proyecto <span class="required">*</span></label>
+                        <select class="form-control" id="project" required disabled>
+                            <option value="">Seleccione primero un cliente</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="quotation">Cotización de Referencia <span class="required">*</span></label>
+                    <select class="form-control" id="quotation" required disabled onchange="SSLOCCliente.loadQuotationDetails()">
+                        <option value="">Seleccione primero un cliente</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Medio de Recepción <span class="required">*</span></label>
+                    <div class="radio-group">
+                        <label class="radio-label">
+                            <input type="radio" name="origin" value="api" required> 
+                            <i class="fas fa-plug"></i> API/Integración
+                        </label>
+                        <label class="radio-label">
+                            <input type="radio" name="origin" value="email" required> 
+                            <i class="fas fa-envelope"></i> Correo Electrónico
+                        </label>
+                        <label class="radio-label">
+                            <input type="radio" name="origin" value="physical" required> 
+                            <i class="fas fa-file-alt"></i> Documento Físico
+                        </label>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="amount">Monto Total OC</label>
+                        <input type="number" class="form-control" id="amount" placeholder="$0">
+                    </div>
+                    <div class="form-group">
+                        <label for="document">Adjuntar OC (PDF)</label>
+                        <input type="file" class="form-control" id="document" accept=".pdf">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="notes">Observaciones</label>
+                    <textarea class="form-control" id="notes" rows="3" placeholder="Ingrese observaciones adicionales..."></textarea>
+                </div>
+
+                <div id="quotationDetails" class="quotation-details">
+                    <h4><i class="fas fa-info-circle"></i> Detalle de Cotización Seleccionada</h4>
+                    <div class="detail-grid">
+                        <div class="detail-item">
+                            <strong>Monto Cotizado:</strong>
+                            <span id="quotedAmount">$0</span>
+                        </div>
+                        <div class="detail-item">
+                            <strong>Fecha Cotización:</strong>
+                            <span id="quotedDate">-</span>
+                        </div>
+                        <div class="detail-item">
+                            <strong>Vigencia hasta:</strong>
+                            <span id="quotedValidity">-</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline" onclick="SSLOCCliente.closeModal('newOCModal')">
+                        Cancelar
+                    </button>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-save"></i> Guardar OC
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Script del menú componentizado -->
+    <script src="../js/menu-component.js"></script>
+    
+    <!-- Script específico de la página -->
+    <script src="../js/ssl-oc-cliente.js"></script>
+    
+    <script>
+        SSLMenu.load('ordenes-compra', 'oc-cliente');
+    </script>
+</body>
+</html>

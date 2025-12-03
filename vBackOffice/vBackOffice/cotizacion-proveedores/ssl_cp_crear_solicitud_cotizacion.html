@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SSL v4.0 - Crear Solicitud de Cotización</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- CSS del menú reutilizable -->
+    <link rel="stylesheet" href="../css/ssl-menu.css">
+    <link rel="stylesheet" href="../css/ssl-general.css">
+
+    <!-- CSS del menú especifico -->        
+    <link rel="stylesheet" href="../css/ssl-cp-crear-solicitud-cotizacion.css">
+</head>
+<body>
+    <!-- Contenedor del menú - Se llenará dinámicamente -->
+    <div id="menu-container"></div>
+
+    <!-- CONTENIDO ESPECÍFICO DE LA PÁGINA -->
+    <main class="content" style="margin-left: var(--menu-width);">
+        <!-- Breadcrumb -->
+        <div class="breadcrumb">
+            <div class="breadcrumb-item"><a href="../inicio/ssl_menu.html">Inicio</a></div>
+            <div class="breadcrumb-item">Cotización a Proveedores</div>
+            <div class="breadcrumb-item"><a href="ssl_listado_solicitudes_cotizar.html">Generación y Distribución</a></div>
+            <div class="breadcrumb-item"><a href="ssl_detalle_solicitud_cotizacion.html">Detalle de Solicitud</a></div>
+            <div class="breadcrumb-item active">Nueva Solicitud de Cotización</div>
+        </div>
+
+        <!-- Page Title -->
+        <div class="page-subtitle">
+            <h1 class="page-title" id="pageTitle">Nueva Solicitud de Cotización</h1>
+            <span>Solicitud: <strong id="numeroSolicitud">SOL-2025-0001</strong></span>
+            <span class="subtitle-badge">Versión 1</span>
+            <span>Correlativo: <strong id="correlativo">003</strong></span>
+        </div>
+
+        <div class="form-container">
+            <form id="cotizacionForm">
+                <!-- Identificación -->
+                <div class="form-section">
+                    <h2 class="section-title">
+                        <i class="fas fa-id-card"></i>
+                        Identificación
+                    </h2>
+                    
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>Número de Solicitud - Versión</label>
+                            <div class="form-value">SOL-2025-0001-V1</div>
+                        </div>
+                        <div class="form-group">
+                            <label>Correlativo de Solicitud</label>
+                            <div class="form-value">003</div>
+                        </div>
+                        <div class="form-group">
+                            <label>Cliente</label>
+                            <div class="form-value">CONSTRUCTORA ALMAGRO S.A.</div>
+                        </div>
+                        <div class="form-group">
+                            <label>Obra</label>
+                            <div class="form-value">EDIFICIO PACIFIC BLUE</div>
+                        </div>
+                        <div class="form-group">
+                            <label>Doc. Referencia Cliente</label>
+                            <div class="form-value">SOLPED-2025-001</div>
+                        </div>
+                        <div class="form-group">
+                            <label>Subclasificación</label>
+                            <div class="form-value">PEP</div>
+                        </div>
+                        <div class="form-group">
+                            <label>Número Subclasificación</label>
+                            <div class="form-value">PEP-001-2025</div>
+                        </div>
+                        <div class="form-group">
+                            <label>Dirección de la Obra</label>
+                            <div class="form-value">Av. Las Condes 1234, Las Condes</div>
+                        </div>
+                        <div class="form-group">
+                            <label>Región de la Obra</label>
+                            <div class="form-value">Región Metropolitana</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Condiciones -->
+                <div class="form-section">
+                    <h2 class="section-title">
+                        <i class="fas fa-clipboard-list"></i>
+                        Condiciones de la Cotización
+                    </h2>
+                    
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="tipoFactura">Tipo de Factura <span class="required">*</span></label>
+                            <select id="tipoFactura" class="form-control" required>
+                                <option value="">Seleccione tipo</option>
+                                <option value="AFECTA" selected>Con Factura AFECTA</option>
+                                <option value="EXENTA">Con Factura EXENTA</option>
+                                <option value="OTRO">OTRO</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="condicionesEntrega">Condiciones de Entrega <span class="required">*</span></label>
+                            <select id="condicionesEntrega" class="form-control" required>
+                                <option value="">Seleccione condición</option>
+                                <option value="puesto-obra" selected>Puesto en Obra</option>
+                                <option value="retiro-tienda">Retiro en Tienda</option>
+                                <option value="bodega-ssl">En Bodega SSL</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="fechaEntrega">Fecha de Entrega Esperada <span class="required">*</span></label>
+                            <input type="date" id="fechaEntrega" class="form-control" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="formaPago">Forma de Pago</label>
+                            <select id="formaPago" class="form-control">
+                                <option value="30-dias" selected>30 días fecha factura</option>
+                                <option value="60-dias">60 días fecha factura</option>
+                                <option value="contado">Contado</option>
+                                <option value="otro">Otro</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group" style="margin-top: 15px;">
+                        <label for="infoAdicional">Información Adicional para Proveedores</label>
+                        <textarea id="infoAdicional" class="form-control" rows="3" 
+                                  placeholder="Incluya cualquier información relevante para los proveedores como condiciones especiales, requisitos técnicos, etc."></textarea>
+                    </div>
+                </div>
+
+                <!-- Selección de Proveedores -->
+                <div class="form-section">
+                    <h2 class="section-title">
+                        <i class="fas fa-users"></i>
+                        Selección de Proveedores
+                    </h2>
+
+                    <div class="info-box">
+                        <i class="fas fa-info-circle"></i>
+                        <p>Seleccione los proveedores a quienes desea enviar esta solicitud de cotización. El sistema muestra proveedores recomendados según el tipo de productos.</p>
+                    </div>
+
+                    <div class="provider-list" id="providerList">
+                        <!-- Los proveedores se cargarán dinámicamente con JavaScript -->
+                    </div>
+
+                    <table class="providers-table" id="selectedProvidersTable">
+                        <thead>
+                            <tr>
+                                <th>Código</th>
+                                <th>Nombre Proveedor</th>
+                                <th>Sucursal</th>
+                                <th>Encargado Cotización</th>
+                                <th>Email</th>
+                                <th>Celular</th>
+                                <th>LC Disponible</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="selectedProvidersBody">
+                            <!-- Los proveedores seleccionados se mostrarán aquí dinámicamente -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Selección de Productos -->
+                <div class="form-section">
+                    <h2 class="section-title">
+                        <i class="fas fa-boxes"></i>
+                        Selección de Productos
+                    </h2>
+
+                    <div class="info-box">
+                        <i class="fas fa-info-circle"></i>
+                        <p>Seleccione los productos de la solicitud de pedido que desea cotizar. Puede ajustar las cantidades y valores referenciales si es necesario.</p>
+                    </div>
+
+                    <button type="button" class="btn btn-primary" onclick="SolicitudCotizacion.agregarProducto()">
+                        <i class="fas fa-plus"></i> Agregar Producto
+                    </button>
+
+                    <table class="products-table" id="productsTable">
+                        <thead>
+                            <tr>
+                                <th width="10%">Seleccionar</th>
+                                <th width="10%">Código Cliente</th>
+                                <th width="20%">Descripción Cliente</th>
+                                <th width="10%">Código SSL</th>
+                                <th width="20%">Descripción SSL</th>
+                                <th width="5%">U.M.</th>
+                                <th width="8%">Cantidad</th>
+                                <th width="10%">Fecha Req.</th>
+                                <th width="12%">Valor Ref.</th>
+                                <th width="5%">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="productTableBody">
+                            <!-- Los productos se agregarán dinámicamente con JavaScript -->
+                        </tbody>
+                    </table>
+
+                    <div class="summary-box">
+                        <div class="summary-title">Resumen</div>
+                        <div class="summary-grid">
+                            <div class="summary-item">
+                                <span class="summary-label">Total Productos:</span>
+                                <span class="summary-value" id="totalProductos">0</span>
+                            </div>
+                            <div class="summary-item">
+                                <span class="summary-label">Total Proveedores:</span>
+                                <span class="summary-value" id="totalProveedores">0</span>
+                            </div>
+                            <div class="summary-item">
+                                <span class="summary-label">Monto Referencial:</span>
+                                <span class="summary-value" id="montoReferencial">$0</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Documentos Adjuntos -->
+                <div class="form-section">
+                    <h2 class="section-title">
+                        <i class="fas fa-paperclip"></i>
+                        Documentos Adjuntos
+                    </h2>
+
+                    <div class="file-upload-area" id="fileUploadArea">
+                        <i class="fas fa-cloud-upload-alt" style="font-size: 3rem; color: var(--secondary-color); margin-bottom: 15px;"></i>
+                        <p>Arrastra archivos aquí o <button type="button" class="btn btn-primary" onclick="document.getElementById('file-upload').click()">selecciona archivos</button></p>
+                        <input type="file" id="file-upload" multiple style="display: none;" accept=".pdf,.doc,.docx,.xls,.xlsx,.jpg,.jpeg,.png">
+                        <p style="font-size: 0.9rem; color: #666; margin-top: 10px;">Formatos permitidos: PDF, Excel, Word, Imágenes | Máximo: 10MB por archivo</p>
+                    </div>
+
+                    <div class="file-list" id="fileList">
+                        <!-- Los archivos se mostrarán aquí dinámicamente -->
+                    </div>
+                </div>
+
+                <!-- Confirmación -->
+                <div class="form-section">
+                    <h2 class="section-title">
+                        <i class="fas fa-check-circle"></i>
+                        Confirmación
+                    </h2>
+
+                    <div class="confirmation-box">
+                        <i class="fas fa-check-circle"></i>
+                        <div>
+                            <strong>Confirmo que la información es correcta y está lista para envío</strong>
+                            <br>
+                            <small>Una vez enviada la solicitud, no podrá ser modificada. Los proveedores recibirán la notificación por email y portal web.</small>
+                        </div>
+                    </div>
+
+                    <div class="warning-box">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <div>
+                            <strong>Importante:</strong>
+                            <ul style="margin: 5px 0 0 20px;">
+                                <li>Verifique que todos los datos estén correctos antes de enviar</li>
+                                <li>Los proveedores tendrán hasta el <strong id="fechaLimite">05/06/2025</strong> para responder</li>
+                                <li>Se generarán <strong id="numSolicitudes">0</strong> solicitudes de cotización</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Botones de Acción -->
+                <div class="action-buttons">
+                    <button type="button" class="btn btn-outline" onclick="SolicitudCotizacion.cancelar()">
+                        <i class="fas fa-times"></i> Cancelar
+                    </button>
+                    <button type="button" class="btn btn-warning" onclick="SolicitudCotizacion.guardarBorrador()">
+                        <i class="fas fa-save"></i> Guardar Borrador
+                    </button>
+                    <button type="button" class="btn btn-primary" onclick="SolicitudCotizacion.vistaPrevia()">
+                        <i class="fas fa-eye"></i> Vista Previa
+                    </button>
+                    <button type="submit" class="btn btn-success">
+                        <i class="fas fa-paper-plane"></i> Enviar Solicitudes
+                    </button>
+                </div>
+            </form>
+        </div>
+    </main>
+
+    <!-- Modal para Agregar Producto -->
+    <div id="modalProducto" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">
+                    <i class="fas fa-box"></i>
+                    Seleccionar Producto
+                </h2>
+                <span class="close" onclick="SolicitudCotizacion.cerrarModalProducto()">&times;</span>
+            </div>
+            
+            <div class="modal-body">
+                <div class="info-box">
+                    <i class="fas fa-info-circle"></i>
+                    <p>Seleccione un producto de la solicitud de pedido original</p>
+                </div>
+
+                <div id="productosDisponibles" style="max-height: 300px; overflow-y: auto; border: 1px solid var(--border-color); border-radius: 4px;">
+                    <!-- Los productos disponibles se cargarán dinámicamente -->
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline" onclick="SolicitudCotizacion.cerrarModalProducto()">
+                    <i class="fas fa-times"></i> Cancelar
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="../js/menu-component.js"></script>
+    <script src="../js/ssl-cp-crear-solicitud-cotizacion.js"></script>
+    <script>
+        // Esperar a que el DOM esté completamente cargado
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('DOM cargado, inicializando componentes...');
+            
+            // Cargar el menú
+            SSLMenu.load('cotizacion-proveedores', 'generacion-distribucion');
+            
+            // Inicializar la funcionalidad de la página
+            // Pequeño delay para asegurar que todo esté listo
+            setTimeout(() => {
+                console.log('Inicializando SolicitudCotizacion...');
+                SolicitudCotizacion.init();
+            }, 100);
+        });
+    </script>
+</body>
+</html>

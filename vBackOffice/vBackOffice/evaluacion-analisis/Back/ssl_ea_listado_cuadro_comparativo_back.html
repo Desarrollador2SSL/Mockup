@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SSL v4.0 - Listado de Cuadros Comparativos</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Estilos del menú compartido -->
+    <link rel="stylesheet" href="../css/ssl-menu-styles.css">
+    
+    <!-- Estilos específicos de la página -->
+    <link rel="stylesheet" href="../css/ssl-eo-cuadro-comparativo.css">
+</head>
+<body>
+    <!-- Contenedor para el menú que será generado por JavaScript -->
+    <div id="menu-container"></div>
+
+    <div class="container">
+        <main class="content">
+            <!-- Breadcrumb -->
+            <div class="breadcrumb">
+                <div class="breadcrumb-item"><a href="../inicio/ssl_menu.html">Inicio</a></div>
+                <div class="breadcrumb-item"><a href="#">Evaluación y Análisis</a></div>
+                <div class="breadcrumb-item active">Listado de Cuadros Comparativos</div>
+            </div>
+
+            <h1 class="page-title">
+                <span><i class="fas fa-chart-line"></i> Cuadros Comparativos Pendientes de Revisión</span>
+            </h1>
+
+            <!-- Tarjetas de estadísticas -->
+            <div class="stats-cards">
+                <div class="stat-card gradient-primary">
+                    <div class="stat-icon">
+                        <i class="fas fa-file-invoice"></i>
+                    </div>
+                    <div class="stat-content">
+                        <div class="stat-number">12</div>
+                        <div class="stat-label">Total Pendientes</div>
+                    </div>
+                </div>
+                <div class="stat-card gradient-warning">
+                    <div class="stat-icon">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                    <div class="stat-content">
+                        <div class="stat-number">5</div>
+                        <div class="stat-label">En Revisión</div>
+                    </div>
+                </div>
+                <div class="stat-card gradient-success">
+                    <div class="stat-icon">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <div class="stat-content">
+                        <div class="stat-number">3</div>
+                        <div class="stat-label">Aprobados Hoy</div>
+                    </div>
+                </div>
+                <div class="stat-card gradient-info">
+                    <div class="stat-icon">
+                        <i class="fas fa-exclamation-triangle"></i>
+                    </div>
+                    <div class="stat-content">
+                        <div class="stat-number">8</div>
+                        <div class="stat-label">Cotizaciones Incompletas</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="main-container">
+                <!-- Sección de Filtros -->
+                <div class="filter-section">
+                    <h3 class="filter-title">
+                        <i class="fas fa-filter"></i>
+                        Filtros de Búsqueda
+                    </h3>
+                    <div class="filter-content">
+                        <div class="filter-group">
+                            <label for="filter-cliente">Cliente</label>
+                            <select id="filter-cliente" class="filter-control">
+                                <option value="">Todos los clientes</option>
+                                <option value="1">CONSTRUCTORA ALMAGRO S.A.</option>
+                                <option value="2">INMOBILIARIA INGEVEC</option>
+                                <option value="3">CONSTRUCTORA MOLLER Y PÉREZ-COTAPOS</option>
+                                <option value="4">CONSTRUCTORA SOCOVESA</option>
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <label for="filter-estado">Estado</label>
+                            <select id="filter-estado" class="filter-control">
+                                <option value="">Todos</option>
+                                <option value="pending">Pendiente</option>
+                                <option value="review">En Revisión</option>
+                                <option value="approved">Aprobado</option>
+                                <option value="incomplete">Incompleto</option>
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <label for="filter-fecha">Fecha</label>
+                            <input type="date" id="filter-fecha" class="filter-control">
+                        </div>
+                        <div class="filter-group">
+                            <label for="filter-buscar">Buscar</label>
+                            <input type="text" id="filter-buscar" class="filter-control" 
+                                   placeholder="Nro. Solicitud o Referencia">
+                        </div>
+                        <div class="filter-actions">
+                            <button class="btn btn-outline" onclick="SSLCuadroComparativo.clearFilters()">
+                                <i class="fas fa-times"></i> Limpiar
+                            </button>
+                            <button class="btn btn-primary" onclick="SSLCuadroComparativo.applyFilters()">
+                                <i class="fas fa-search"></i> Buscar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tabla de cuadros comparativos -->
+                <div class="table-container">
+                    <div class="table-header-actions">
+                        <h3 class="table-title">
+                            <i class="fas fa-list"></i>
+                            Listado de Cuadros Comparativos
+                        </h3>
+                        <button class="btn btn-success" onclick="SSLCuadroComparativo.exportData()">
+                            <i class="fas fa-download"></i> Exportar
+                        </button>
+                    </div>
+                    <table class="comparatives-list" id="comparatives-table">
+                        <thead>
+                            <tr>
+                                <th width="5%"></th>
+                                <th width="12%">Solicitud Pedido</th>
+                                <th width="25%">Cliente / Obra</th>
+                                <th width="15%">Solicitudes Cotización</th>
+                                <th width="15%">Cotizaciones</th>
+                                <th width="10%">Estado</th>
+                                <th width="10%">Monto Total</th>
+                                <th width="8%">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="comparatives-tbody">
+                            <!-- El contenido se cargará dinámicamente con JavaScript -->
+                        </tbody>
+                    </table>
+
+                    <!-- Paginación -->
+                    <div class="pagination" id="pagination">
+                        <!-- La paginación se generará dinámicamente -->
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Script del menú componentizado -->
+    <script src="../js/menu-component.js"></script>
+    
+    <!-- Script específico de la página -->
+    <script src="../js/ssl-eo-cuadro-comparativo.js"></script>
+    
+    <script>
+        // Cargar el menú con la sección activa correcta
+        SSLMenu.load('evaluacion-analisis', 'cuadros-comparativos');
+    </script>
+</body>
+</html>

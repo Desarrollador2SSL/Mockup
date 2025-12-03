@@ -1,0 +1,364 @@
+/* listado-solicitud-styles.css - Estilos específicos del listado de solicitudes */
+
+/* Contenedor principal del listado */
+.list-container {
+    background-color: var(--card-bg);
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+    border: 1px solid var(--border-color);
+}
+
+/* Sección de filtros */
+
+.filters-section {
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+.filters-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 15px;
+    color: var(--primary-color);
+    display: flex;
+    align-items: center;
+}
+
+.filters-title i {
+    margin-right: 8px;
+}
+
+.filters-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 15px;
+    margin-bottom: 15px;
+}
+
+.filter-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.filter-group label {
+    margin-bottom: 5px;
+    font-weight: 500;
+    color: var(--text-color);
+    font-size: 0.9rem;
+}
+
+select.form-control {
+    appearance: none;
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right .7em top 50%;
+    background-size: 1.2em;
+    padding-right: 2.5em;
+}
+
+.filter-actions {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+}
+
+/* Botones específicos */
+.btn-sm {
+    padding: 5px 10px;
+    font-size: 0.85rem;
+}
+
+.btn-icon {
+    padding: 5px 8px;
+}
+
+/* Acciones del listado */
+.list-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.view-options {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.view-toggle {
+    display: flex;
+    background-color: #f0f4f8;
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.view-toggle button {
+    padding: 8px 12px;
+    border: none;
+    background-color: transparent;
+    cursor: pointer;
+    transition: all var(--transition-speed);
+}
+
+.view-toggle button.active {
+    background-color: var(--secondary-color);
+    color: white;
+}
+
+.view-toggle button:hover:not(.active) {
+    background-color: #e0e7ef;
+}
+
+/* Vista de tabla */
+.table-wrapper {
+    overflow-x: auto;
+}
+
+.solicitudes-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.95rem;
+}
+
+.solicitudes-table th {
+    background-color: var(--table-header);
+    padding: 12px;
+    text-align: left;
+    font-weight: 600;
+    border: 1px solid var(--border-color);
+    white-space: nowrap;
+}
+
+.solicitudes-table td {
+    padding: 10px 12px;
+    border: 1px solid var(--border-color);
+}
+
+.solicitudes-table tbody tr:nth-child(even) {
+    background-color: var(--table-row-even);
+}
+
+.solicitudes-table tbody tr:hover {
+    background-color: #f0f4f8;
+    cursor: pointer;
+}
+
+/* Vista de tarjetas */
+.cards-view {
+    display: none;
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    gap: 20px;
+}
+
+.solicitud-card {
+    background-color: white;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 20px;
+    transition: all var(--transition-speed);
+    position: relative;
+}
+
+.solicitud-card:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    transform: translateY(-2px);
+}
+
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: start;
+    margin-bottom: 15px;
+}
+
+.card-number {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--primary-color);
+}
+
+.card-version {
+    font-size: 0.85rem;
+    color: #666;
+    background-color: #f0f4f8;
+    padding: 2px 8px;
+    border-radius: 12px;
+}
+
+.card-body {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.card-field {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.card-field-label {
+    font-weight: 500;
+    color: #666;
+    font-size: 0.9rem;
+}
+
+.card-field-value {
+    font-weight: 500;
+    color: var(--text-color);
+}
+
+.card-actions {
+    display: flex;
+    gap: 5px;
+    margin-top: 15px;
+    padding-top: 15px;
+    border-top: 1px solid var(--border-color);
+}
+
+/* Estados de solicitud */
+.status-badge {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 15px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    text-align: center;
+}
+
+.status-nuevo {
+    background-color: #cce5ff;
+    color: #004085;
+}
+
+.status-cotizando {
+    background-color: #fff3cd;
+    color: #856404;
+}
+
+.status-cotizada {
+    background-color: #d1ecf1;
+    color: #0c5460;
+}
+
+.status-aprobada {
+    background-color: #d4edda;
+    color: #155724;
+}
+
+.status-rechazada {
+    background-color: #f8d7da;
+    color: #721c24;
+}
+
+.status-oc-generada {
+    background-color: #e2e3e5;
+    color: #383d41;
+}
+
+.actions-cell {
+    display: flex;
+    gap: 5px;
+    justify-content: center;
+}
+
+/* Paginación */
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+    gap: 5px;
+}
+
+.pagination button {
+    padding: 8px 12px;
+    border: 1px solid var(--border-color);
+    background-color: white;
+    cursor: pointer;
+    transition: all var(--transition-speed);
+    border-radius: 4px;
+}
+
+.pagination button:hover:not(:disabled) {
+    background-color: #f0f4f8;
+    border-color: var(--secondary-color);
+}
+
+.pagination button.active {
+    background-color: var(--secondary-color);
+    color: white;
+    border-color: var(--secondary-color);
+}
+
+.pagination button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.pagination-info {
+    margin: 0 10px;
+    color: #666;
+}
+
+/* Estado vacío */
+.empty-state {
+    text-align: center;
+    padding: 60px 20px;
+}
+
+.empty-state i {
+    font-size: 4rem;
+    color: #dee2e6;
+    margin-bottom: 20px;
+}
+
+.empty-state h3 {
+    color: #6c757d;
+    margin-bottom: 10px;
+}
+
+.empty-state p {
+    color: #6c757d;
+    margin-bottom: 20px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .filters-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .list-actions {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .view-options {
+        width: 100%;
+        justify-content: space-between;
+    }
+
+    .cards-view {
+        grid-template-columns: 1fr;
+    }
+
+    .table-wrapper {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .solicitudes-table {
+        min-width: 800px;
+    }
+}
+
+@media (max-width: 1024px) and (min-width: 769px) {
+    .cards-view {
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    }
+}

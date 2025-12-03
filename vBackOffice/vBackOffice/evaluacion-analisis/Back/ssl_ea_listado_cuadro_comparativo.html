@@ -1,0 +1,1698 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SSL v4.0 - Listado de Cuadros Comparativos</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --accent-color: #e74c3c;
+            --success-color: #27ae60;
+            --warning-color: #f39c12;
+            --info-color: #9b59b6;
+            --text-color: #333;
+            --text-light: #ecf0f1;
+            --border-color: #ddd;
+            --light-bg: #f5f7fa;
+            --form-bg: #f1f1f1;
+            --table-header: #e9e9e9;
+            --table-row-even: #f9f9f9;
+            --table-row-hover: #f0f0f0;
+            --menu-width: 250px;
+            --header-height: 60px;
+            --transition-speed: 0.3s;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--light-bg);
+            color: var(--text-color);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        .header {
+            background-color: var(--primary-color);
+            color: var(--text-light);
+            height: var(--header-height);
+            padding: 0 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+        }
+
+        .logo img {
+            height: 40px;
+            margin-right: 10px;
+        }
+
+        .logo h1 {
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .header-date {
+            display: flex;
+            align-items: center;
+            font-size: 0.9rem;
+            color: var(--text-light);
+            opacity: 0.9;
+            padding: 0 15px;
+            border-right: 1px solid rgba(255, 255, 255, 0.2);
+            height: 35px;
+            cursor: default;
+            position: relative;
+            transition: opacity var(--transition-speed);
+        }
+
+        .header-date:hover {
+            opacity: 1;
+        }
+
+        .header-date:hover::after {
+            content: attr(data-time);
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            white-space: nowrap;
+            margin-top: 5px;
+            z-index: 1001;
+        }
+
+        .header-date i {
+            margin-right: 8px;
+            font-size: 1rem;
+        }
+
+        #currentDate {
+            transition: opacity var(--transition-speed);
+        }
+
+        .user-menu {
+            display: flex;
+            align-items: center;
+            margin-left: 20px;
+            cursor: pointer;
+            position: relative;
+            padding: 8px 12px;
+            border-radius: 4px;
+            transition: background-color var(--transition-speed);
+        }
+
+        .user-menu:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .user-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background-color: var(--secondary-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            margin-right: 10px;
+        }
+
+        .user-name {
+            font-weight: 500;
+            margin-right: 8px;
+        }
+
+        .user-menu-arrow {
+            font-size: 0.8rem;
+            transition: transform var(--transition-speed);
+        }
+
+        .user-menu.active .user-menu-arrow {
+            transform: rotate(180deg);
+        }
+
+        /* Dropdown menu */
+        .user-dropdown {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            margin-top: 10px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            min-width: 200px;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: all var(--transition-speed);
+        }
+
+        .user-menu.active .user-dropdown {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .user-dropdown::before {
+            content: '';
+            position: absolute;
+            top: -8px;
+            right: 20px;
+            width: 0;
+            height: 0;
+            border-left: 8px solid transparent;
+            border-right: 8px solid transparent;
+            border-bottom: 8px solid white;
+        }
+
+        .dropdown-header {
+            padding: 15px 20px;
+            border-bottom: 1px solid var(--border-color);
+            background-color: #f8f9fa;
+            border-radius: 8px 8px 0 0;
+        }
+
+        .dropdown-user-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .dropdown-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: var(--secondary-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.2rem;
+        }
+
+        .dropdown-user-details {
+            flex: 1;
+        }
+
+        .dropdown-user-name {
+            font-weight: 600;
+            color: var(--text-color);
+            font-size: 0.95rem;
+        }
+
+        .dropdown-user-email {
+            font-size: 0.85rem;
+            color: #666;
+        }
+
+        .dropdown-menu {
+            padding: 8px 0;
+        }
+
+        .dropdown-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 20px;
+            color: var(--text-color);
+            text-decoration: none;
+            transition: background-color var(--transition-speed);
+            cursor: pointer;
+        }
+
+        .dropdown-item:hover {
+            background-color: #f8f9fa;
+        }
+
+        .dropdown-item i {
+            margin-right: 12px;
+            width: 20px;
+            text-align: center;
+            color: #666;
+        }
+
+        .dropdown-divider {
+            height: 1px;
+            background-color: var(--border-color);
+            margin: 8px 0;
+        }
+
+        .dropdown-item.logout {
+            color: var(--accent-color);
+        }
+
+        .dropdown-item.logout i {
+            color: var(--accent-color);
+        }
+
+        .notifications {
+            position: relative;
+            margin-right: 20px;
+        }
+
+        .notifications i {
+            font-size: 1.2rem;
+            cursor: pointer;
+        }     
+
+        .notification-count {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background-color: var(--accent-color);
+            color: white;
+            border-radius: 50%;
+            font-size: 0.7rem;
+            width: 16px;
+            height: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .menu-toggle {
+            display: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        .container {
+            display: flex;
+            flex: 1;
+            margin-top: var(--header-height);
+        }
+
+        .sidebar {
+            width: var(--menu-width);
+            background-color: white;
+            border-right: 1px solid var(--border-color);
+            height: calc(100vh - var(--header-height));
+            position: fixed;
+            overflow-y: auto;
+            transition: transform var(--transition-speed);
+            z-index: 900;
+        }
+
+        .menu {
+            list-style: none;
+            padding: 0;
+        }
+
+        .menu-item {
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .menu-header {
+            display: flex;
+            align-items: center;
+            padding: 15px 20px;
+            cursor: pointer;
+            color: var(--text-color);
+            font-weight: 500;
+            transition: background-color var(--transition-speed);
+        }
+
+        .menu-header:hover {
+            background-color: #f0f4f8;
+        }
+
+        .menu-header.active {
+            background-color: var(--secondary-color);
+            color: white;
+        }
+
+        .menu-header i {
+            margin-right: 10px;
+            width: 20px;
+            text-align: center;
+        }
+
+        .menu-header .arrow {
+            margin-left: auto;
+            transition: transform var(--transition-speed);
+        }
+
+        .submenu {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height var(--transition-speed);
+            background-color: #f8f9fa;
+        }
+
+        .menu-item.active .submenu {
+            max-height: 1000px;
+        }
+
+        .menu-item.active .arrow {
+            transform: rotate(90deg);
+        }
+
+        .submenu-item {
+            padding: 12px 20px 12px 50px;
+            cursor: pointer;
+            transition: background-color var(--transition-speed);
+            font-size: 0.95rem;
+        }
+
+        .submenu-item:hover {
+            background-color: #e9ecef;
+        }
+
+        .submenu-item.active {
+            background-color: #e2e6ea;
+            color: var(--secondary-color);
+            font-weight: 500;
+        }
+
+
+        .submenu a.submenu-item {
+            text-decoration: none;
+            color: inherit;
+            display: block;
+            padding: 12px 20px 12px 50px;
+            cursor: pointer;
+            transition: background-color var(--transition-speed);
+            font-size: 0.95rem;
+        }
+
+        .submenu a.submenu-item:hover {
+            background-color: #e9ecef;
+        }
+
+        .submenu a.submenu-item.active {
+            background-color: #e2e6ea;
+            color: var(--secondary-color);
+            font-weight: 500;
+        }
+
+        .content {
+            flex: 1;
+            margin-left: var(--menu-width);
+            padding: 20px;
+        }
+
+        .breadcrumb {
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            font-size: 0.9rem;
+        }
+
+        .breadcrumb-item {
+            display: inline-block;
+        }
+
+        .breadcrumb-item:not(:last-child)::after {
+            content: "/";
+            margin: 0 10px;
+            color: #aaa;
+        }
+
+        .breadcrumb-item a {
+            color: var(--secondary-color);
+            text-decoration: none;
+        }
+
+        .breadcrumb-item a:hover {
+            text-decoration: underline;
+        }
+
+        .breadcrumb-item.active {
+            color: var(--text-color);
+            font-weight: 500;
+        }
+
+        .page-title {
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            color: var(--primary-color);
+        }
+
+        .main-container {
+            background-color: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+            border: 1px solid var(--border-color);
+        }
+
+        .filter-section {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-radius: 6px;
+            flex-wrap: wrap;
+            align-items: flex-end;
+        }
+
+        .filter-group {
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .filter-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+
+        .filter-control {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            background-color: white;
+        }
+
+        .stats-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .stat-card.warning {
+            background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+        }
+
+        .stat-card.success {
+            background: linear-gradient(135deg, #84fab0 0%, #8fd3f4 100%);
+        }
+
+        .stat-card.info {
+            background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        .comparatives-list {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.95rem;
+        }
+
+        .comparatives-list th {
+            background-color: var(--table-header);
+            padding: 12px;
+            text-align: left;
+            font-weight: 600;
+            border-bottom: 2px solid var(--border-color);
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        .comparatives-list td {
+            padding: 12px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .comparatives-list tbody tr:hover {
+            background-color: var(--table-row-hover);
+        }
+
+        .expandable-row {
+            cursor: pointer;
+            transition: background-color var(--transition-speed);
+        }
+
+        .expandable-row:hover {
+            background-color: #e8f4f8;
+        }
+
+        .expand-icon {
+            transition: transform var(--transition-speed);
+            margin-right: 10px;
+            color: var(--secondary-color);
+        }
+
+        .expanded .expand-icon {
+            transform: rotate(90deg);
+        }
+
+        .sub-table {
+            display: none;
+            background-color: #f8f9fa;
+        }
+
+        .sub-table td {
+            padding: 10px 20px;
+        }
+
+        .sub-table-content {
+            width: 100%;
+            margin: 10px 0;
+        }
+
+        .sub-table-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .sub-table-row:last-child {
+            border-bottom: none;
+        }
+
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
+        .status-pending {
+            background-color: #fff3cd;
+            color: #856404;
+        }
+
+        .status-review {
+            background-color: #cce5ff;
+            color: #004085;
+        }
+
+        .status-approved {
+            background-color: #d4edda;
+            color: #155724;
+        }
+
+        .status-incomplete {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 8px;
+        }
+
+        .btn {
+            padding: 6px 12px;
+            border: none;
+            border-radius: 4px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all var(--transition-speed);
+            display: inline-flex;
+            align-items: center;
+            text-decoration: none;
+        }
+
+        .btn i {
+            margin-right: 5px;
+        }
+
+        .btn-primary {
+            background-color: var(--secondary-color);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: #2980b9;
+        }
+
+        .btn-info {
+            background-color: var(--info-color);
+            color: white;
+        }
+
+        .btn-info:hover {
+            background-color: #8e44ad;
+        }
+
+        .btn-success {
+            background-color: var(--success-color);
+            color: white;
+        }
+
+        .btn-success:hover {
+            background-color: #219653;
+        }
+
+        .btn-outline {
+            background-color: transparent;
+            border: 1px solid var(--border-color);
+            color: var(--text-color);
+        }
+
+        .btn-outline:hover {
+            background-color: #f0f4f8;
+            border-color: var(--secondary-color);
+            color: var(--secondary-color);
+        }
+
+        .provider-count {
+            display: inline-flex;
+            align-items: center;
+            margin-left: 10px;
+            font-size: 0.85rem;
+            color: #6c757d;
+        }
+
+        .quote-progress {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .progress-bar {
+            width: 100px;
+            height: 6px;
+            background-color: #e9ecef;
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background-color: var(--success-color);
+            transition: width var(--transition-speed);
+        }
+
+        .client-info {
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+
+        .date-info {
+            font-size: 0.85rem;
+            color: #6c757d;
+        }
+
+        .amount-info {
+            font-weight: 600;
+            color: var(--success-color);
+        }
+
+        .pagination {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 20px;
+            gap: 10px;
+        }
+
+        .pagination-btn {
+            padding: 8px 12px;
+            border: 1px solid var(--border-color);
+            background-color: white;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all var(--transition-speed);
+        }
+
+        .pagination-btn:hover:not(.active) {
+            background-color: #f0f4f8;
+            border-color: var(--secondary-color);
+        }
+
+        .pagination-btn.active {
+            background-color: var(--secondary-color);
+            color: white;
+            border-color: var(--secondary-color);
+        }
+
+        .pagination-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        @media (max-width: 1200px) {
+            .filter-section {
+                flex-direction: column;
+            }
+
+            .filter-group {
+                width: 100%;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .menu-toggle {
+                display: block;
+            }
+
+            .sidebar {
+                transform: translateX(-100%);
+            }
+
+            .sidebar.active {
+                transform: translateX(0);
+            }
+
+            .content {
+                margin-left: 0;
+            }
+
+            .user-name {
+                display: none;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+                width: 100%;
+            }
+
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .comparatives-list {
+                font-size: 0.8rem;
+            }
+
+            .comparatives-list th,
+            .comparatives-list td {
+                padding: 8px;
+            }
+        }
+
+        @media (max-width: 1024px) and (min-width: 769px) {
+            .header-date {
+                font-size: 0.85rem;
+            }
+            
+            .header-date i {
+                display: none;
+            }
+        }
+
+        .submenu-item.disabled {
+            display: flex;
+            align-items: center;
+            opacity: 0.6;
+            cursor: not-allowed;
+            pointer-events: none;
+            text-decoration: line-through;
+            color: #999;
+        }
+
+        .submenu-item.disabled .text-disabled {
+            text-decoration: line-through;
+        } 
+
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="menu-toggle">
+            <i class="fas fa-bars"></i>
+        </div>
+        <div class="logo">
+            <!-- img src="/api/placeholder/60/40" alt="SSL Logo" -->
+            <img src="logo_ssl.png" alt="SSL Logo">
+            <h1>SSL v4.0</h1>
+        </div>
+        <div class="header-right">
+            <div class="header-date" data-time="Hora actual: 00:00">
+                <i class="fas fa-calendar-alt"></i>
+                <span id="currentDate">Lunes, 26 de Mayo de 2025</span>
+            </div>
+            <div class="notifications">
+                <i class="fas fa-bell"></i>
+                <span class="notification-count">3</span>
+            </div>
+            <div class="user-menu" id="userMenu">
+                <div class="user-avatar">
+                    <i class="fas fa-user"></i>
+                </div>
+                <span class="user-name">Usuario SSL</span>
+                <i class="fas fa-chevron-down user-menu-arrow"></i>
+                
+                <!-- Dropdown Menu -->
+                <div class="user-dropdown">
+                    <div class="dropdown-header">
+                        <div class="dropdown-user-info">
+                            <div class="dropdown-avatar">
+                                <i class="fas fa-user"></i>
+                            </div>
+                            <div class="dropdown-user-details">
+                                <div class="dropdown-user-name">Usuario SSL</div>
+                                <div class="dropdown-user-email">usuario@seashipping.cl</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="dropdown-menu">
+                        <a href="#" class="dropdown-item" onclick="goToProfile(event)">
+                            <i class="fas fa-user-circle"></i>
+                            <span>Mi Perfil</span>
+                        </a>
+                        <a href="#" class="dropdown-item" onclick="goToSettings(event)">
+                            <i class="fas fa-cog"></i>
+                            <span>Configuración</span>
+                        </a>
+                        <div class="dropdown-divider"></div>
+                        <a href="#" class="dropdown-item logout" onclick="logout(event)">
+                            <i class="fas fa-sign-out-alt"></i>
+                            <span>Cerrar Sesión</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <!-- Evaluación y Análisis - Cuadros Comparativos -->
+        <nav class="sidebar">
+            <ul class="menu">
+                <!-- Acceso -->
+                <li class="menu-item">
+                    <div class="menu-header">
+                        <i class="fas fa-lock"></i>
+                        <span>Acceso</span>
+                        <i class="fas fa-chevron-right arrow"></i>
+                    </div>
+                    <div class="submenu">
+                        <div class="submenu-item">Página llegada</div>
+                        <div class="submenu-item">Login</div>
+                        <div class="submenu-item">Recuperar Contraseña</div>
+                    </div>
+                </li>
+
+                <!-- Inicio -->
+                <li class="menu-item">
+                    <div class="menu-header">
+                        <i class="fas fa-home"></i>
+                        <span>Inicio</span>
+                        <i class="fas fa-chevron-right arrow"></i>
+                    </div>
+                    <div class="submenu">
+                        <div class="submenu-item">Dashboard General</div>
+                        <div class="submenu-item disabled" title="Próximamente">Notificaciones</div>
+                        <div class="submenu-item disabled" title="Próximamente">Perfil de Usuario</div>                        
+                    </div>
+                </li>
+
+
+                <!-- Recepción de Solicitudes -->
+                <li class="menu-item">
+                    <div class="menu-header">
+                        <i class="fas fa-clipboard-list"></i>
+                        <span>Recepción de Solicitudes</span>
+                        <i class="fas fa-chevron-right arrow"></i>
+                    </div>
+                    <div class="submenu">
+                        <a href="ingreso_solicitud_pedido_v2.html" class="submenu-item">Ingreso Manual</a>
+                        <a href="listado_solicitud_pedido.html" class="submenu-item">Listado de Solicitudes</a>
+                    </div>
+                </li>
+
+                <!-- Carpeta Digital -->
+                <li class="menu-item">
+                    <div class="menu-header">
+                        <i class="fas fa-folder-open"></i>
+                        <span>Carpeta Digital</span>
+                        <i class="fas fa-chevron-right arrow"></i>
+                    </div>
+                    <div class="submenu">
+                        <a href="listado_carpeta_digital.html" class="submenu-item">Carpeta Digital</a>
+                    </div>
+                </li>
+
+                <!-- Cotización a Proveedores -->
+                <li class="menu-item">
+                    <div class="menu-header">
+                        <i class="fas fa-file-invoice-dollar"></i>
+                        <span>Cotización a Proveedores</span>
+                        <i class="fas fa-chevron-right arrow"></i>
+                    </div>
+                    <div class="submenu">
+                        <a href="listado_solicitudes_cotizar.html" class="submenu-item">Generación y Distribución</a>
+                        <a href="recepcion_respuesta.html" class="submenu-item">Recepción de Cotizaciones</a>
+                    </div>
+                </li>
+
+                <!-- Evaluación y Análisis -->
+                <li class="menu-item active">
+                    <div class="menu-header active">
+                        <i class="fas fa-chart-line"></i>
+                        <span>Evaluación y Análisis</span>
+                        <i class="fas fa-chevron-right arrow"></i>
+                    </div>
+                    <div class="submenu">
+                        <a href="ssl_ea_listado_cuadro_comparativo.html" class="submenu-item active">Cuadros Comparativos</a>
+                        <div class="submenu-item disabled" title="Próximamente">Márgenes y Rentabilidad</div>
+                    </div>
+                </li>
+
+                <!-- Órdenes de Compra -->
+                <li class="menu-item">
+                    <div class="menu-header">
+                        <i class="fas fa-shopping-cart"></i>
+                        <span>Órdenes de Compra</span>
+                        <i class="fas fa-chevron-right arrow"></i>
+                    </div>
+                    <div class="submenu">
+                        <a href="oc_cliente.html" class="submenu-item">OC Cliente</a>
+                        <a href="oc_proveedor.html" class="submenu-item">OC Proveedor</a>
+                        <div class="submenu-item disabled" title="Próximamente">Gestión de Cambios</div>                           
+                    </div>
+                </li>
+
+                <!-- Gestión Logística -->
+                <li class="menu-item">
+                    <div class="menu-header">
+                        <i class="fas fa-truck"></i>
+                        <span>Gestión Logística</span>
+                        <i class="fas fa-chevron-right arrow"></i>
+                    </div>
+                    <div class="submenu">
+                        <div class="submenu-item disabled" title="Próximamente">Planificación Logística (Swisslog)</div>                          
+                        <div class="submenu-item disabled" title="Próximamente">Seguimiento de Entregas</div>                          
+                    </div>
+                </li>
+
+                <!-- Zona Franca -->
+                <li class="menu-item">
+                    <div class="menu-header">
+                        <i class="fas fa-warehouse"></i>
+                        <span>Zona Franca</span>
+                        <i class="fas fa-chevron-right arrow"></i>
+                    </div>
+                    <div class="submenu">
+                        <div class="submenu-item disabled" title="Próximamente">Declaraciones DI/DSZF</div>                            
+                        <div class="submenu-item disabled" title="Próximamente">Documentos Aduaneros</div>                            
+                        <div class="submenu-item disabled" title="Próximamente">Alertas y Condiciones ZF</div>                            
+                    </div>
+                </li>
+
+                <!-- Entregas y Conformidad -->
+                <li class="menu-item">
+                    <div class="menu-header">
+                        <i class="fas fa-box-open"></i>
+                        <span>Entregas y Conformidad</span>
+                        <i class="fas fa-chevron-right arrow"></i>
+                    </div>
+                    <div class="submenu">
+                        <div class="submenu-item disabled" title="Próximamente">Confirmación Cliente</div>                        
+                        <div class="submenu-item disabled" title="Próximamente">Gestión de Incidencias</div>                        
+                        <div class="submenu-item disabled" title="Próximamente">Documentación Firmada</div>                        
+                    </div>
+                </li>
+
+                <!-- Reportes y BI -->
+                <li class="menu-item">
+                    <div class="menu-header">
+                        <i class="fas fa-chart-pie"></i>
+                        <span>Reportes y BI</span>
+                        <i class="fas fa-chevron-right arrow"></i>
+                    </div>
+                    <div class="submenu">
+                        <div class="submenu-item disabled" title="Próximamente">KPI Operacionales</div>                          
+                        <div class="submenu-item disabled" title="Próximamente">Métricas por Cliente / Proveedor</div>                          
+                        <div class="submenu-item disabled" title="Próximamente">Análisis Avanzado</div>                          
+                    </div>
+                </li>
+
+                <!-- Usuarios y Accesos -->
+                <li class="menu-item">
+                    <div class="menu-header">
+                        <i class="fas fa-users"></i>
+                        <span>Usuarios y Accesos</span>
+                        <i class="fas fa-chevron-right arrow"></i>
+                    </div>
+                    <div class="submenu">
+                        <div class="submenu-item disabled" title="Próximamente">Gestión de Usuarios</div>                          
+                        <div class="submenu-item disabled" title="Próximamente">Perfiles y Roles</div>                          
+                    </div>
+                </li>
+
+                <!-- Empresas y Organizaciones -->
+                <li class="menu-item">
+                    <div class="menu-header">
+                        <i class="fas fa-building"></i>
+                        <span>Empresas y Organizaciones</span>
+                        <i class="fas fa-chevron-right arrow"></i>
+                    </div>
+                    <div class="submenu">
+                        <a href="cliente_proveedor.html" class="submenu-item">Clientes y Proveedores</a>
+                        <a href="obras.html" class="submenu-item">Obras y Proyectos</a>
+                        <div class="submenu-item disabled" title="Próximamente">Transportistas / Financieras</div>                             
+                    </div>
+                </li>
+
+                <!-- Catálogos y Configuración -->
+                <li class="menu-item">
+                    <div class="menu-header">
+                        <i class="fas fa-cogs"></i>
+                        <span>Catálogos y Configuración</span>
+                        <i class="fas fa-chevron-right arrow"></i>
+                    </div>
+                    <div class="submenu">
+                        <a href="catalogo_producto.html" class="submenu-item">Catálogo Maestro</a>    
+                        <div class="submenu-item disabled" title="Próximamente">Divisas y Parámetros Globales</div>                          
+                        <div class="submenu-item disabled" title="Próximamente">Zona Franca (ZF)</div>                          
+                        <div class="submenu-item disabled" title="Próximamente">Flujos de Aprobación</div>                          
+                    </div>
+                </li>
+
+                <!-- Administración -->
+                <li class="menu-item">
+                    <div class="menu-header">
+                        <i class="fas fa-sliders-h"></i>
+                        <span>Administración</span>
+                        <i class="fas fa-chevron-right arrow"></i>
+                    </div>
+                    <div class="submenu">
+                        <div class="submenu-item disabled" title="Próximamente">Parámetros Comerciales</div>                         
+                        <div class="submenu-item disabled" title="Próximamente">Límites de Crédito</div>                         
+                        <div class="submenu-item disabled" title="Próximamente">Condiciones de Pago</div>                         
+                    </div>
+                </li>
+
+                <!-- Auditoría y Seguridad -->
+                <li class="menu-item">
+                    <div class="menu-header">
+                        <i class="fas fa-shield-alt"></i>
+                        <span>Auditoría y Seguridad</span>
+                        <i class="fas fa-chevron-right arrow"></i>
+                    </div>
+                    <div class="submenu">
+                        <div class="submenu-item disabled" title="Próximamente">Exportación Auditorías</div>                             
+                        <div class="submenu-item disabled" title="Próximamente">Políticas de Backup</div>                             
+                    </div>
+                </li>
+
+            </ul>
+        </nav>
+
+        <main class="content">
+            <!-- Volver al Menú -->
+            <div class="breadcrumb">
+                <div class="breadcrumb-item"><a href="menu.html">Inicio</a></div>
+                <div class="breadcrumb-item"><a href="menu.html">Evaluación y Análisis</a></div>
+                <div class="breadcrumb-item active">Listado de Cuadros Comparativos</div>
+            </div>
+
+            <h1 class="page-title">Cuadros Comparativos Pendientes de Revisión</h1>
+
+            <!-- Tarjetas de estadísticas -->
+            <div class="stats-cards">
+                <div class="stat-card">
+                    <div class="stat-number">12</div>
+                    <div class="stat-label">Total Pendientes</div>
+                </div>
+                <div class="stat-card warning">
+                    <div class="stat-number">5</div>
+                    <div class="stat-label">En Revisión</div>
+                </div>
+                <div class="stat-card success">
+                    <div class="stat-number">3</div>
+                    <div class="stat-label">Aprobados Hoy</div>
+                </div>
+                <div class="stat-card info">
+                    <div class="stat-number">8</div>
+                    <div class="stat-label">Cotizaciones Incompletas</div>
+                </div>
+            </div>
+
+            <div class="main-container">
+                <!-- Filtros -->
+                <div class="filter-section">
+                    <div class="filter-group">
+                        <label>Cliente</label>
+                        <select class="filter-control">
+                            <option value="">Todos los clientes</option>
+                            <option value="1">CONSTRUCTORA ALMAGRO S.A.</option>
+                            <option value="2">INMOBILIARIA INGEVEC</option>
+                            <option value="3">CONSTRUCTORA MOLLER Y PÉREZ-COTAPOS</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label>Estado</label>
+                        <select class="filter-control">
+                            <option value="">Todos</option>
+                            <option value="pending">Pendiente</option>
+                            <option value="review">En Revisión</option>
+                            <option value="approved">Aprobado</option>
+                            <option value="incomplete">Incompleto</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label>Fecha</label>
+                        <input type="date" class="filter-control">
+                    </div>
+                    <div class="filter-group">
+                        <label>Buscar</label>
+                        <input type="text" class="filter-control" placeholder="Nro. Solicitud o Referencia">
+                    </div>
+                    <button class="btn btn-primary">
+                        <i class="fas fa-search"></i> Buscar
+                    </button>
+                </div>
+
+                <!-- Tabla de cuadros comparativos -->
+                <table class="comparatives-list">
+                    <thead>
+                        <tr>
+                            <th width="5%"></th>
+                            <th width="12%">Solicitud Pedido</th>
+                            <th width="25%">Cliente / Obra</th>
+                            <th width="15%">Solicitudes Cotización</th>
+                            <th width="15%">Cotizaciones</th>
+                            <th width="10%">Estado</th>
+                            <th width="10%">Monto Total</th>
+                            <th width="8%">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Fila 1 -->
+                        <tr class="expandable-row" onclick="toggleRow(this)">
+                            <td><i class="fas fa-chevron-right expand-icon"></i></td>
+                            <td>
+                                <strong>SOLPED-2025-0847</strong>
+                                <br>
+                                <span class="date-info">25/05/2025</span>
+                            </td>
+                            <td>
+                                <span class="client-info">CONSTRUCTORA ALMAGRO S.A.</span>
+                                <br>
+                                <span>EDIFICIO PACIFIC BLUE</span>
+                            </td>
+                            <td>
+                                <strong>3</strong> Solicitudes
+                                <span class="provider-count">
+                                    <i class="fas fa-building"></i> 8 proveedores
+                                </span>
+                            </td>
+                            <td>
+                                <div class="quote-progress">
+                                    <span>7/8</span>
+                                    <div class="progress-bar">
+                                        <div class="progress-fill" style="width: 87.5%"></div>
+                                    </div>
+                                    <span>87.5%</span>
+                                </div>
+                            </td>
+                            <td>
+                                <span class="status-badge status-pending">Pendiente</span>
+                            </td>
+                            <td class="amount-info">$15,750,000</td>
+                            <td>
+                                <div class="action-buttons">
+                                    <a href="#" class="btn btn-primary" title="Revisar">
+                                        <i class="fas fa-eye"></i>
+                                    </a>
+                                    <button class="btn btn-outline" title="Historial">
+                                        <i class="fas fa-history"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr class="sub-table">
+                            <td colspan="8">
+                                <div class="sub-table-content">
+                                    <div class="sub-table-row">
+                                        <strong>Solicitudes de Cotización:</strong>
+                                    </div>
+                                    <div class="sub-table-row">
+                                        <span>SOL-COT-2025-1234 - Materiales Eléctricos</span>
+                                        <span>3 proveedores | 3/3 cotizaciones</span>
+                                        <a href="ssl_ea_detalle_cuadro_comparativo.html" class="btn btn-info btn-sm">Ver Cuadro</a>
+                                    </div>
+                                    <div class="sub-table-row">
+                                        <span>SOL-COT-2025-1235 - Materiales Hidráulicos</span>
+                                        <span>3 proveedores | 2/3 cotizaciones</span>
+                                        <a href="ssl_ea_detalle_cuadro_comparativo.html" class="btn btn-info btn-sm">Ver Cuadro</a>
+                                    </div>
+                                    <div class="sub-table-row">
+                                        <span>SOL-COT-2025-1236 - Ferretería General</span>
+                                        <span>2 proveedores | 2/2 cotizaciones</span>
+                                        <a href="ssl_ea_detalle_cuadro_comparativo.html" class="btn btn-info btn-sm">Ver Cuadro</a>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+
+                        <!-- Fila 2 -->
+                        <tr class="expandable-row" onclick="toggleRow(this)">
+                            <td><i class="fas fa-chevron-right expand-icon"></i></td>
+                            <td>
+                                <strong>SOLPED-2025-0848</strong>
+                                <br>
+                                <span class="date-info">24/05/2025</span>
+                            </td>
+                            <td>
+                                <span class="client-info">INMOBILIARIA INGEVEC</span>
+                                <br>
+                                <span>CONDOMINIO VISTA MAR</span>
+                            </td>
+                            <td>
+                                <strong>2</strong> Solicitudes
+                                <span class="provider-count">
+                                    <i class="fas fa-building"></i> 5 proveedores
+                                </span>
+                            </td>
+                            <td>
+                                <div class="quote-progress">
+                                    <span>5/5</span>
+                                    <div class="progress-bar">
+                                        <div class="progress-fill" style="width: 100%"></div>
+                                    </div>
+                                    <span>100%</span>
+                                </div>
+                            </td>
+                            <td>
+                                <span class="status-badge status-review">En Revisión</span>
+                            </td>
+                            <td class="amount-info">$8,320,000</td>
+                            <td>
+                                <div class="action-buttons">
+                                    <a href="#" class="btn btn-primary" title="Revisar">
+                                        <i class="fas fa-eye"></i>
+                                    </a>
+                                    <button class="btn btn-outline" title="Historial">
+                                        <i class="fas fa-history"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr class="sub-table">
+                            <td colspan="8">
+                                <div class="sub-table-content">
+                                    <div class="sub-table-row">
+                                        <strong>Solicitudes de Cotización:</strong>
+                                    </div>
+                                    <div class="sub-table-row">
+                                        <span>SOL-COT-2025-1237 - Cerámicos y Porcelanatos</span>
+                                        <span>3 proveedores | 3/3 cotizaciones</span>
+                                        <a href="ssl_ea_detalle_cuadro_comparativo.html" class="btn btn-info btn-sm">Ver Cuadro</a>
+                                    </div>
+                                    <div class="sub-table-row">
+                                        <span>SOL-COT-2025-1238 - Pinturas y Revestimientos</span>
+                                        <span>2 proveedores | 2/2 cotizaciones</span>
+                                        <a href="ssl_ea_detalle_cuadro_comparativo.html" class="btn btn-info btn-sm">Ver Cuadro</a>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+
+                        <!-- Fila 3 -->
+                        <tr class="expandable-row" onclick="toggleRow(this)">
+                            <td><i class="fas fa-chevron-right expand-icon"></i></td>
+                            <td>
+                                <strong>SOLPED-2025-0849</strong>
+                                <br>
+                                <span class="date-info">24/05/2025</span>
+                            </td>
+                            <td>
+                                <span class="client-info">CONSTRUCTORA MOLLER Y PÉREZ-COTAPOS</span>
+                                <br>
+                                <span>EDIFICIO CENTRAL PARK</span>
+                            </td>
+                            <td>
+                                <strong>1</strong> Solicitud
+                                <span class="provider-count">
+                                    <i class="fas fa-building"></i> 4 proveedores
+                                </span>
+                            </td>
+                            <td>
+                                <div class="quote-progress">
+                                    <span>3/4</span>
+                                    <div class="progress-bar">
+                                        <div class="progress-fill" style="width: 75%"></div>
+                                    </div>
+                                    <span>75%</span>
+                                </div>
+                            </td>
+                            <td>
+                                <span class="status-badge status-incomplete">Incompleto</span>
+                            </td>
+                            <td class="amount-info">$12,450,000</td>
+                            <td>
+                                <div class="action-buttons">
+                                    <a href="#" class="btn btn-primary" title="Revisar">
+                                        <i class="fas fa-eye"></i>
+                                    </a>
+                                    <button class="btn btn-outline" title="Historial">
+                                        <i class="fas fa-history"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr class="sub-table">
+                            <td colspan="8">
+                                <div class="sub-table-content">
+                                    <div class="sub-table-row">
+                                        <strong>Solicitudes de Cotización:</strong>
+                                    </div>
+                                    <div class="sub-table-row">
+                                        <span>SOL-COT-2025-1239 - Estructuras Metálicas</span>
+                                        <span>4 proveedores | 3/4 cotizaciones</span>
+                                        <a href="ssl_ea_detalle_cuadro_comparativo.html" class="btn btn-info btn-sm">Ver Cuadro</a>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+
+                        <!-- Fila 4 -->
+                        <tr class="expandable-row" onclick="toggleRow(this)">
+                            <td><i class="fas fa-chevron-right expand-icon"></i></td>
+                            <td>
+                                <strong>SOLPED-2025-0850</strong>
+                                <br>
+                                <span class="date-info">23/05/2025</span>
+                            </td>
+                            <td>
+                                <span class="client-info">CONSTRUCTORA ALMAGRO S.A.</span>
+                                <br>
+                                <span>TORRE ALMAGRO</span>
+                            </td>
+                            <td>
+                                <strong>4</strong> Solicitudes
+                                <span class="provider-count">
+                                    <i class="fas fa-building"></i> 12 proveedores
+                                </span>
+                            </td>
+                            <td>
+                                <div class="quote-progress">
+                                    <span>12/12</span>
+                                    <div class="progress-bar">
+                                        <div class="progress-fill" style="width: 100%"></div>
+                                    </div>
+                                    <span>100%</span>
+                                </div>
+                            </td>
+                            <td>
+                                <span class="status-badge status-approved">Aprobado</span>
+                            </td>
+                            <td class="amount-info">$45,780,000</td>
+                            <td>
+                                <div class="action-buttons">
+                                    <a href="#" class="btn btn-success" title="Ver">
+                                        <i class="fas fa-check"></i>
+                                    </a>
+                                    <button class="btn btn-outline" title="Historial">
+                                        <i class="fas fa-history"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr class="sub-table">
+                            <td colspan="8">
+                                <div class="sub-table-content">
+                                    <div class="sub-table-row">
+                                        <strong>Solicitudes de Cotización:</strong>
+                                    </div>
+                                    <div class="sub-table-row">
+                                        <span>SOL-COT-2025-1240 - Hormigón y Áridos</span>
+                                        <span>3 proveedores | 3/3 cotizaciones</span>
+                                        <a href="#" class="btn btn-success btn-sm">Aprobado</a>
+                                    </div>
+                                    <div class="sub-table-row">
+                                        <span>SOL-COT-2025-1241 - Acero Estructural</span>
+                                        <span>3 proveedores | 3/3 cotizaciones</span>
+                                        <a href="#" class="btn btn-success btn-sm">Aprobado</a>
+                                    </div>
+                                    <div class="sub-table-row">
+                                        <span>SOL-COT-2025-1242 - Maderas y Molduras</span>
+                                        <span>3 proveedores | 3/3 cotizaciones</span>
+                                        <a href="#" class="btn btn-success btn-sm">Aprobado</a>
+                                    </div>
+                                    <div class="sub-table-row">
+                                        <span>SOL-COT-2025-1243 - Vidrios y Cristales</span>
+                                        <span>3 proveedores | 3/3 cotizaciones</span>
+                                        <a href="#" class="btn btn-success btn-sm">Aprobado</a>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <!-- Paginación -->
+                <div class="pagination">
+                    <button class="pagination-btn" disabled>
+                        <i class="fas fa-chevron-left"></i>
+                    </button>
+                    <button class="pagination-btn active">1</button>
+                    <button class="pagination-btn">2</button>
+                    <button class="pagination-btn">3</button>
+                    <span>...</span>
+                    <button class="pagination-btn">8</button>
+                    <button class="pagination-btn">
+                        <i class="fas fa-chevron-right"></i>
+                    </button>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Toggle menu items
+        document.querySelectorAll('.menu-header').forEach(header => {
+            header.addEventListener('click', () => {
+                const menuItem = header.parentElement;
+                menuItem.classList.toggle('active');
+            });
+        });
+
+        // Toggle mobile menu
+        document.querySelector('.menu-toggle').addEventListener('click', () => {
+            document.querySelector('.sidebar').classList.toggle('active');
+        });
+
+        // Handle submenu item clicks
+        document.querySelectorAll('.submenu-item').forEach(item => {
+            item.addEventListener('click', () => {
+                // Remove active class from all submenu items
+                document.querySelectorAll('.submenu-item').forEach(subItem => {
+                    subItem.classList.remove('active');
+                });
+                
+                // Add active class to clicked item
+                item.classList.add('active');
+                
+                // Update breadcrumb and page title
+                const menuHeader = item.closest('.menu-item').querySelector('.menu-header span').textContent;
+                const submenuText = item.textContent;
+                
+                document.querySelector('.breadcrumb').innerHTML = `
+                    <div class="breadcrumb-item"><a href="#">Inicio</a></div>
+                    <div class="breadcrumb-item"><a href="#">${menuHeader}</a></div>
+                    <div class="breadcrumb-item active">${submenuText}</div>
+                `;
+                
+                document.querySelector('.page-title').textContent = submenuText;
+            });
+        });
+
+        // User menu dropdown functionality
+        const userMenu = document.getElementById('userMenu');
+        let isUserMenuOpen = false;
+
+        userMenu.addEventListener('click', function(e) {
+            e.stopPropagation();
+            isUserMenuOpen = !isUserMenuOpen;
+            this.classList.toggle('active');
+        });
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', function(e) {
+            if (!userMenu.contains(e.target) && isUserMenuOpen) {
+                userMenu.classList.remove('active');
+                isUserMenuOpen = false;
+            }
+        });
+
+        // Prevent dropdown from closing when clicking inside
+        document.querySelector('.user-dropdown').addEventListener('click', function(e) {
+            e.stopPropagation();
+        });
+
+        // Profile function
+        function goToProfile(e) {
+            e.preventDefault();
+            alert('Navegando al perfil de usuario...\nEsta funcionalidad estará disponible próximamente.');
+            userMenu.classList.remove('active');
+            isUserMenuOpen = false;
+        }
+
+        // Settings function
+        function goToSettings(e) {
+            e.preventDefault();
+            alert('Navegando a configuración...\nEsta funcionalidad estará disponible próximamente.');
+            userMenu.classList.remove('active');
+            isUserMenuOpen = false;
+        }
+
+        // Logout function
+        function logout(e) {
+            e.preventDefault();
+            if (confirm('¿Está seguro que desea cerrar sesión?')) {
+                // Clear any session data
+                localStorage.removeItem('userToken');
+                localStorage.removeItem('userData');
+                sessionStorage.clear();
+                
+                // Redirect to login page
+                window.location.href = 'index.html';
+            }
+        }
+
+        // Update user info if available
+        document.addEventListener('DOMContentLoaded', function() {
+            // This would typically fetch user data from an API or local storage
+            const userData = localStorage.getItem('userData');
+            if (userData) {
+                try {
+                    const user = JSON.parse(userData);
+                    if (user.name) {
+                        document.querySelector('.user-name').textContent = user.name;
+                        document.querySelector('.dropdown-user-name').textContent = user.name;
+                    }
+                    if (user.email) {
+                        document.querySelector('.dropdown-user-email').textContent = user.email;
+                    }
+                } catch (e) {
+                    console.error('Error parsing user data:', e);
+                }
+            }
+
+            // Update current date
+            updateDate();
+            // Update date every minute (and time in tooltip)
+            setInterval(updateDate, 60000);
+        });
+
+        // Function to update date
+        function updateDate() {
+            const now = new Date();
+            const options = { 
+                weekday: 'long', 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric' 
+            };
+            const formattedDate = now.toLocaleDateString('es-CL', options);
+            // Capitalize first letter of weekday
+            const capitalizedDate = formattedDate.charAt(0).toUpperCase() + formattedDate.slice(1);
+            
+            // Format time for tooltip
+            const timeOptions = { hour: '2-digit', minute: '2-digit' };
+            const formattedTime = now.toLocaleTimeString('es-CL', timeOptions);
+            
+            const dateElement = document.getElementById('currentDate');
+            const dateContainer = document.querySelector('.header-date');
+            
+            // Update tooltip with current time
+            dateContainer.setAttribute('data-time', `Hora actual: ${formattedTime}`);
+            
+            // Add fade effect
+            dateElement.style.opacity = '0.5';
+            setTimeout(() => {
+                dateElement.textContent = capitalizedDate;
+                dateElement.style.opacity = '0.9';
+            }, 150);
+        }
+
+        // Keyboard navigation for dropdown
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && isUserMenuOpen) {
+                userMenu.classList.remove('active');
+                isUserMenuOpen = false;
+            }
+        });
+                
+        // Toggle expandable rows
+        function toggleRow(row) {
+            const nextRow = row.nextElementSibling;
+            const expandIcon = row.querySelector('.expand-icon');
+            
+            if (nextRow && nextRow.classList.contains('sub-table')) {
+                row.classList.toggle('expanded');
+                if (nextRow.style.display === 'table-row') {
+                    nextRow.style.display = 'none';
+                } else {
+                    nextRow.style.display = 'table-row';
+                }
+            }
+        }
+        
+        // Simulación de actualización en tiempo real
+        setInterval(() => {
+            // Actualizar contador de notificaciones
+            const notificationCount = document.querySelector('.notification-count');
+            const currentCount = parseInt(notificationCount.textContent);
+            if (Math.random() > 0.8) {
+                notificationCount.textContent = currentCount + 1;
+            }
+        }, 30000); // Cada 30 segundos
+        
+        // Filtros
+        document.querySelectorAll('.filter-control').forEach(control => {
+            control.addEventListener('change', () => {
+                console.log('Aplicando filtros...');
+                // Aquí iría la lógica de filtrado
+            });
+        });
+        
+        // Paginación
+        document.querySelectorAll('.pagination-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                if (!this.disabled) {
+                    document.querySelector('.pagination-btn.active').classList.remove('active');
+                    this.classList.add('active');
+                    // Aquí iría la lógica de paginación
+                }
+            });
+        });
+    </script>
+</body>
+</html>

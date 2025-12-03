@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SSL v4.0 - Obras y Proyectos</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- CSS del menú reutilizable -->
+    <link rel="stylesheet" href="../css/ssl-menu.css">
+    <link rel="stylesheet" href="../css/ssl-general.css">
+
+    <!-- CSS del menú especifico -->        
+    <link rel="stylesheet" href="../css/ssl-eo-listado-obras.css">
+</head>
+<body>
+    <!-- Contenedor del menú -->
+    <div id="menu-container"></div>
+    
+    <!-- Contenido principal -->
+    <main class="content">
+        <div class="breadcrumb">
+            <div class="breadcrumb-item"><a href="../inicio/ssl_menu.html">Inicio</a></div>
+            <div class="breadcrumb-item"><a href="#">Empresas y Organizaciones</a></div>
+            <div class="breadcrumb-item active">Obras y Proyectos</div>
+        </div>
+
+        <!-- Page Header -->
+        <div class="page-header">
+            <h1 class="page-title">
+                Gestión de Obras y Proyectos
+            </h1>
+            <div class="header-actions">                
+                <button class="btn btn-success" onclick="ObrasManager.openNewObraModal()">
+                    <i class="fas fa-plus"></i> Nueva Obra
+                </button>
+            </div>                
+        </div>            
+
+        <!-- Filtros -->
+        <div class="filter-section">
+            <h3 style="margin-bottom: 15px;"><i class="fas fa-filter"></i> Filtros de Búsqueda</h3>
+            <form class="filter-form">
+                <div class="form-group">
+                    <label for="filter-cliente">Cliente</label>
+                    <select id="filter-cliente" class="form-control">
+                        <option value="">Todos los clientes</option>
+                        <option value="76.123.456-7">CONSTRUCTORA ALMAGRO S.A.</option>
+                        <option value="76.456.789-0">INMOBILIARIA INGEVEC</option>
+                        <option value="76.789.012-3">CONSTRUCTORA MOLLER Y PÉREZ-COTAPOS</option>
+                        <option value="76.234.567-8">CONSTRUCTORA SOCOVESA</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="filter-nombre">Nombre de Obra</label>
+                    <input type="text" id="filter-nombre" class="form-control" placeholder="Buscar por nombre">
+                </div>
+                <div class="form-group">
+                    <label for="filter-mes">Mes</label>
+                    <select id="filter-mes" class="form-control">
+                        <option value="">Todos</option>
+                        <option value="1">Enero</option>
+                        <option value="2">Febrero</option>
+                        <option value="3">Marzo</option>
+                        <option value="4">Abril</option>
+                        <option value="5" selected>Mayo</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="filter-ano">Año</label>
+                    <select id="filter-ano" class="form-control">
+                        <option value="2025" selected>2025</option>
+                        <option value="2024">2024</option>
+                        <option value="2023">2023</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="filter-estado">Estado</label>
+                    <select id="filter-estado" class="form-control">
+                        <option value="">Todos</option>
+                        <option value="activa">Activa</option>
+                        <option value="finalizada">Finalizada</option>
+                        <option value="suspendida">Suspendida</option>
+                        <option value="cancelada">Cancelada</option>
+                    </select>
+                </div>
+            </form>
+            <div class="filter-actions">
+                <button type="button" class="btn btn-outline" onclick="ObrasManager.clearFilters()">
+                    <i class="fas fa-times"></i> Limpiar
+                </button>
+                <button type="button" class="btn btn-primary" onclick="ObrasManager.searchObras()">
+                    <i class="fas fa-search"></i> Buscar
+                </button>
+            </div>
+        </div>
+
+        <!-- Resultados -->
+        <div class="results-container">
+            <div class="results-header">
+                <div>
+                    <h2 class="results-title">
+                        <i class="fas fa-list"></i>
+                        Listado de Obras
+                    </h2>
+                    <div class="results-count">Mostrando <span id="showing-count">10</span> de <span id="total-count">47</span> obras</div>
+                </div>
+            </div>
+
+            <table class="obras-table">
+                <thead>
+                    <tr>
+                        <th width="20%">Obra</th>
+                        <th width="20%">Cliente</th>
+                        <th width="10%">Fecha Inicio</th>
+                        <th width="15%">Dirección</th>
+                        <th width="8%">OCs</th>
+                        <th width="12%">Monto Vendido</th>
+                        <th width="10%">Por Pagar</th>
+                        <th width="8%">Estado</th>
+                        <th width="7%">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody id="obras-tbody">
+                    <!-- Contenido dinámico -->
+                </tbody>
+            </table>
+        </div>
+    </main>
+
+    <!-- Modal Nueva/Editar Obra -->
+    <div id="obraModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title"><i class="fas fa-hard-hat"></i> <span id="modal-action">Nueva</span> Obra</h2>
+                <span class="close" onclick="ObrasManager.closeObraModal()">&times;</span>
+            </div>
+            
+            <div class="modal-body">
+                <!-- Datos Básicos -->
+                <h3>Datos Básicos</h3>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="obra-cliente">Cliente <span style="color: red;">*</span></label>
+                        <select id="obra-cliente" class="form-control" required>
+                            <option value="">Seleccione cliente</option>
+                            <option value="76.123.456-7">76.123.456-7 - CONSTRUCTORA ALMAGRO S.A.</option>
+                            <option value="76.456.789-0">76.456.789-0 - INMOBILIARIA INGEVEC</option>
+                            <option value="76.789.012-3">76.789.012-3 - CONSTRUCTORA MOLLER Y PÉREZ-COTAPOS</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="obra-nombre">Nombre de la Obra <span style="color: red;">*</span></label>
+                        <input type="text" id="obra-nombre" class="form-control" placeholder="Ej: EDIFICIO PACIFIC BLUE" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="obra-fecha-inicio">Fecha de Inicio <span style="color: red;">*</span></label>
+                        <input type="date" id="obra-fecha-inicio" class="form-control" required>
+                    </div>
+                </div>
+
+                <!-- Dirección de la Obra -->
+                <div class="form-section">
+                    <h4><i class="fas fa-map-marker-alt"></i> Dirección de la Obra</h4>
+                    <div class="address-grid">
+                        <div class="form-group">
+                            <label for="obra-direccion">Dirección</label>
+                            <input type="text" id="obra-direccion" class="form-control" placeholder="Ej: Av. Las Condes 1234">
+                        </div>
+                        <div class="form-group">
+                            <label for="obra-comuna">Comuna</label>
+                            <select id="obra-comuna" class="form-control">
+                                <option value="">Seleccione comuna</option>
+                                <option value="las-condes">Las Condes</option>
+                                <option value="providencia">Providencia</option>
+                                <option value="vitacura">Vitacura</option>
+                                <option value="santiago">Santiago</option>
+                                <option value="maipu">Maipú</option>
+                                <option value="vina-del-mar">Viña del Mar</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="obra-region">Región</label>
+                            <select id="obra-region" class="form-control">
+                                <option value="">Seleccione región</option>
+                                <option value="rm">Región Metropolitana</option>
+                                <option value="valparaiso">Región de Valparaíso</option>
+                                <option value="biobio">Región del Biobío</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Contacto de la Obra -->
+                <div class="form-section">
+                    <h4><i class="fas fa-user"></i> Contacto Principal de la Obra</h4>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="contacto-nombre">Nombre</label>
+                            <input type="text" id="contacto-nombre" class="form-control" placeholder="Nombre completo">
+                        </div>
+                        <div class="form-group">
+                            <label for="contacto-celular">Celular</label>
+                            <input type="text" id="contacto-celular" class="form-control" placeholder="+56 9 1234 5678">
+                        </div>
+                        <div class="form-group">
+                            <label for="contacto-email">Correo Electrónico</label>
+                            <input type="email" id="contacto-email" class="form-control" placeholder="contacto@empresa.cl">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Datos de Facturación -->
+                <div class="form-section">
+                    <h4><i class="fas fa-file-invoice"></i> Datos de Facturación</h4>
+                    <div class="checkbox-same">
+                        <input type="checkbox" id="same-as-client" onchange="ObrasManager.toggleFacturacion()">
+                        <label for="same-as-client">Usar datos del cliente</label>
+                    </div>
+                    <div id="facturacion-fields">
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label for="fact-rut">RUT</label>
+                                <input type="text" id="fact-rut" class="form-control" placeholder="76.123.456-7">
+                            </div>
+                            <div class="form-group">
+                                <label for="fact-razon">Razón Social</label>
+                                <input type="text" id="fact-razon" class="form-control" placeholder="Razón social para facturación">
+                            </div>
+                            <div class="form-group">
+                                <label for="fact-email">Correo Electrónico</label>
+                                <input type="email" id="fact-email" class="form-control" placeholder="facturacion@empresa.cl">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="fact-direccion">Dirección de Facturación</label>
+                            <input type="text" id="fact-direccion" class="form-control" placeholder="Dirección completa para facturación">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Contactos Comerciales/Técnicos -->
+                <div class="form-section">
+                    <h4><i class="fas fa-users"></i> Contactos Comerciales / Técnicos</h4>
+                    <div class="inline-form">
+                        <div class="form-group">
+                            <label for="contact-nombre">Nombre</label>
+                            <input type="text" id="contact-nombre" class="form-control" placeholder="Nombre completo">
+                        </div>
+                        <div class="form-group">
+                            <label for="contact-cargo">Cargo</label>
+                            <input type="text" id="contact-cargo" class="form-control" placeholder="Cargo">
+                        </div>
+                        <div class="form-group">
+                            <label for="contact-celular">Celular</label>
+                            <input type="text" id="contact-celular" class="form-control" placeholder="+56 9 1234 5678">
+                        </div>
+                        <div class="form-group">
+                            <label for="contact-tipo">Tipo</label>
+                            <select id="contact-tipo" class="form-control">
+                                <option value="comercial">Comercial</option>
+                                <option value="tecnico">Técnico</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="contact-email">Email</label>
+                            <input type="email" id="contact-email" class="form-control" placeholder="email@empresa.cl">
+                        </div>
+                        <button type="button" class="btn btn-success btn-sm" onclick="ObrasManager.addContact()">
+                            <i class="fas fa-plus"></i>
+                        </button>
+                    </div>
+                    
+                    <table class="contacts-table" id="contacts-table">
+                        <thead>
+                            <tr>
+                                <th>Nombre</th>
+                                <th>Cargo</th>
+                                <th>Celular</th>
+                                <th>Tipo</th>
+                                <th>Email</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td colspan="6" style="text-align: center; color: #666;">No hay contactos agregados</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button class="btn btn-outline" onclick="ObrasManager.closeObraModal()">
+                    <i class="fas fa-times"></i> Cancelar
+                </button>
+                <button class="btn btn-success" onclick="ObrasManager.saveObra()">
+                    <i class="fas fa-save"></i> Guardar
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Ver Obra -->
+    <div id="viewObraModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title" id="view-modal-title"><i class="fas fa-hard-hat"></i> <span></span></h2>
+                <span class="close" onclick="ObrasManager.closeViewObraModal()">&times;</span>
+            </div>
+            
+            <div class="modal-body">
+                <!-- Información General -->
+                <div class="obra-details-section">
+                    <h4><i class="fas fa-info-circle"></i> Información General</h4>
+                    
+                    <div class="contact-info">
+                        <div class="info-item">
+                            <div class="info-label">Cliente:</div>
+                            <div class="info-value" id="view-cliente"></div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">RUT Cliente:</div>
+                            <div class="info-value" id="view-rut-cliente"></div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Fecha de Inicio:</div>
+                            <div class="info-value" id="view-fecha-inicio"></div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Estado:</div>
+                            <div class="info-value" id="view-estado"></div>
+                        </div>
+                    </div>
+
+                    <h5 style="margin-top: 20px;">Dirección de la Obra</h5>
+                    <p id="view-direccion-obra"><i class="fas fa-map-marker-alt"></i> </p>
+
+                    <h5 style="margin-top: 20px;">Contacto Principal</h5>
+                    <div class="contact-info">
+                        <div class="info-item">
+                            <div class="info-label">Nombre:</div>
+                            <div class="info-value" id="view-contacto-nombre"></div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Celular:</div>
+                            <div class="info-value" id="view-contacto-celular"></div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Email:</div>
+                            <div class="info-value" id="view-contacto-email"></div>
+                        </div>
+                    </div>
+
+                    <h5 style="margin-top: 20px;">Datos de Facturación</h5>
+                    <div class="contact-info">
+                        <div class="info-item">
+                            <div class="info-label">RUT:</div>
+                            <div class="info-value" id="view-fact-rut"></div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Razón Social:</div>
+                            <div class="info-value" id="view-fact-razon"></div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Email Facturación:</div>
+                            <div class="info-value" id="view-fact-email"></div>
+                        </div>
+                    </div>
+                    <p id="view-fact-direccion" style="margin-top: 10px;"><i class="fas fa-building"></i> </p>
+                </div>
+
+                <!-- Resumen Económico -->
+                <h3>Resumen Económico</h3>
+                <div class="summary-cards">
+                    <div class="summary-card">
+                        <div class="summary-value amount-positive" id="summary-total-vendido">$0</div>
+                        <div class="summary-label">Monto Total Vendido</div>
+                    </div>
+                    <div class="summary-card">
+                        <div class="summary-value amount-warning" id="summary-profit">$0</div>
+                        <div class="summary-label">Profit Total (15%)</div>
+                    </div>
+                    <div class="summary-card">
+                        <div class="summary-value amount-positive" id="summary-pagado">$0</div>
+                        <div class="summary-label">Monto Pagado</div>
+                    </div>
+                    <div class="summary-card">
+                        <div class="summary-value amount-negative" id="summary-por-cobrar">$0</div>
+                        <div class="summary-label">Por Cobrar</div>
+                    </div>
+                    <div class="summary-card">
+                        <div class="summary-value" id="summary-oc-cliente">0</div>
+                        <div class="summary-label">Total OC Cliente</div>
+                    </div>
+                    <div class="summary-card">
+                        <div class="summary-value" id="summary-oc-proveedor">0</div>
+                        <div class="summary-label">OC Proveedores</div>
+                    </div>
+                </div>
+
+                <!-- Listado de OC -->
+                <h3>Órdenes de Compra del Cliente</h3>
+                <table class="oc-table">
+                    <thead>
+                        <tr>
+                            <th>OC Cliente</th>
+                            <th>SOLPED Asociados</th>
+                            <th>Fecha</th>
+                            <th>Monto Vendido</th>
+                            <th>Profit</th>
+                            <th>Pagado</th>
+                            <th>Profit Pagado</th>
+                            <th>OC Prov.</th>
+                            <th>Entregadas</th>
+                            <th>Estado</th>
+                        </tr>
+                    </thead>
+                    <tbody id="oc-tbody">
+                        <!-- Contenido dinámico -->
+                    </tbody>
+                    <tfoot id="oc-tfoot">
+                        <!-- Totales dinámicos -->
+                    </tfoot>
+                </table>
+
+                <!-- Contactos -->
+                <h3 style="margin-top: 30px;">Contactos de la Obra</h3>
+                <table class="contacts-table">
+                    <thead>
+                        <tr>
+                            <th>Nombre</th>
+                            <th>Cargo</th>
+                            <th>Celular</th>
+                            <th>Tipo</th>
+                            <th>Email</th>
+                        </tr>
+                    </thead>
+                    <tbody id="view-contacts-tbody">
+                        <!-- Contenido dinámico -->
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="modal-footer">
+                <button class="btn btn-outline" onclick="ObrasManager.closeViewObraModal()">
+                    <i class="fas fa-times"></i> Cerrar
+                </button>
+                <button class="btn btn-warning" onclick="ObrasManager.editFromView()">
+                    <i class="fas fa-edit"></i> Editar
+                </button>
+                <button class="btn btn-primary" onclick="ObrasManager.printObra()">
+                    <i class="fas fa-print"></i> Imprimir
+                </button>
+                <button class="btn btn-info" onclick="ObrasManager.exportObra()">
+                    <i class="fas fa-file-excel"></i> Exportar
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="../js/menu-component.js"></script>
+    <script src="../js/ssl-eo-listado-obras.js"></script>
+    <script>
+        // Inicializar el menú con la sección activa
+        SSLMenu.load('empresas-organizaciones', 'obras-proyectos');
+    </script>
+</body>
+</html>

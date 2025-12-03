@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SSL v4.0 - Detalle Cuadro Comparativo</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- CSS del menú reutilizable -->
+    <link rel="stylesheet" href="../css/ssl-menu.css">
+    <link rel="stylesheet" href="../css/ssl-general.css">
+
+    <!-- CSS del menú especifico -->        
+    <link rel="stylesheet" href="../css/ssl_ea_detalle_cuadro_comparativo.css">
+</head>
+<body>
+    <!-- El menú se carga dinámicamente aquí -->
+    <div id="menu-container"></div>
+
+    <main class="content">
+        <!-- Breadcrumb -->
+        <div class="breadcrumb">
+            <div class="breadcrumb-item"><a href="../inicio/ssl_menu.html">Inicio</a></div>
+            <div class="breadcrumb-item"><a href="#">Evaluación y Análisis</a></div>
+            <div class="breadcrumb-item"><a href="ssl_ea_listado_cuadro_comparativo.html">Cuadros Comparativos</a></div>
+            <div class="breadcrumb-item active">Detalle Comparativo</div>
+        </div>
+
+        <h1 class="page-title">
+            <span><i class="fas fa-chart-line"></i> Cuadro Comparativo de Cotizaciones</span>
+        </h1>
+
+        <div class="main-container">
+            <!-- Header con información y controles -->
+            <div class="header-controls">
+                <div class="header-left">
+                    <div class="header-info">
+                        <div class="info-item">
+                            <span class="info-label">Cliente:</span>
+                            <span class="info-value">CONSTRUCTORA ALMAGRO S.A.</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Obra:</span>
+                            <span class="info-value">EDIFICIO PACIFIC BLUE</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Solicitud:</span>
+                            <span class="info-value">SOLPED-2025-0847</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Sol. Cotización:</span>
+                            <span class="info-value">SOL-COT-2025-1234</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Estado:</span>
+                            <span class="status-badge status-revision">EN REVISIÓN</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Fecha:</span>
+                            <span class="info-value">25/05/2025</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Alertas de normalización -->
+            <div class="normalization-alert">
+                <i class="fas fa-info-circle"></i>
+                <span>Se han normalizado las unidades de medida para una comparación equitativa. 
+                Los valores originales se muestran al pasar el cursor sobre cada ítem.</span>
+            </div>
+
+            <!-- Controles de vista -->
+            <div class="view-controls">
+                <button class="view-btn active" onclick="changeView('comparison')">
+                    <i class="fas fa-table"></i> Vista Comparativa
+                </button>
+                <button class="view-btn" onclick="changeView('individual')">
+                    <i class="fas fa-file-alt"></i> Cotizaciones Individuales
+                </button>
+                <button class="view-btn" onclick="changeView('grouped')">
+                    <i class="fas fa-layer-group"></i> Agrupado por Similitud
+                </button>
+                <button class="view-btn" onclick="changeView('analysis')">
+                    <i class="fas fa-chart-bar"></i> Análisis
+                </button>
+            </div>
+
+            <!-- Filtros -->
+            <div class="filter-section">
+                <div class="filter-grid">
+                    <div class="filter-group">
+                        <label>Criterio de Comparación</label>
+                        <select class="filter-control" id="criteriaSelect">
+                            <option value="price">Precio</option>
+                            <option value="delivery">Plazo de Entrega</option>
+                            <option value="quality">Calidad</option>
+                            <option value="brand">Marca</option>
+                            <option value="combined">Combinado</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label>Filtrar Proveedores</label>
+                        <select class="filter-control" id="providerFilter">
+                            <option value="all">Todos</option>
+                            <option value="complete">Solo cotizaciones completas</option>
+                            <option value="partial">Con cotizaciones parciales</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label>Agrupar por</label>
+                        <select class="filter-control" id="groupingSelect">
+                            <option value="none">Sin agrupar</option>
+                            <option value="category">Categoría</option>
+                            <option value="similarity">Productos similares</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Criterios de comparación múltiple -->
+            <div class="criteria-selector">
+                <label style="font-weight: 600; margin-right: 15px;">Criterios activos:</label>
+                <label class="criteria-checkbox">
+                    <input type="checkbox" checked> Precio
+                </label>
+                <label class="criteria-checkbox">
+                    <input type="checkbox"> Plazo de entrega
+                </label>
+                <label class="criteria-checkbox">
+                    <input type="checkbox"> Marca
+                </label>
+                <label class="criteria-checkbox">
+                    <input type="checkbox"> Calidad certificada
+                </label>
+            </div>
+
+            <!-- Resumen de cotizaciones -->
+            <div class="summary-cards">
+                <div class="summary-card">
+                    <h3>FERRETERÍA CENTRAL</h3>
+                    <div class="summary-content">
+                        <div class="summary-row">
+                            <span class="summary-label">Total cotizado:</span>
+                            <span class="summary-value">$3,087,500</span>
+                        </div>
+                        <div class="summary-row">
+                            <span class="summary-label">Items cotizados:</span>
+                            <span class="summary-value">5/5</span>
+                        </div>
+                        <div class="summary-row">
+                            <span class="summary-label">Plazo promedio:</span>
+                            <span class="summary-value">2 días</span>
+                        </div>
+                        <div class="summary-row">
+                            <span class="summary-label">Estado:</span>
+                            <span class="quote-status quote-complete">Completa</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="summary-card">
+                    <h3>DISTRIBUIDORA ELÉCTRICA</h3>
+                    <div class="summary-content">
+                        <div class="summary-row">
+                            <span class="summary-label">Total cotizado:</span>
+                            <span class="summary-value">$3,000,000</span>
+                        </div>
+                        <div class="summary-row">
+                            <span class="summary-label">Items cotizados:</span>
+                            <span class="summary-value">5/5</span>
+                        </div>
+                        <div class="summary-row">
+                            <span class="summary-label">Plazo promedio:</span>
+                            <span class="summary-value">3 días</span>
+                        </div>
+                        <div class="summary-row">
+                            <span class="summary-label">Estado:</span>
+                            <span class="quote-status quote-complete">Completa</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="summary-card">
+                    <h3>MATERIALES DEL SUR</h3>
+                    <div class="summary-content">
+                        <div class="summary-row">
+                            <span class="summary-label">Total cotizado:</span>
+                            <span class="summary-value">$3,205,000</span>
+                        </div>
+                        <div class="summary-row">
+                            <span class="summary-label">Items cotizados:</span>
+                            <span class="summary-value">4/5</span>
+                        </div>
+                        <div class="summary-row">
+                            <span class="summary-label">Plazo promedio:</span>
+                            <span class="summary-value">1 día</span>
+                        </div>
+                        <div class="summary-row">
+                            <span class="summary-label">Estado:</span>
+                            <span class="quote-status quote-partial">Parcial</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tabla comparativa -->
+            <div class="table-container">
+                <table class="comparison-table" id="comparisonTable">
+                    <thead>
+                        <tr>
+                            <th rowspan="2" width="8%">Código</th>
+                            <th rowspan="2" width="20%">Descripción</th>
+                            <th rowspan="2" width="6%">Cant.</th>
+                            <th rowspan="2" width="6%">Unidad</th>
+                            <th colspan="4" class="provider-header">FERRETERÍA CENTRAL</th>
+                            <th colspan="4" class="provider-header">DISTRIBUIDORA ELÉCTRICA</th>
+                            <th colspan="4" class="provider-header">MATERIALES DEL SUR</th>
+                        </tr>
+                        <tr>
+                            <th>Precio Unit.</th>
+                            <th>Total</th>
+                            <th>Plazo</th>
+                            <th>Marca</th>
+                            <th>Precio Unit.</th>
+                            <th>Total</th>
+                            <th>Plazo</th>
+                            <th>Marca</th>
+                            <th>Precio Unit.</th>
+                            <th>Total</th>
+                            <th>Plazo</th>
+                            <th>Marca</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Grupo de productos eléctricos -->
+                        <tr class="product-group">
+                            <td colspan="16">MATERIALES ELÉCTRICOS</td>
+                        </tr>
+                        <tr>
+                            <td class="product-code">EL-1245</td>
+                            <td>
+                                Cable eléctrico NYY 3x10mm2 0.6/1kV
+                                <span class="tooltip">
+                                    <i class="fas fa-info-circle" style="color: #3498db; font-size: 0.8rem;"></i>
+                                    <span class="tooltiptext">Normalizado de metros a metros lineales</span>
+                                </span>
+                            </td>
+                            <td style="text-align: center;">500</td>
+                            <td style="text-align: center;">ML</td>
+                            <td class="price-cell">$3,200</td>
+                            <td class="price-cell">$1,600,000</td>
+                            <td style="text-align: center;">3 días</td>
+                            <td style="text-align: center;">NEXANS</td>
+                            <td class="price-cell best-price">
+                                $3,150
+                                <div class="price-variation variation-down">
+                                    <i class="fas fa-arrow-down"></i> -1.6%
+                                </div>
+                            </td>
+                            <td class="price-cell best-price">$1,575,000</td>
+                            <td style="text-align: center;">5 días</td>
+                            <td style="text-align: center;">CABLEC</td>
+                            <td class="price-cell">$3,400</td>
+                            <td class="price-cell">$1,700,000</td>
+                            <td style="text-align: center;">2 días</td>
+                            <td style="text-align: center;">NEXANS</td>
+                        </tr>
+                        <tr>
+                            <td class="product-code">EL-0876</td>
+                            <td>
+                                Tubo Conduit PVC 25mm
+                                <span class="unit-normalized">UN → TRA (6 UN)</span>
+                            </td>
+                            <td style="text-align: center;">50</td>
+                            <td style="text-align: center;">TRA</td>
+                            <td class="price-cell">$11,100</td>
+                            <td class="price-cell">$555,000</td>
+                            <td style="text-align: center;">2 días</td>
+                            <td style="text-align: center;">TIGRE</td>
+                            <td class="price-cell best-price">
+                                $10,680
+                                <div class="price-variation variation-down">
+                                    <i class="fas fa-arrow-down"></i> -3.8%
+                                </div>
+                            </td>
+                            <td class="price-cell best-price">$534,000</td>
+                            <td style="text-align: center;">3 días</td>
+                            <td style="text-align: center;">DURATEC</td>
+                            <td class="price-cell">$11,400</td>
+                            <td class="price-cell">$570,000</td>
+                            <td style="text-align: center;">1 día</td>
+                            <td style="text-align: center;">TIGRE</td>
+                        </tr>
+                        <tr>
+                            <td class="product-code">EL-2534</td>
+                            <td>Caja de derivación PVC 100x100mm</td>
+                            <td style="text-align: center;">150</td>
+                            <td style="text-align: center;">UN</td>
+                            <td class="price-cell best-price">
+                                $1,250
+                                <div class="price-variation variation-equal">
+                                    <i class="fas fa-equals"></i> 0%
+                                </div>
+                            </td>
+                            <td class="price-cell best-price">$187,500</td>
+                            <td style="text-align: center;">1 día</td>
+                            <td style="text-align: center;">BTICINO</td>
+                            <td class="price-cell">$1,280</td>
+                            <td class="price-cell">$192,000</td>
+                            <td style="text-align: center;">2 días</td>
+                            <td style="text-align: center;">LEGRAND</td>
+                            <td class="price-cell">$1,300</td>
+                            <td class="price-cell">$195,000</td>
+                            <td style="text-align: center;">1 día</td>
+                            <td style="text-align: center;">BTICINO</td>
+                        </tr>
+                        
+                        <!-- Grupo de productos de protección -->
+                        <tr class="product-group">
+                            <td colspan="16">PROTECCIONES ELÉCTRICAS</td>
+                        </tr>
+                        <tr>
+                            <td class="product-code">EL-3698</td>
+                            <td>
+                                Interruptor Diferencial 25A
+                                <span class="tooltip">
+                                    <i class="fas fa-exclamation-triangle" style="color: #f39c12; font-size: 0.8rem;"></i>
+                                    <span class="tooltiptext">Productos similares agrupados</span>
+                                </span>
+                            </td>
+                            <td style="text-align: center;">50</td>
+                            <td style="text-align: center;">UN</td>
+                            <td class="price-cell">$12,500</td>
+                            <td class="price-cell">$625,000</td>
+                            <td style="text-align: center;">2 días</td>
+                            <td style="text-align: center;">SCHNEIDER</td>
+                            <td class="price-cell best-price">
+                                $12,200
+                                <div class="price-variation variation-down">
+                                    <i class="fas fa-arrow-down"></i> -2.4%
+                                </div>
+                            </td>
+                            <td class="price-cell best-price">$610,000</td>
+                            <td style="text-align: center;">3 días</td>
+                            <td style="text-align: center;">ABB</td>
+                            <td class="price-cell">$12,800</td>
+                            <td class="price-cell">$640,000</td>
+                            <td style="text-align: center;">1 día</td>
+                            <td style="text-align: center;">LEGRAND</td>
+                        </tr>
+                        <tr class="incomplete-quote">
+                            <td class="product-code">EL-4102</td>
+                            <td>Terminal de conexión 10mm²</td>
+                            <td style="text-align: center;">200</td>
+                            <td style="text-align: center;">UN</td>
+                            <td class="price-cell">$350</td>
+                            <td class="price-cell">$70,000</td>
+                            <td style="text-align: center;">1 día</td>
+                            <td style="text-align: center;">3M</td>
+                            <td class="price-cell best-price">
+                                $320
+                                <div class="price-variation variation-down">
+                                    <i class="fas fa-arrow-down"></i> -8.6%
+                                </div>
+                            </td>
+                            <td class="price-cell best-price">$64,000</td>
+                            <td style="text-align: center;">2 días</td>
+                            <td style="text-align: center;">BURNDY</td>
+                            <td colspan="4" style="text-align: center; background-color: #f8d7da;">
+                                <span class="quote-status quote-missing">No cotizado</span>
+                            </td>
+                        </tr>
+
+                        <!-- Totales -->
+                        <tr class="totals-row">
+                            <td colspan="4" style="text-align: right; font-weight: 600;">TOTALES</td>
+                            <td colspan="2" class="price-cell" style="font-weight: 700; font-size: 1.1rem;">$3,037,500</td>
+                            <td colspan="2"></td>
+                            <td colspan="2" class="price-cell best-price" style="font-weight: 700; font-size: 1.1rem;">$2,975,000</td>
+                            <td colspan="2"></td>
+                            <td colspan="2" class="price-cell" style="font-weight: 700; font-size: 1.1rem;">$3,205,000</td>
+                            <td colspan="2"></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Botones de acción -->
+            <div class="action-buttons">
+                <div class="btn-group">
+                    <button class="btn btn-outline" onclick="window.location.href='ssl_ea_listado_cuadro_comparativo.html'">
+                        <i class="fas fa-arrow-left"></i> Volver al Listado
+                    </button>
+                    <button class="btn btn-outline" onclick="exportToExcel()">
+                        <i class="fas fa-file-excel"></i> Exportar Excel
+                    </button>
+                    <button class="btn btn-outline" onclick="printComparison()">
+                        <i class="fas fa-print"></i> Imprimir
+                    </button>
+                    <button class="btn btn-outline" onclick="shareComparison()">
+                        <i class="fas fa-share-alt"></i> Compartir
+                    </button>
+                </div>
+                <div class="btn-group">
+                    <button class="btn btn-warning" onclick="showIncompleteAlert()">
+                        <i class="fas fa-exclamation-triangle"></i> Revisar Incompletas
+                    </button>
+                    <button class="btn btn-primary" onclick="saveComparison()">
+                        <i class="fas fa-save"></i> Guardar Comparación
+                    </button>
+                    <button class="btn btn-success" onclick="selectBestQuotes()">
+                        <i class="fas fa-check-circle"></i> Seleccionar Mejores
+                    </button>
+                    <button class="btn btn-success" onclick="generateOCCliente()">
+                        <i class="fas fa-file-invoice"></i> Generar OC Cliente
+                    </button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Modal para visualización individual de cotización -->
+    <div id="quotationModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Cotización Individual</h2>
+                <span class="close" onclick="closeModal()">&times;</span>
+            </div>
+            <div class="modal-body" id="modalBody">
+                <!-- Contenido dinámico del modal -->
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" onclick="closeModal()">Cerrar</button>
+                <button class="btn btn-primary" onclick="printQuotation()">
+                    <i class="fas fa-print"></i> Imprimir
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de análisis -->
+    <div id="analysisModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Análisis Comparativo</h2>
+                <span class="close" onclick="closeAnalysisModal()">&times;</span>
+            </div>
+            <div class="modal-body" id="analysisModalBody">
+                <div class="analysis-container">
+                    <h3>Análisis de Precios</h3>
+                    <canvas id="priceChart"></canvas>
+                    
+                    <h3 style="margin-top: 20px;">Análisis de Plazos</h3>
+                    <canvas id="deliveryChart"></canvas>
+                    
+                    <h3 style="margin-top: 20px;">Recomendaciones</h3>
+                    <div class="recommendations-box">
+                        <ul>
+                            <li>DISTRIBUIDORA ELÉCTRICA ofrece el mejor precio global (-2.1% vs promedio)</li>
+                            <li>MATERIALES DEL SUR tiene los mejores plazos de entrega (1 día promedio)</li>
+                            <li>Se recomienda solicitar cotización completa a MATERIALES DEL SUR</li>
+                            <li>Considerar negociación de volumen con DISTRIBUIDORA ELÉCTRICA</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" onclick="closeAnalysisModal()">Cerrar</button>
+                <button class="btn btn-primary" onclick="exportAnalysis()">
+                    <i class="fas fa-file-pdf"></i> Exportar Análisis
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="../js/menu-component.js"></script>
+    <script src="../js/ssl_ea_detalle_cuadro_comparativo.js"></script>
+    
+    <script>
+        // Inicializar menú con la sección activa
+        SSLMenu.load('evaluacion-analisis', 'cuadros-comparativos');
+    </script>
+</body>
+</html>

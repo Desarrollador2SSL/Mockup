@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SSL v4.0 - Órdenes de Compra Proveedores</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- CSS del menú reutilizable -->
+    <link rel="stylesheet" href="../css/ssl-menu.css">
+    <link rel="stylesheet" href="../css/ssl-general.css">
+
+    <link rel="stylesheet" href="../css/ssl-oc-listado-oc-proveedor.css">
+</head>
+<body>
+    <!-- Container for the menu component -->
+    <div id="menu-container"></div>
+
+    <main class="content">
+        <div class="breadcrumb">
+            <div class="breadcrumb-item"><a href="../inicio/ssl_menu.html">Inicio</a></div>
+            <div class="breadcrumb-item"><a href="#">Órdenes de Compra</a></div>
+            <div class="breadcrumb-item active">OC Proveedor</div>
+        </div>
+
+        <div class="page-header">
+            <h1 class="page-title">
+                Órdenes de Compra a Proveedores
+            </h1>
+            <div class="header-actions">            
+                <button class="btn btn-success" onclick="OCProveedor.openNewOCModal()">
+                    <i class="fas fa-plus"></i> Nueva OC Proveedores
+                </button>        
+            </div>                    
+        </div>        
+
+        <!-- Filtros -->
+        <div class="filter-section">
+            <h3 style="margin-bottom: 15px;"><i class="fas fa-filter"></i> Filtros de Búsqueda</h3>
+            <form class="filter-form">
+                <div class="form-group">
+                    <label for="filter-nro-oc">Nro. OC</label>
+                    <input type="text" id="filter-nro-oc" class="form-control" placeholder="Ej: OC-PROV-2025-001">
+                </div>
+                <div class="form-group">
+                    <label for="filter-proveedor">Proveedor</label>
+                    <select id="filter-proveedor" class="form-control">
+                        <option value="">Todos los proveedores</option>
+                        <option value="1">CEMENTOS BIO BIO S.A.</option>
+                        <option value="2">FERRETERÍA INDUSTRIAL LTDA.</option>
+                        <option value="3">MATERIALES DEL SUR S.A.</option>
+                        <option value="4">ELECTROCOM LTDA.</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="filter-cliente">Cliente</label>
+                    <select id="filter-cliente" class="form-control">
+                        <option value="">Todos los clientes</option>
+                        <option value="1">CONSTRUCTORA ALMAGRO S.A.</option>
+                        <option value="2">INMOBILIARIA INGEVEC</option>
+                        <option value="3">CONSTRUCTORA MOLLER Y PÉREZ-COTAPOS</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="filter-estado">Estado</label>
+                    <select id="filter-estado" class="form-control">
+                        <option value="">Todos los estados</option>
+                        <option value="pendiente">Pendiente</option>
+                        <option value="aprobada">Aprobada</option>
+                        <option value="rechazada">Rechazada</option>
+                        <option value="ajuste">En Ajuste</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="filter-fecha-desde">Fecha Desde</label>
+                    <input type="date" id="filter-fecha-desde" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label for="filter-fecha-hasta">Fecha Hasta</label>
+                    <input type="date" id="filter-fecha-hasta" class="form-control">
+                </div>
+            </form>
+            <div class="filter-actions">
+                <button type="button" class="btn btn-outline" onclick="OCProveedor.clearFilters()">
+                    <i class="fas fa-times"></i> Limpiar
+                </button>
+                <button type="button" class="btn btn-primary" onclick="OCProveedor.searchOC()">
+                    <i class="fas fa-search"></i> Buscar
+                </button>
+            </div>
+        </div>
+
+        <!-- Resultados -->
+        <div class="results-container">
+            <div class="results-header">
+                <div>
+                    <h2 class="results-title">Listado de Órdenes de Compra</h2>
+                    <div class="results-count">Mostrando 10 de 24 órdenes</div>
+                </div>
+            </div>
+
+            <table class="oc-table">
+                <thead>
+                    <tr>
+                        <th>Nro. OC</th>
+                        <th>Proveedor</th>
+                        <th>Cliente / Obra</th>
+                        <th>OC Cliente Ref.</th>
+                        <th>Fecha Emisión</th>
+                        <th>Monto Total</th>
+                        <th>Estado</th>
+                        <th>Medio Envío</th>
+                        <th>Acuse</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr onclick="OCProveedor.viewOC('OC-PROV-2025-001')">
+                        <td><strong>OC-PROV-2025-001</strong></td>
+                        <td>CEMENTOS BIO BIO S.A.</td>
+                        <td>
+                            CONSTRUCTORA ALMAGRO S.A.<br>
+                            <small>EDIFICIO PACIFIC BLUE</small>
+                        </td>
+                        <td>OC-CLI-2025-847</td>
+                        <td>22/05/2025</td>
+                        <td style="text-align: right; font-weight: 600;">$1,950,000</td>
+                        <td><span class="status-badge status-aprobada">APROBADA</span></td>
+                        <td>
+                            <span class="medio-badge">
+                                <i class="fas fa-envelope"></i> Email
+                            </span>
+                        </td>
+                        <td style="text-align: center;">
+                            <i class="fas fa-check-circle acuse-icon acuse-si" title="Acuse recibido"></i>
+                        </td>
+                        <td>
+                            <div class="action-buttons">
+                                <button class="btn btn-info btn-sm" onclick="event.stopPropagation(); OCProveedor.viewOC('OC-PROV-2025-001')">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                                <button class="btn btn-primary btn-sm" onclick="event.stopPropagation(); OCProveedor.downloadOC('OC-PROV-2025-001')">
+                                    <i class="fas fa-download"></i>
+                                </button>
+                                <button class="btn btn-warning btn-sm" onclick="event.stopPropagation(); OCProveedor.viewHistory('OC-PROV-2025-001')">
+                                    <i class="fas fa-history"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr onclick="OCProveedor.viewOC('OC-PROV-2025-002')">
+                        <td><strong>OC-PROV-2025-002</strong></td>
+                        <td>MATERIALES DEL SUR S.A.</td>
+                        <td>
+                            CONSTRUCTORA ALMAGRO S.A.<br>
+                            <small>EDIFICIO PACIFIC BLUE</small>
+                        </td>
+                        <td>OC-CLI-2025-847</td>
+                        <td>22/05/2025</td>
+                        <td style="text-align: right; font-weight: 600;">$2,150,000</td>
+                        <td><span class="status-badge status-pendiente">PENDIENTE</span></td>
+                        <td>
+                            <span class="medio-badge">
+                                <i class="fas fa-plug"></i> API
+                            </span>
+                        </td>
+                        <td style="text-align: center;">
+                            <i class="fas fa-times-circle acuse-icon acuse-no" title="Sin acuse"></i>
+                        </td>
+                        <td>
+                            <div class="action-buttons">
+                                <button class="btn btn-info btn-sm" onclick="event.stopPropagation(); OCProveedor.viewOC('OC-PROV-2025-002')">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                                <button class="btn btn-success btn-sm" onclick="event.stopPropagation(); OCProveedor.approveOC('OC-PROV-2025-002')">
+                                    <i class="fas fa-check"></i>
+                                </button>
+                                <button class="btn btn-danger btn-sm" onclick="event.stopPropagation(); OCProveedor.rejectOC('OC-PROV-2025-002')">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr onclick="OCProveedor.viewOC('OC-PROV-2025-003')">
+                        <td><strong>OC-PROV-2025-003</strong></td>
+                        <td>FERRETERÍA INDUSTRIAL LTDA.</td>
+                        <td>
+                            INMOBILIARIA INGEVEC<br>
+                            <small>CONDOMINIO VISTA MAR</small>
+                        </td>
+                        <td>OC-CLI-2025-848</td>
+                        <td>21/05/2025</td>
+                        <td style="text-align: right; font-weight: 600;">$1,680,000</td>
+                        <td><span class="status-badge status-ajuste">EN AJUSTE</span></td>
+                        <td>
+                            <span class="medio-badge">
+                                <i class="fas fa-file-alt"></i> Físico
+                            </span>
+                        </td>
+                        <td style="text-align: center;">
+                            <i class="fas fa-check-circle acuse-icon acuse-si" title="Acuse recibido"></i>
+                        </td>
+                        <td>
+                            <div class="action-buttons">
+                                <button class="btn btn-info btn-sm" onclick="event.stopPropagation(); OCProveedor.viewOC('OC-PROV-2025-003')">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                                <button class="btn btn-warning btn-sm" onclick="event.stopPropagation(); OCProveedor.editOC('OC-PROV-2025-003')">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button class="btn btn-primary btn-sm" onclick="event.stopPropagation(); OCProveedor.resendOC('OC-PROV-2025-003')">
+                                    <i class="fas fa-paper-plane"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr onclick="OCProveedor.viewOC('OC-PROV-2025-004')">
+                        <td><strong>OC-PROV-2025-004</strong></td>
+                        <td>ELECTROCOM LTDA.</td>
+                        <td>
+                            CONSTRUCTORA MOLLER Y PÉREZ-COTAPOS<br>
+                            <small>EDIFICIO CENTRAL PARK</small>
+                        </td>
+                        <td>OC-CLI-2025-849</td>
+                        <td>20/05/2025</td>
+                        <td style="text-align: right; font-weight: 600;">$980,500</td>
+                        <td><span class="status-badge status-rechazada">RECHAZADA</span></td>
+                        <td>
+                            <span class="medio-badge">
+                                <i class="fas fa-envelope"></i> Email
+                            </span>
+                        </td>
+                        <td style="text-align: center;">
+                            <i class="fas fa-check-circle acuse-icon acuse-si" title="Acuse recibido"></i>
+                        </td>
+                        <td>
+                            <div class="action-buttons">
+                                <button class="btn btn-info btn-sm" onclick="event.stopPropagation(); OCProveedor.viewOC('OC-PROV-2025-004')">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                                <button class="btn btn-warning btn-sm" onclick="event.stopPropagation(); OCProveedor.createNewVersion('OC-PROV-2025-004')">
+                                    <i class="fas fa-redo"></i>
+                                </button>
+                                <button class="btn btn-danger btn-sm" onclick="event.stopPropagation(); OCProveedor.cancelOC('OC-PROV-2025-004')">
+                                    <i class="fas fa-ban"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </main>
+
+    <!-- Modal Nueva OC -->
+    <div id="newOCModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title"><i class="fas fa-plus"></i> Nueva Orden de Compra a Proveedor</h2>
+                <span class="close" onclick="OCProveedor.closeNewOCModal()">&times;</span>
+            </div>
+            
+            <div class="modal-body">
+                <h3>Selección de Origen</h3>
+                <div class="detail-grid">
+                    <div class="detail-item">
+                        <label for="origen-oc">Generar OC basada en:</label>
+                        <select id="origen-oc" class="form-control" onchange="OCProveedor.handleOrigenChange()">
+                            <option value="">Seleccione origen</option>
+                            <option value="cotizacion-proveedor">Cotización del Proveedor</option>
+                            <option value="cotizacion-ssl">Cotización de SSL al Cliente</option>
+                            <option value="oc-cliente">OC del Cliente</option>
+                        </select>
+                    </div>
+                    <div class="detail-item">
+                        <label for="doc-referencia">Documento de Referencia:</label>
+                        <select id="doc-referencia" class="form-control" disabled onchange="OCProveedor.loadDocumentData()">
+                            <option value="">Primero seleccione origen</option>
+                        </select>
+                    </div>
+                    <div class="detail-item">
+                        <label for="proveedor-oc">Proveedor:</label>
+                        <select id="proveedor-oc" class="form-control" disabled>
+                            <option value="">Se cargará automáticamente</option>
+                        </select>
+                    </div>
+                    <div class="detail-item">
+                        <label for="medio-envio">Medio de Envío:</label>
+                        <select id="medio-envio" class="form-control">
+                            <option value="email">Email</option>
+                            <option value="api">API</option>
+                            <option value="fisico">Físico</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div id="full-oc-content" style="display: none;">
+                    <!-- Información de Referencia -->
+                    <h4 style="margin-top: 30px;">Información de Referencia</h4>
+                    <div class="detail-grid" style="background-color: #e8f4f8;">
+                        <div class="detail-item">
+                            <div class="detail-label">Cliente:</div>
+                            <div class="detail-value" id="ref-cliente">CONSTRUCTORA ALMAGRO S.A.</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">Obra:</div>
+                            <div class="detail-value" id="ref-obra">EDIFICIO PACIFIC BLUE</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">OC Cliente:</div>
+                            <div class="detail-value" id="ref-oc-cliente">OC-CLI-2025-847</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">Monto OC Cliente:</div>
+                            <div class="detail-value" id="ref-monto">$2,850,000</div>
+                        </div>
+                    </div>
+
+                    <!-- Items de la Orden -->
+                    <h3 style="margin-top: 30px;">Items de la Orden de Compra</h3>
+                    
+                    <div class="warning-box">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <span>Las cantidades deben ser iguales o menores a las indicadas en la OC del Cliente</span>
+                    </div>
+
+                    <table class="items-table">
+                        <thead>
+                            <tr>
+                                <th>Código SSL</th>
+                                <th>Descripción SSL</th>
+                                <th>Código Proveedor</th>
+                                <th>Descripción Proveedor</th>
+                                <th>Cant. Cotizada</th>
+                                <th>Cant. OC Cliente</th>
+                                <th>Cant. a Pedir</th>
+                                <th>Precio Unit.</th>
+                                <th>Total</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>SSL-001-2025</td>
+                                <td>Cemento Portland tipo I - Saco 25kg</td>
+                                <td>CEM-P-I-25</td>
+                                <td>Cemento Portland Bio Bio Tipo I 25kg</td>
+                                <td class="center-text">150</td>
+                                <td class="center-text">150</td>
+                                <td>
+                                    <input type="number" class="qty-input" value="150" min="0" max="150" onchange="OCProveedor.validateQuantity(this, 150)">
+                                </td>
+                                <td class="right-text">$5,800</td>
+                                <td class="right-text">$870,000</td>
+                            </tr>
+                            <tr>
+                                <td>SSL-002-2025</td>
+                                <td>Fierro corrugado 12mm x 12m</td>
+                                <td>FE-12-12M</td>
+                                <td>Fierro CAP A63-42H 12mm</td>
+                                <td class="center-text">50</td>
+                                <td class="center-text">48</td>
+                                <td>
+                                    <input type="number" class="qty-input" value="48" min="0" max="48" onchange="OCProveedor.validateQuantity(this, 48)">
+                                    <div class="qty-warning">⚠️ OC Cliente menor a cotizado</div>
+                                </td>
+                                <td class="right-text">$12,500</td>
+                                <td class="right-text">$600,000</td>
+                            </tr>
+                            <tr>
+                                <td>SSL-003-2025</td>
+                                <td>Ladrillo princesa 14x19x29cm</td>
+                                <td>LAD-PRI-14</td>
+                                <td>Ladrillo Princesa Santiago</td>
+                                <td class="center-text">2000</td>
+                                <td class="center-text">2000</td>
+                                <td>
+                                    <input type="number" class="qty-input" value="2000" min="0" max="2000" onchange="OCProveedor.validateQuantity(this, 2000)">
+                                </td>
+                                <td class="right-text">$240</td>
+                                <td class="right-text">$480,000</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <div class="totals-section">
+                        <div class="total-row">
+                            <span class="total-label">Subtotal:</span>
+                            <span class="total-value">$1,950,000</span>
+                        </div>
+                        <div class="total-row">
+                            <span class="total-label">IVA (19%):</span>
+                            <span class="total-value">$370,500</span>
+                        </div>
+                        <div class="total-row total-final">
+                            <span class="total-label">Total OC:</span>
+                            <span class="total-value">$2,320,500</span>
+                        </div>
+                    </div>
+
+                    <!-- Condiciones Específicas -->
+                    <h3 style="margin-top: 30px;">Condiciones Específicas</h3>
+                    
+                    <div class="conditions-section">
+                        <div class="condition-item">
+                            <label for="plazo-entrega">Plazo de Entrega:</label>
+                            <input type="text" id="plazo-entrega" class="condition-input" value="7 días hábiles desde la confirmación">
+                        </div>
+                        <div class="condition-item">
+                            <label for="lugar-entrega">Lugar de Entrega:</label>
+                            <input type="text" id="lugar-entrega" class="condition-input" value="Obra EDIFICIO PACIFIC BLUE - Av. Las Condes 1234">
+                        </div>
+                        <div class="condition-item">
+                            <label for="forma-pago">Forma de Pago:</label>
+                            <select id="forma-pago" class="form-control">
+                                <option value="30">30 días</option>
+                                <option value="60">60 días</option>
+                                <option value="90">90 días</option>
+                                <option value="contado">Contado</option>
+                            </select>
+                        </div>
+                        <div class="condition-item">
+                            <label for="condiciones-especiales">Condiciones Especiales:</label>
+                            <textarea id="condiciones-especiales" class="condition-input" rows="4">1. Los materiales deben cumplir con las especificaciones técnicas indicadas.
+2. Se requiere certificado de calidad para todos los productos.
+3. La entrega debe coordinarse con 48 horas de anticipación.
+4. Aplicar descuento del 5% por volumen según acuerdo comercial.</textarea>
+                        </div>
+                        <div class="condition-item">
+                            <label for="contacto-proveedor">Contacto Proveedor:</label>
+                            <input type="text" id="contacto-proveedor" class="condition-input" value="Juan Pérez - jpere@proveedore.cl - +56 9 1234 5678">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button class="btn btn-outline" onclick="OCProveedor.closeNewOCModal()">
+                    <i class="fas fa-times"></i> Cancelar
+                </button>
+                <button class="btn btn-warning" onclick="OCProveedor.saveDraft()">
+                    <i class="fas fa-save"></i> Guardar Borrador
+                </button>
+                <button class="btn btn-primary" onclick="OCProveedor.previewOC()">
+                    <i class="fas fa-eye"></i> Vista Previa
+                </button>
+                <button class="btn btn-success" onclick="OCProveedor.generateOC()">
+                    <i class="fas fa-check"></i> Generar OC
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Ver OC -->
+    <div id="viewOCModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title"><i class="fas fa-file-invoice"></i> Orden de Compra OC-PROV-2025-001</h2>
+                <span class="close" onclick="OCProveedor.closeViewOCModal()">&times;</span>
+            </div>
+            
+            <div class="modal-body">
+                <div class="detail-grid">
+                    <div class="detail-item">
+                        <div class="detail-label">Nro. OC:</div>
+                        <div class="detail-value">OC-PROV-2025-001</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Proveedor:</div>
+                        <div class="detail-value">CEMENTOS BIO BIO S.A.</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Cliente:</div>
+                        <div class="detail-value">CONSTRUCTORA ALMAGRO S.A.</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Obra:</div>
+                        <div class="detail-value">EDIFICIO PACIFIC BLUE</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">OC Cliente Ref:</div>
+                        <div class="detail-value">OC-CLI-2025-847</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Fecha Emisión:</div>
+                        <div class="detail-value">22/05/2025</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Estado:</div>
+                        <div class="detail-value"><span class="status-badge status-aprobada">APROBADA</span></div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Acuse de Recibo:</div>
+                        <div class="detail-value">
+                            <i class="fas fa-check-circle acuse-icon acuse-si"></i> Sí - 22/05/2025 14:30
+                        </div>
+                    </div>
+                </div>
+
+                <h3>Items de la Orden</h3>
+                <table class="items-table">
+                    <thead>
+                        <tr>
+                            <th>Código SSL</th>
+                            <th>Descripción</th>
+                            <th>Código Proveedor</th>
+                            <th>Cantidad</th>
+                            <th>Precio Unit.</th>
+                            <th>Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>SSL-001-2025</td>
+                            <td>Cemento Portland tipo I - Saco 25kg</td>
+                            <td>CEM-P-I-25</td>
+                            <td class="center-text">150</td>
+                            <td class="right-text">$5,800</td>
+                            <td class="right-text">$870,000</td>
+                        </tr>
+                        <tr>
+                            <td>SSL-002-2025</td>
+                            <td>Fierro corrugado 12mm x 12m</td>
+                            <td>FE-12-12M</td>
+                            <td class="center-text">48</td>
+                            <td class="right-text">$12,500</td>
+                            <td class="right-text">$600,000</td>
+                        </tr>
+                        <tr>
+                            <td>SSL-003-2025</td>
+                            <td>Ladrillo princesa 14x19x29cm</td>
+                            <td>LAD-PRI-14</td>
+                            <td class="center-text">2000</td>
+                            <td class="right-text">$240</td>
+                            <td class="right-text">$480,000</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="totals-section">
+                    <div class="total-row">
+                        <span class="total-label">Subtotal:</span>
+                        <span class="total-value">$1,950,000</span>
+                    </div>
+                    <div class="total-row">
+                        <span class="total-label">IVA (19%):</span>
+                        <span class="total-value">$370,500</span>
+                    </div>
+                    <div class="total-row total-final">
+                        <span class="total-label">Total OC:</span>
+                        <span class="total-value">$2,320,500</span>
+                    </div>
+                </div>
+
+                <h3>Historial de Seguimiento</h3>
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <div class="timeline-date">22/05/2025 14:30</div>
+                        <div class="timeline-content">Acuse de recibo confirmado por proveedor</div>
+                        <div class="timeline-user">Sistema Automático</div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-date">22/05/2025 11:15</div>
+                        <div class="timeline-content">OC enviada por Email a proveedor@cbb.cl</div>
+                        <div class="timeline-user">Juan Pérez (Ejecutivo SSL)</div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-date">22/05/2025 10:45</div>
+                        <div class="timeline-content">OC aprobada</div>
+                        <div class="timeline-user">María González (Supervisor SSL)</div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-date">22/05/2025 09:30</div>
+                        <div class="timeline-content">OC generada desde OC Cliente OC-CLI-2025-847</div>
+                        <div class="timeline-user">Juan Pérez (Ejecutivo SSL)</div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-date">20/05/2025 15:00</div>
+                        <div class="timeline-content">OC Cliente recibida de CONSTRUCTORA ALMAGRO S.A.</div>
+                        <div class="timeline-user">Sistema Automático</div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-date">19/05/2025 14:00</div>
+                        <div class="timeline-content">Cotización SSL enviada al cliente</div>
+                        <div class="timeline-user">Juan Pérez (Ejecutivo SSL)</div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-date">18/05/2025 10:00</div>
+                        <div class="timeline-content">Cotización recibida del proveedor</div>
+                        <div class="timeline-user">Sistema Automático</div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-date">15/05/2025 10:15</div>
+                        <div class="timeline-content">Solicitud de pedido SOLPED-2025-0847 ingresada</div>
+                        <div class="timeline-user">María González (Ejecutivo SSL)</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button class="btn btn-outline" onclick="OCProveedor.closeViewOCModal()">
+                    <i class="fas fa-times"></i> Cerrar
+                </button>
+                <button class="btn btn-primary" onclick="OCProveedor.downloadOC('OC-PROV-2025-001')">
+                    <i class="fas fa-download"></i> Descargar PDF
+                </button>
+                <button class="btn btn-warning" onclick="OCProveedor.resendOC('OC-PROV-2025-001')">
+                    <i class="fas fa-paper-plane"></i> Reenviar
+                </button>
+                <button class="btn btn-info" onclick="OCProveedor.printOC('OC-PROV-2025-001')">
+                    <i class="fas fa-print"></i> Imprimir
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Load menu component and page-specific scripts -->
+    <script src="../js/menu-component.js"></script>
+    <script src="../js/ssl_listado_oc_proveedor.js"></script>
+    <script>
+        // Load the menu when the page loads
+        SSLMenu.load('ordenes-compra', 'oc-proveedor');
+    </script>
+</body>
+</html>

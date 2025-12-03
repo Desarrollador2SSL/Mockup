@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SSL v4.0 - Recepción de Respuestas / Cotizaciones</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../shared/css/ssl-menu-styles.css">
+    <link rel="stylesheet" href="ssl_listado_recepcion_respuesta.css">
+</head>
+<body>
+    <!-- Contenedor del menú - Se llenará dinámicamente -->
+    <div id="menu-container"></div>
+
+    <div class="container">
+        <main class="content">
+            <div class="breadcrumb">
+                <div class="breadcrumb-item"><a href="../inicio/ssl_menu.html">Inicio</a></div>
+                <div class="breadcrumb-item">Cotización a Proveedores</div>
+                <div class="breadcrumb-item active">Recepción de Respuestas / Cotizaciones</div>
+            </div>
+
+            <h1 class="page-title">
+                <span><i class="fas fa-inbox"></i> Recepción de Respuestas / Cotizaciones</span>
+                <button class="btn btn-success" onclick="RecepcionRespuesta.nuevaCotizacion()">
+                    <i class="fas fa-plus"></i> Nueva Cotización
+                </button>
+            </h1>
+
+            <!-- Formulario de Búsqueda -->
+            <div class="search-container">
+                <h2 class="search-title">
+                    <i class="fas fa-search"></i>
+                    Búsqueda y Filtros
+                </h2>
+                
+                <form class="search-form">
+                    <div class="form-group">
+                        <label for="nro-solicitud">Nro. Solicitud Cotización</label>
+                        <input type="text" id="nro-solicitud" class="form-control" placeholder="Ej: SC-2025-0042">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="proveedor">Proveedor</label>
+                        <div class="select-container">
+                            <select id="proveedor" class="form-control">
+                                <option value="">Todos los proveedores</option>
+                                <option value="1">ELECTROCOM LTDA.</option>
+                                <option value="2">IMPORTADORA TÉCNICA S.A.</option>
+                                <option value="3">DISTRIBUIDORA ELÉCTRICA NACIONAL</option>
+                                <option value="4">CABLES Y CONDUCTORES SpA</option>
+                                <option value="5">MATERIALES CONSTRUCCIÓN S.A.</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="cliente">Cliente</label>
+                        <div class="select-container">
+                            <select id="cliente" class="form-control">
+                                <option value="">Todos los clientes</option>
+                                <option value="1">CONSTRUCTORA ALMAGRO S.A.</option>
+                                <option value="2">INMOBILIARIA INGEVEC</option>
+                                <option value="3">CONSTRUCTORA MOLLER Y PÉREZ-COTAPOS</option>
+                                <option value="4">CONSTRUCTORA SOCOVESA</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="estado">Estado</label>
+                        <div class="select-container">
+                            <select id="estado" class="form-control">
+                                <option value="">Todos los estados</option>
+                                <option value="pendiente">PENDIENTE</option>
+                                <option value="recibida">RECIBIDA</option>
+                                <option value="revisada">REVISADA</option>
+                                <option value="vencida">VENCIDA</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="fecha-desde">Fecha Desde</label>
+                        <input type="date" id="fecha-desde" class="form-control">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="fecha-hasta">Fecha Hasta</label>
+                        <input type="date" id="fecha-hasta" class="form-control">
+                    </div>
+                </form>
+                
+                <div class="search-actions">
+                    <button type="button" class="btn btn-outline" onclick="RecepcionRespuesta.clearFilters()">
+                        <i class="fas fa-times"></i> Limpiar
+                    </button>
+                    <button type="button" class="btn btn-primary" onclick="RecepcionRespuesta.searchCotizaciones()">
+                        <i class="fas fa-search"></i> Buscar
+                    </button>
+                </div>
+            </div>
+
+            <!-- Resultados -->
+            <div class="results-container">
+                <div class="results-header">
+                    <div>
+                        <h2 class="results-title">
+                            <i class="fas fa-file-invoice"></i>
+                            Cotizaciones Recibidas
+                        </h2>
+                        <div class="results-count">Mostrando 8 de 24 cotizaciones</div>
+                    </div>
+                </div>
+
+                <table class="cotizaciones-table">
+                    <thead>
+                        <tr>
+                            <th>Nro. Solicitud</th>
+                            <th>Proveedor</th>
+                            <th>Cliente</th>
+                            <th>Obra</th>
+                            <th>Nro. Cotización</th>
+                            <th>Fecha Recepción</th>
+                            <th>Fecha Vencimiento</th>
+                            <th>Monto</th>
+                            <th>Items</th>
+                            <th>Estado</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="cotizaciones-tbody">
+                        <!-- Contenido se llenará dinámicamente -->
+                    </tbody>
+                </table>
+            </div>
+        </main>
+    </div>
+
+    <!-- Scripts -->
+    <script src="../shared/js/menu-component.js"></script>
+    <script src="ssl_listado_recepcion_respuesta.js"></script>
+    <script>
+        // Inicializar menú con la sección activa
+        document.addEventListener('DOMContentLoaded', function() {
+            SSLMenu.load('cotizacion-proveedores', 'recepcion-cotizaciones');
+            RecepcionRespuesta.init();
+        });
+    </script>
+</body>
+</html>

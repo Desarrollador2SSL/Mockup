@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema SSL v4.0</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- CSS del menú reutilizable -->
+    <link rel="stylesheet" href="../css/ssl-menu.css">
+    <link rel="stylesheet" href="../css/ssl-general.css">
+
+</head>
+<body>
+
+    <!-- Contenedor del menú - Se carga dinámicamente -->
+    <div id="menu-container"></div>
+
+    <!-- Contenido principal -->
+    <main class="content">
+        <div class="breadcrumb">
+            <div class="breadcrumb-item"><a href="#">Inicio</a></div>
+            <div class="breadcrumb-item active">Dashboard General</div>
+        </div>
+
+        <h1 class="page-title">Dashboard General</h1>
+
+        <div class="page-content">
+            <h2>Bienvenido al Sistema SSL v4.0</h2>
+            <p>Este es el panel principal donde podrás visualizar toda la información relevante del sistema.</p>
+            <p>Utiliza el menú lateral para navegar entre las diferentes secciones.</p>
+        </div>
+    </main>
+
+    <!-- Script del componente del menú -->
+    <script src="../js/menu-component.js"></script>
+
+    <!-- Inicializar el menú -->
+    <script>
+        // Cargar el menú con la sección y elemento activos
+        SSLMenu.load('inicio', 'dashboard');
+    </script>
+    
+    <script>
+        // Toggle sidebar collapse
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const toggleButton = document.querySelector('.sidebar-toggle');
+            const isCollapsed = sidebar.classList.contains('collapsed');
+            
+            if (isCollapsed) {
+                sidebar.classList.remove('collapsed');
+                localStorage.setItem('sidebarCollapsed', 'false');
+            } else {
+                sidebar.classList.add('collapsed');
+                localStorage.setItem('sidebarCollapsed', 'true');
+            }
+            
+            // Update button icon rotation
+            const icon = toggleButton.querySelector('i');
+            if (sidebar.classList.contains('collapsed')) {
+                icon.style.transform = 'rotate(180deg)';
+            } else {
+                icon.style.transform = 'rotate(0deg)';
+            }
+        }
+
+        // Load sidebar state from localStorage
+        function loadSidebarState() {
+            const isCollapsed = localStorage.getItem('sidebarCollapsed') === 'true';
+            const sidebar = document.getElementById('sidebar');
+            const toggleButton = document.querySelector('.sidebar-toggle');
+            const icon = toggleButton.querySelector('i');
+            
+            if (isCollapsed) {
+                sidebar.classList.add('collapsed');
+                icon.style.transform = 'rotate(180deg)';
+            }
+        }
+
+        // Toggle mobile menu
+        function toggleMobileMenu() {
+            const sidebar = document.getElementById('sidebar');
+            sidebar.classList.toggle('active');
+        }
+
+        // Toggle submenu
+        function toggleSubmenu(header) {
+            const menuItem = header.parentElement;
+            const sidebar = document.getElementById('sidebar');
+            const wasActive = menuItem.classList.contains('active');
+            
+            // Close all submenus
+            document.querySelectorAll('.menu-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            
+            // Remove active from all headers
+            document.querySelectorAll('.menu-header').forEach(h => {
+                h.classList.remove('active');
+            });
+            
+            // If it wasn't active, open it
+            if (!wasActive && header.nextElementSibling) {
+                menuItem.classList.add('active');
+            }
+            
+            // Always keep the clicked header active if it's a main item
+            if (!header.querySelector('.arrow')) {
+                header.classList.add('active');
+            }
+        }
+
+        // Handle submenu item clicks
+        document.querySelectorAll('.submenu-item').forEach(item => {
+            item.addEventListener('click', function() {
+                // Skip if disabled
+                if (this.classList.contains('disabled')) {
+                    return;
+                }
+                
+                // Remove active class from all submenu items
+                document.querySelectorAll('.submenu-item').forEach(subItem => {
+                    subItem.classList.remove('active');
+                });
+                
+                // Add active class to clicked item
+                this.classList.add('active');
+                
+                // Update breadcrumb and page title
+                const menuHeader = this.closest('.menu-item').querySelector('.menu-header span').textContent;
+                const submenuText = this.querySelector('.full-text').textContent;
+                
+                document.querySelector('.breadcrumb').innerHTML = `
+                    <div class="breadcrumb-item"><a href="#">Inicio</a></div>
+                    <div class="breadcrumb-item"><a href="#">${menuHeader}</a></div>
+                    <div class="breadcrumb-item active">${submenuText}</div>
+                `;
+                
+                document.querySelector('.page-title').textContent = submenuText;
+            });
+        });
+
+        // User menu dropdown functionality
+        const userMenu = document.getElementById('userMenu');
+        let isUserMenuOpen = false;
+
+        userMenu.addEventListener('click', function(e) {
+            e.stopPropagation();
+            isUserMenuOpen = !isUserMenuOpen;
+            this.classList.toggle('active');
+        });
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', function(e) {
+            if (!userMenu.contains(e.target) && isUserMenuOpen) {
+                userMenu.classList.remove('active');
+                isUserMenuOpen = false;
+            }
+        });
+
+        // Prevent dropdown from closing when clicking inside
+        document.querySelector('.user-dropdown').addEventListener('click', function(e) {
+            e.stopPropagation();
+        });
+
+        // Profile function
+        function goToProfile(e) {
+            e.preventDefault();
+            alert('Navegando al perfil de usuario...\nEsta funcionalidad estará disponible próximamente.');
+            userMenu.classList.remove('active');
+            isUserMenuOpen = false;
+        }
+
+        // Settings function
+        function goToSettings(e) {
+            e.preventDefault();
+            alert('Navegando a configuración...\nEsta funcionalidad estará disponible próximamente.');
+            userMenu.classList.remove('active');
+            isUserMenuOpen = false;
+        }
+
+        // Logout function
+        function logout(e) {
+            e.preventDefault();
+            if (confirm('¿Está seguro que desea cerrar sesión?')) {
+                // Clear any session data
+                localStorage.removeItem('userToken');
+                localStorage.removeItem('userData');
+                sessionStorage.clear();
+                
+                // Redirect to login page
+                window.location.href = '../index.html';
+            }
+        }
+
+        // Update user info if available
+        document.addEventListener('DOMContentLoaded', function() {
+            // Load sidebar state
+            loadSidebarState();
+            
+            // This would typically fetch user data from an API or local storage
+            const userData = localStorage.getItem('userData');
+            if (userData) {
+                try {
+                    const user = JSON.parse(userData);
+                    if (user.name) {
+                        document.querySelector('.user-name').textContent = user.name;
+                        document.querySelector('.dropdown-user-name').textContent = user.name;
+                    }
+                    if (user.email) {
+                        document.querySelector('.dropdown-user-email').textContent = user.email;
+                    }
+                } catch (e) {
+                    console.error('Error parsing user data:', e);
+                }
+            }
+
+            // Update current date
+            updateDate();
+            // Update date every minute (and time in tooltip)
+            setInterval(updateDate, 60000);
+        });
+
+        // Function to update date
+        function updateDate() {
+            const now = new Date();
+            const options = { 
+                weekday: 'long', 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric' 
+            };
+            const formattedDate = now.toLocaleDateString('es-CL', options);
+            // Capitalize first letter of weekday
+            const capitalizedDate = formattedDate.charAt(0).toUpperCase() + formattedDate.slice(1);
+            
+            // Format time for tooltip
+            const timeOptions = { hour: '2-digit', minute: '2-digit' };
+            const formattedTime = now.toLocaleTimeString('es-CL', timeOptions);
+            
+            const dateElement = document.getElementById('currentDate');
+            const dateContainer = document.querySelector('.header-date');
+            
+            // Update tooltip with current time
+            dateContainer.setAttribute('data-time', `Hora actual: ${formattedTime}`);
+            
+            // Add fade effect
+            dateElement.style.opacity = '0.5';
+            setTimeout(() => {
+                dateElement.textContent = capitalizedDate;
+                dateElement.style.opacity = '0.9';
+            }, 150);
+        }
+
+        // Keyboard navigation for dropdown
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && isUserMenuOpen) {
+                userMenu.classList.remove('active');
+                isUserMenuOpen = false;
+            }
+        });
+    </script>
+</body>
+</html>

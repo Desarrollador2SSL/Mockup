@@ -1,0 +1,1953 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SSL v4.0 - Cuadros Comparativos</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --accent-color: #e74c3c;
+            --success-color: #27ae60;
+            --warning-color: #f39c12;
+            --info-color: #9b59b6;
+            --text-color: #333;
+            --text-light: #ecf0f1;
+            --border-color: #ddd;
+            --light-bg: #f5f7fa;
+            --form-bg: #f1f1f1;
+            --table-header: #e9e9e9;
+            --table-row-even: #f9f9f9;
+            --table-row-hover: #f0f0f0;
+            --selected-row: #d4e6f1;
+            --best-price: #d5f5e3;
+            --incomplete-bg: #fff3cd;
+            --menu-width: 250px;
+            --header-height: 60px;
+            --transition-speed: 0.3s;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--light-bg);
+            color: var(--text-color);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        .header {
+            background-color: var(--primary-color);
+            color: var(--text-light);
+            height: var(--header-height);
+            padding: 0 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+        }
+
+        .logo img {
+            height: 40px;
+            margin-right: 10px;
+        }
+
+        .logo h1 {
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+       .header-right {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .header-date {
+            display: flex;
+            align-items: center;
+            font-size: 0.9rem;
+            color: var(--text-light);
+            opacity: 0.9;
+            padding: 0 15px;
+            border-right: 1px solid rgba(255, 255, 255, 0.2);
+            height: 35px;
+            cursor: default;
+            position: relative;
+            transition: opacity var(--transition-speed);
+        }
+
+        .header-date:hover {
+            opacity: 1;
+        }
+
+        .header-date:hover::after {
+            content: attr(data-time);
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            white-space: nowrap;
+            margin-top: 5px;
+            z-index: 1001;
+        }
+
+        .header-date i {
+            margin-right: 8px;
+            font-size: 1rem;
+        }
+
+        #currentDate {
+            transition: opacity var(--transition-speed);
+        }
+
+        .user-menu {
+            display: flex;
+            align-items: center;
+            margin-left: 20px;
+            cursor: pointer;
+            position: relative;
+            padding: 8px 12px;
+            border-radius: 4px;
+            transition: background-color var(--transition-speed);
+        }
+
+        .user-menu:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .user-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background-color: var(--secondary-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            margin-right: 10px;
+        }
+
+        .user-name {
+            font-weight: 500;
+            margin-right: 8px;
+        }
+
+        .user-menu-arrow {
+            font-size: 0.8rem;
+            transition: transform var(--transition-speed);
+        }
+
+        .user-menu.active .user-menu-arrow {
+            transform: rotate(180deg);
+        }
+
+        /* Dropdown menu */
+        .user-dropdown {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            margin-top: 10px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            min-width: 200px;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: all var(--transition-speed);
+        }
+
+        .user-menu.active .user-dropdown {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .user-dropdown::before {
+            content: '';
+            position: absolute;
+            top: -8px;
+            right: 20px;
+            width: 0;
+            height: 0;
+            border-left: 8px solid transparent;
+            border-right: 8px solid transparent;
+            border-bottom: 8px solid white;
+        }
+
+        .dropdown-header {
+            padding: 15px 20px;
+            border-bottom: 1px solid var(--border-color);
+            background-color: #f8f9fa;
+            border-radius: 8px 8px 0 0;
+        }
+
+        .dropdown-user-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .dropdown-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: var(--secondary-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.2rem;
+        }
+
+        .dropdown-user-details {
+            flex: 1;
+        }
+
+        .dropdown-user-name {
+            font-weight: 600;
+            color: var(--text-color);
+            font-size: 0.95rem;
+        }
+
+        .dropdown-user-email {
+            font-size: 0.85rem;
+            color: #666;
+        }
+
+        .dropdown-menu {
+            padding: 8px 0;
+        }
+
+        .dropdown-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 20px;
+            color: var(--text-color);
+            text-decoration: none;
+            transition: background-color var(--transition-speed);
+            cursor: pointer;
+        }
+
+        .dropdown-item:hover {
+            background-color: #f8f9fa;
+        }
+
+        .dropdown-item i {
+            margin-right: 12px;
+            width: 20px;
+            text-align: center;
+            color: #666;
+        }
+
+        .dropdown-divider {
+            height: 1px;
+            background-color: var(--border-color);
+            margin: 8px 0;
+        }
+
+        .dropdown-item.logout {
+            color: var(--accent-color);
+        }
+
+        .dropdown-item.logout i {
+            color: var(--accent-color);
+        }
+
+        .notifications {
+            position: relative;
+            margin-right: 20px;
+        }
+
+        .notifications i {
+            font-size: 1.2rem;
+            cursor: pointer;
+        } 
+
+        .notification-count {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background-color: var(--accent-color);
+            color: white;
+            border-radius: 50%;
+            font-size: 0.7rem;
+            width: 16px;
+            height: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .menu-toggle {
+            display: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        .container {
+            display: flex;
+            flex: 1;
+            margin-top: var(--header-height);
+        }
+
+        .sidebar {
+            width: var(--menu-width);
+            background-color: white;
+            border-right: 1px solid var(--border-color);
+            height: calc(100vh - var(--header-height));
+            position: fixed;
+            overflow-y: auto;
+            transition: transform var(--transition-speed);
+            z-index: 900;
+        }
+
+        .menu {
+            list-style: none;
+            padding: 0;
+        }
+
+        .menu-item {
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .menu-header {
+            display: flex;
+            align-items: center;
+            padding: 15px 20px;
+            cursor: pointer;
+            color: var(--text-color);
+            font-weight: 500;
+            transition: background-color var(--transition-speed);
+        }
+
+        .menu-header:hover {
+            background-color: #f0f4f8;
+        }
+
+        .menu-header.active {
+            background-color: var(--secondary-color);
+            color: white;
+        }
+
+        .menu-header i {
+            margin-right: 10px;
+            width: 20px;
+            text-align: center;
+        }
+
+        .menu-header .arrow {
+            margin-left: auto;
+            transition: transform var(--transition-speed);
+        }
+
+        .submenu {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height var(--transition-speed);
+            background-color: #f8f9fa;
+        }
+
+        .menu-item.active .submenu {
+            max-height: 1000px;
+        }
+
+        .menu-item.active .arrow {
+            transform: rotate(90deg);
+        }
+
+        .submenu-item {
+            padding: 12px 20px 12px 50px;
+            cursor: pointer;
+            transition: background-color var(--transition-speed);
+            font-size: 0.95rem;
+        }
+
+        .submenu-item:hover {
+            background-color: #e9ecef;
+        }
+
+        .submenu-item.active {
+            background-color: #e2e6ea;
+            color: var(--secondary-color);
+            font-weight: 500;
+        }
+
+
+        .submenu a.submenu-item {
+            text-decoration: none;
+            color: inherit;
+            display: block;
+            padding: 12px 20px 12px 50px;
+            cursor: pointer;
+            transition: background-color var(--transition-speed);
+            font-size: 0.95rem;
+        }
+
+        .submenu a.submenu-item:hover {
+            background-color: #e9ecef;
+        }
+
+        .submenu a.submenu-item.active {
+            background-color: #e2e6ea;
+            color: var(--secondary-color);
+            font-weight: 500;
+        }
+
+        .content {
+            flex: 1;
+            margin-left: var(--menu-width);
+            padding: 20px;
+        }
+
+        .breadcrumb {
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            font-size: 0.9rem;
+        }
+
+        .breadcrumb-item {
+            display: inline-block;
+        }
+
+        .breadcrumb-item:not(:last-child)::after {
+            content: "/";
+            margin: 0 10px;
+            color: #aaa;
+        }
+
+        .breadcrumb-item a {
+            color: var(--secondary-color);
+            text-decoration: none;
+        }
+
+        .breadcrumb-item a:hover {
+            text-decoration: underline;
+        }
+
+        .breadcrumb-item.active {
+            color: var(--text-color);
+            font-weight: 500;
+        }
+
+        .page-title {
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            color: var(--primary-color);
+        }
+
+        .main-container {
+            background-color: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+            border: 1px solid var(--border-color);
+        }
+
+        .header-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        .header-left {
+            flex: 1;
+        }
+
+        .header-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .info-item {
+            display: flex;
+            align-items: center;
+        }
+
+        .info-label {
+            font-weight: 600;
+            margin-right: 10px;
+            min-width: 100px;
+        }
+
+        .info-value {
+            padding: 6px 12px;
+            background-color: #f8f9fa;
+            border-radius: 4px;
+            flex: 1;
+        }
+
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
+        .status-revision {
+            background-color: #fff3cd;
+            color: #856404;
+        }
+
+        .status-complete {
+            background-color: #d4edda;
+            color: #155724;
+        }
+
+        .view-controls {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .view-btn {
+            padding: 8px 16px;
+            border: 1px solid var(--border-color);
+            background-color: white;
+            border-radius: 4px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            transition: all var(--transition-speed);
+        }
+
+        .view-btn:hover {
+            background-color: #f8f9fa;
+        }
+
+        .view-btn.active {
+            background-color: var(--secondary-color);
+            color: white;
+            border-color: var(--secondary-color);
+        }
+
+        .view-btn i {
+            margin-right: 6px;
+        }
+
+        .filter-section {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+        }
+
+        .filter-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .filter-group label {
+            font-weight: 500;
+            margin-bottom: 5px;
+            font-size: 0.9rem;
+        }
+
+        .filter-control {
+            padding: 8px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            background-color: white;
+        }
+
+        .normalization-alert {
+            display: flex;
+            align-items: center;
+            padding: 12px;
+            background-color: #e3f2fd;
+            border-left: 4px solid var(--secondary-color);
+            border-radius: 4px;
+            margin-bottom: 15px;
+        }
+
+        .normalization-alert i {
+            color: var(--secondary-color);
+            margin-right: 10px;
+        }
+
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.95rem;
+            margin-bottom: 20px;
+        }
+
+        .comparison-table th,
+        .comparison-table td {
+            border: 1px solid var(--border-color);
+            padding: 10px;
+            text-align: left;
+        }
+
+        .comparison-table th {
+            background-color: var(--table-header);
+            font-weight: 600;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        .comparison-table tbody tr:nth-child(even) {
+            background-color: var(--table-row-even);
+        }
+
+        .comparison-table tbody tr:hover {
+            background-color: var(--table-row-hover);
+        }
+
+        .product-group {
+            background-color: #e8f4f8;
+            font-weight: 600;
+        }
+
+        .product-code {
+            font-family: monospace;
+            font-size: 0.9rem;
+        }
+
+        .provider-header {
+            text-align: center;
+            background-color: #dee2e6 !important;
+        }
+
+        .price-cell {
+            text-align: right;
+            font-weight: 500;
+        }
+
+        .best-price {
+            background-color: var(--best-price) !important;
+            font-weight: 600;
+        }
+
+        .price-variation {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            font-size: 0.85rem;
+        }
+
+        .variation-up {
+            color: var(--accent-color);
+        }
+
+        .variation-down {
+            color: var(--success-color);
+        }
+
+        .variation-equal {
+            color: #6c757d;
+        }
+
+        .incomplete-quote {
+            background-color: var(--incomplete-bg) !important;
+        }
+
+        .quote-status {
+            display: inline-flex;
+            align-items: center;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+        }
+
+        .quote-complete {
+            background-color: #d4edda;
+            color: #155724;
+        }
+
+        .quote-partial {
+            background-color: #fff3cd;
+            color: #856404;
+        }
+
+        .quote-missing {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+
+        .unit-normalized {
+            display: inline-flex;
+            align-items: center;
+            padding: 2px 6px;
+            background-color: #e3f2fd;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            margin-left: 5px;
+        }
+
+        .summary-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .summary-card {
+            background-color: white;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 15px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+
+        .summary-card h3 {
+            font-size: 1rem;
+            margin-bottom: 10px;
+            color: var(--primary-color);
+        }
+
+        .summary-content {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .summary-label {
+            font-size: 0.9rem;
+            color: #6c757d;
+        }
+
+        .summary-value {
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        .action-buttons {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 2px solid var(--border-color);
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all var(--transition-speed);
+            display: flex;
+            align-items: center;
+        }
+
+        .btn i {
+            margin-right: 8px;
+        }
+
+        .btn-primary {
+            background-color: var(--secondary-color);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: #2980b9;
+        }
+
+        .btn-success {
+            background-color: var(--success-color);
+            color: white;
+        }
+
+        .btn-success:hover {
+            background-color: #219653;
+        }
+
+        .btn-outline {
+            background-color: transparent;
+            border: 1px solid var(--border-color);
+            color: var(--text-color);
+        }
+
+        .btn-outline:hover {
+            background-color: #f0f4f8;
+            border-color: var(--secondary-color);
+            color: var(--secondary-color);
+        }
+
+        .btn-warning {
+            background-color: var(--warning-color);
+            color: white;
+        }
+
+        .btn-warning:hover {
+            background-color: #e67e22;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+
+        .modal-content {
+            background-color: white;
+            margin: 5% auto;
+            padding: 20px;
+            border-radius: 8px;
+            width: 80%;
+            max-width: 800px;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        .modal-title {
+            font-size: 1.4rem;
+            color: var(--primary-color);
+        }
+
+        .close {
+            color: #aaa;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .close:hover {
+            color: #000;
+        }
+
+        .tooltip {
+            position: relative;
+            display: inline-block;
+        }
+
+        .tooltip .tooltiptext {
+            visibility: hidden;
+            width: 200px;
+            background-color: #555;
+            color: #fff;
+            text-align: center;
+            border-radius: 6px;
+            padding: 5px;
+            position: absolute;
+            z-index: 1;
+            bottom: 125%;
+            left: 50%;
+            margin-left: -100px;
+            opacity: 0;
+            transition: opacity 0.3s;
+            font-size: 0.85rem;
+        }
+
+        .tooltip:hover .tooltiptext {
+            visibility: visible;
+            opacity: 1;
+        }
+
+        .criteria-selector {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+        }
+
+        .criteria-checkbox {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+        }
+
+        .criteria-checkbox input {
+            margin-right: 5px;
+        }
+
+        @media (max-width: 1200px) {
+            .header-info {
+                grid-template-columns: 1fr;
+            }
+
+            .filter-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .table-container {
+                overflow-x: auto;
+            }
+
+            .comparison-table {
+                min-width: 800px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .menu-toggle {
+                display: block;
+            }
+
+            .sidebar {
+                transform: translateX(-100%);
+            }
+
+            .sidebar.active {
+                transform: translateX(0);
+            }
+
+            .content {
+                margin-left: 0;
+            }
+
+            .user-name {
+                display: none;
+            }
+
+            .header-controls {
+                flex-direction: column;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .btn-group {
+                flex-wrap: wrap;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .menu-toggle {
+                display: block;
+            }
+
+            .sidebar {
+                transform: translateX(-100%);
+            }
+
+            .sidebar.active {
+                transform: translateX(0);
+            }
+
+            .content {
+                margin-left: 0;
+            }
+
+            .user-name {
+                display: none;
+            }
+
+            .user-menu-arrow {
+                display: none;
+            }
+
+            .user-dropdown {
+                right: -10px;
+            }
+
+            .header-date {
+                display: none;
+            }
+        }
+
+        @media (max-width: 1024px) and (min-width: 769px) {
+            .header-date {
+                font-size: 0.85rem;
+            }
+            
+            .header-date i {
+                display: none;
+            }
+        }
+
+        .submenu-item.disabled {
+            display: flex;
+            align-items: center;
+            opacity: 0.6;
+            cursor: not-allowed;
+            pointer-events: none;
+            text-decoration: line-through;
+            color: #999;
+        }
+
+        .submenu-item.disabled .text-disabled {
+            text-decoration: line-through;
+        } 
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="menu-toggle">
+            <i class="fas fa-bars"></i>
+        </div>
+        <div class="logo">
+            <!-- img src="/api/placeholder/60/40" alt="SSL Logo" -->
+            <img src="logo_ssl.png" alt="SSL Logo">
+            <h1>SSL v4.0</h1>
+        </div>
+        <div class="header-right">
+            <div class="header-date" data-time="Hora actual: 00:00">
+                <i class="fas fa-calendar-alt"></i>
+                <span id="currentDate">Lunes, 26 de Mayo de 2025</span>
+            </div>
+            <div class="notifications">
+                <i class="fas fa-bell"></i>
+                <span class="notification-count">3</span>
+            </div>
+            <div class="user-menu" id="userMenu">
+                <div class="user-avatar">
+                    <i class="fas fa-user"></i>
+                </div>
+                <span class="user-name">Usuario SSL</span>
+                <i class="fas fa-chevron-down user-menu-arrow"></i>
+                
+                <!-- Dropdown Menu -->
+                <div class="user-dropdown">
+                    <div class="dropdown-header">
+                        <div class="dropdown-user-info">
+                            <div class="dropdown-avatar">
+                                <i class="fas fa-user"></i>
+                            </div>
+                            <div class="dropdown-user-details">
+                                <div class="dropdown-user-name">Usuario SSL</div>
+                                <div class="dropdown-user-email">usuario@seashipping.cl</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="dropdown-menu">
+                        <a href="#" class="dropdown-item" onclick="goToProfile(event)">
+                            <i class="fas fa-user-circle"></i>
+                            <span>Mi Perfil</span>
+                        </a>
+                        <a href="#" class="dropdown-item" onclick="goToSettings(event)">
+                            <i class="fas fa-cog"></i>
+                            <span>Configuración</span>
+                        </a>
+                        <div class="dropdown-divider"></div>
+                        <a href="#" class="dropdown-item logout" onclick="logout(event)">
+                            <i class="fas fa-sign-out-alt"></i>
+                            <span>Cerrar Sesión</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <!-- Evaluación y Análisis - Cuadros Comparativos -->
+        <nav class="sidebar">
+            <ul class="menu">
+                <!-- Acceso -->
+                <li class="menu-item">
+                    <div class="menu-header">
+                        <i class="fas fa-lock"></i>
+                        <span>Acceso</span>
+                        <i class="fas fa-chevron-right arrow"></i>
+                    </div>
+                    <div class="submenu">
+                        <div class="submenu-item">Página llegada</div>
+                        <div class="submenu-item">Login</div>
+                        <div class="submenu-item">Recuperar Contraseña</div>
+                    </div>
+                </li>
+
+                <!-- Inicio -->
+                <li class="menu-item">
+                    <div class="menu-header">
+                        <i class="fas fa-home"></i>
+                        <span>Inicio</span>
+                        <i class="fas fa-chevron-right arrow"></i>
+                    </div>
+                    <div class="submenu">
+                        <div class="submenu-item">Dashboard General</div>
+                        <div class="submenu-item disabled" title="Próximamente">Notificaciones</div>
+                        <div class="submenu-item disabled" title="Próximamente">Perfil de Usuario</div>                        
+                    </div>
+                </li>
+
+                <!-- Recepción de Solicitudes -->
+                <li class="menu-item">
+                    <div class="menu-header">
+                        <i class="fas fa-clipboard-list"></i>
+                        <span>Recepción de Solicitudes</span>
+                        <i class="fas fa-chevron-right arrow"></i>
+                    </div>
+                    <div class="submenu">
+                        <a href="ingreso_solicitud_pedido_v2.html" class="submenu-item">Ingreso Manual</a>
+                        <a href="listado_solicitud_pedido.html" class="submenu-item">Listado de Solicitudes</a>
+                    </div>
+                </li>
+
+                <!-- Carpeta Digital -->
+                <li class="menu-item">
+                    <div class="menu-header">
+                        <i class="fas fa-folder-open"></i>
+                        <span>Carpeta Digital</span>
+                        <i class="fas fa-chevron-right arrow"></i>
+                    </div>
+                    <div class="submenu">
+                        <a href="listado_carpeta_digital.html" class="submenu-item">Carpeta Digital</a>
+                    </div>
+                </li>
+
+                <!-- Cotización a Proveedores -->
+                <li class="menu-item">
+                    <div class="menu-header">
+                        <i class="fas fa-file-invoice-dollar"></i>
+                        <span>Cotización a Proveedores</span>
+                        <i class="fas fa-chevron-right arrow"></i>
+                    </div>
+                    <div class="submenu">
+                        <a href="listado_solicitudes_cotizar.html" class="submenu-item">Generación y Distribución</a>
+                        <a href="recepcion_respuesta.html" class="submenu-item">Recepción de Cotizaciones</a>
+                    </div>
+                </li>
+
+                <!-- Evaluación y Análisis -->
+                <li class="menu-item active">
+                    <div class="menu-header active">
+                        <i class="fas fa-chart-line"></i>
+                        <span>Evaluación y Análisis</span>
+                        <i class="fas fa-chevron-right arrow"></i>
+                    </div>
+                    <div class="submenu">
+                        <a href="lista_cuadro_comparativo.html" class="submenu-item active">Cuadros Comparativos</a>
+                        <div class="submenu-item disabled" title="Próximamente">Márgenes y Rentabilidad</div>
+                    </div>
+                </li>
+
+                <!-- Órdenes de Compra -->
+                <li class="menu-item">
+                    <div class="menu-header">
+                        <i class="fas fa-shopping-cart"></i>
+                        <span>Órdenes de Compra</span>
+                        <i class="fas fa-chevron-right arrow"></i>
+                    </div>
+                    <div class="submenu">
+                        <a href="oc_cliente.html" class="submenu-item">OC Cliente</a>
+                        <a href="oc_proveedor.html" class="submenu-item">OC Proveedor</a>
+                        <div class="submenu-item disabled" title="Próximamente">Gestión de Cambios</div>                           
+                    </div>
+                </li>
+
+                <!-- Gestión Logística -->
+                <li class="menu-item">
+                    <div class="menu-header">
+                        <i class="fas fa-truck"></i>
+                        <span>Gestión Logística</span>
+                        <i class="fas fa-chevron-right arrow"></i>
+                    </div>
+                    <div class="submenu">
+                        <div class="submenu-item disabled" title="Próximamente">Planificación Logística (Swisslog)</div>                          
+                        <div class="submenu-item disabled" title="Próximamente">Seguimiento de Entregas</div>                          
+                    </div>
+                </li>
+
+                <!-- Zona Franca -->
+                <li class="menu-item">
+                    <div class="menu-header">
+                        <i class="fas fa-warehouse"></i>
+                        <span>Zona Franca</span>
+                        <i class="fas fa-chevron-right arrow"></i>
+                    </div>
+                    <div class="submenu">
+                        <div class="submenu-item disabled" title="Próximamente">Declaraciones DI/DSZF</div>                            
+                        <div class="submenu-item disabled" title="Próximamente">Documentos Aduaneros</div>                            
+                        <div class="submenu-item disabled" title="Próximamente">Alertas y Condiciones ZF</div>                            
+                    </div>
+                </li>
+
+                <!-- Entregas y Conformidad -->
+                <li class="menu-item">
+                    <div class="menu-header">
+                        <i class="fas fa-box-open"></i>
+                        <span>Entregas y Conformidad</span>
+                        <i class="fas fa-chevron-right arrow"></i>
+                    </div>
+                    <div class="submenu">
+                        <div class="submenu-item disabled" title="Próximamente">Confirmación Cliente</div>                        
+                        <div class="submenu-item disabled" title="Próximamente">Gestión de Incidencias</div>                        
+                        <div class="submenu-item disabled" title="Próximamente">Documentación Firmada</div>                        
+                    </div>
+                </li>
+
+                <!-- Reportes y BI -->
+                <li class="menu-item">
+                    <div class="menu-header">
+                        <i class="fas fa-chart-pie"></i>
+                        <span>Reportes y BI</span>
+                        <i class="fas fa-chevron-right arrow"></i>
+                    </div>
+                    <div class="submenu">
+                        <div class="submenu-item disabled" title="Próximamente">KPI Operacionales</div>                          
+                        <div class="submenu-item disabled" title="Próximamente">Métricas por Cliente / Proveedor</div>                          
+                        <div class="submenu-item disabled" title="Próximamente">Análisis Avanzado</div>                          
+                    </div>
+                </li>
+
+                <!-- Usuarios y Accesos -->
+                <li class="menu-item">
+                    <div class="menu-header">
+                        <i class="fas fa-users"></i>
+                        <span>Usuarios y Accesos</span>
+                        <i class="fas fa-chevron-right arrow"></i>
+                    </div>
+                    <div class="submenu">
+                        <div class="submenu-item disabled" title="Próximamente">Gestión de Usuarios</div>                          
+                        <div class="submenu-item disabled" title="Próximamente">Perfiles y Roles</div>                          
+                    </div>
+                </li>
+
+                <!-- Empresas y Organizaciones -->
+                <li class="menu-item">
+                    <div class="menu-header">
+                        <i class="fas fa-building"></i>
+                        <span>Empresas y Organizaciones</span>
+                        <i class="fas fa-chevron-right arrow"></i>
+                    </div>
+                    <div class="submenu">
+                        <a href="cliente_proveedor.html" class="submenu-item">Clientes y Proveedores</a>
+                        <a href="obras.html" class="submenu-item">Obras y Proyectos</a>
+                        <div class="submenu-item disabled" title="Próximamente">Transportistas / Financieras</div>                             
+                    </div>
+                </li>
+
+                <!-- Catálogos y Configuración -->
+                <li class="menu-item">
+                    <div class="menu-header">
+                        <i class="fas fa-cogs"></i>
+                        <span>Catálogos y Configuración</span>
+                        <i class="fas fa-chevron-right arrow"></i>
+                    </div>
+                    <div class="submenu">
+                        <a href="catalogo_producto.html" class="submenu-item">Catálogo Maestro</a>    
+                        <div class="submenu-item disabled" title="Próximamente">Divisas y Parámetros Globales</div>                          
+                        <div class="submenu-item disabled" title="Próximamente">Zona Franca (ZF)</div>                          
+                        <div class="submenu-item disabled" title="Próximamente">Flujos de Aprobación</div>                          
+                    </div>
+                </li>
+
+                <!-- Administración -->
+                <li class="menu-item">
+                    <div class="menu-header">
+                        <i class="fas fa-sliders-h"></i>
+                        <span>Administración</span>
+                        <i class="fas fa-chevron-right arrow"></i>
+                    </div>
+                    <div class="submenu">
+                        <div class="submenu-item disabled" title="Próximamente">Parámetros Comerciales</div>                         
+                        <div class="submenu-item disabled" title="Próximamente">Límites de Crédito</div>                         
+                        <div class="submenu-item disabled" title="Próximamente">Condiciones de Pago</div>                         
+                    </div>
+                </li>
+
+                <!-- Auditoría y Seguridad -->
+                <li class="menu-item">
+                    <div class="menu-header">
+                        <i class="fas fa-shield-alt"></i>
+                        <span>Auditoría y Seguridad</span>
+                        <i class="fas fa-chevron-right arrow"></i>
+                    </div>
+                    <div class="submenu">
+                        <div class="submenu-item disabled" title="Próximamente">Exportación Auditorías</div>                             
+                        <div class="submenu-item disabled" title="Próximamente">Políticas de Backup</div>                             
+                    </div>
+                </li>
+
+            </ul>
+        </nav>
+        
+        <main class="content">
+            <div class="breadcrumb">
+                <div class="breadcrumb-item"><a href="menu.html">Inicio</a></div>
+                <div class="breadcrumb-item"><a href="menu.html">Evaluación y Análisis</a></div>
+                <div class="breadcrumb-item active">Cuadros Comparativos</div>
+            </div>
+
+            <h1 class="page-title">Cuadro Comparativo de Cotizaciones</h1>
+
+            <div class="main-container">
+                <!-- Header con información y controles -->
+                <div class="header-controls">
+                    <div class="header-left">
+                        <div class="header-info">
+                            <div class="info-item">
+                                <span class="info-label">Cliente:</span>
+                                <span class="info-value">CONSTRUCTORA ALMAGRO S.A.</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">Obra:</span>
+                                <span class="info-value">EDIFICIO PACIFIC BLUE</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">Solicitud:</span>
+                                <span class="info-value">SOL-2025-0847</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">Estado:</span>
+                                <span class="status-badge status-revision">EN REVISIÓN</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Alertas de normalización -->
+                <div class="normalization-alert">
+                    <i class="fas fa-info-circle"></i>
+                    <span>Se han normalizado las unidades de medida para una comparación equitativa. 
+                    Los valores originales se muestran al pasar el cursor sobre cada ítem.</span>
+                </div>
+
+                <!-- Controles de vista -->
+                <div class="view-controls">
+                    <button class="view-btn active" onclick="changeView('comparison')">
+                        <i class="fas fa-table"></i> Vista Comparativa
+                    </button>
+                    <button class="view-btn" onclick="changeView('individual')">
+                        <i class="fas fa-file-alt"></i> Cotizaciones Individuales
+                    </button>
+                    <button class="view-btn" onclick="changeView('grouped')">
+                        <i class="fas fa-layer-group"></i> Agrupado por Similitud
+                    </button>
+                </div>
+
+                <!-- Filtros -->
+                <div class="filter-section">
+                    <div class="filter-grid">
+                        <div class="filter-group">
+                            <label>Criterio de Comparación</label>
+                            <select class="filter-control" id="criteriaSelect">
+                                <option value="price">Precio</option>
+                                <option value="delivery">Plazo de Entrega</option>
+                                <option value="quality">Calidad</option>
+                                <option value="brand">Marca</option>
+                                <option value="combined">Combinado</option>
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <label>Filtrar Proveedores</label>
+                            <select class="filter-control" id="providerFilter">
+                                <option value="all">Todos</option>
+                                <option value="complete">Solo cotizaciones completas</option>
+                                <option value="partial">Con cotizaciones parciales</option>
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <label>Agrupar por</label>
+                            <select class="filter-control" id="groupingSelect">
+                                <option value="none">Sin agrupar</option>
+                                <option value="category">Categoría</option>
+                                <option value="similarity">Productos similares</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Criterios de comparación múltiple -->
+                <div class="criteria-selector">
+                    <label style="font-weight: 600; margin-right: 15px;">Criterios activos:</label>
+                    <label class="criteria-checkbox">
+                        <input type="checkbox" checked> Precio
+                    </label>
+                    <label class="criteria-checkbox">
+                        <input type="checkbox"> Plazo de entrega
+                    </label>
+                    <label class="criteria-checkbox">
+                        <input type="checkbox"> Marca
+                    </label>
+                    <label class="criteria-checkbox">
+                        <input type="checkbox"> Calidad certificada
+                    </label>
+                </div>
+
+                <!-- Resumen de cotizaciones -->
+                <div class="summary-cards">
+                    <div class="summary-card">
+                        <h3>FERRETERÍA CENTRAL</h3>
+                        <div class="summary-content">
+                            <div class="summary-row">
+                                <span class="summary-label">Total cotizado:</span>
+                                <span class="summary-value">$3,087,500</span>
+                            </div>
+                            <div class="summary-row">
+                                <span class="summary-label">Items cotizados:</span>
+                                <span class="summary-value">5/5</span>
+                            </div>
+                            <div class="summary-row">
+                                <span class="summary-label">Estado:</span>
+                                <span class="quote-status quote-complete">Completa</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="summary-card">
+                        <h3>DISTRIBUIDORA ELÉCTRICA</h3>
+                        <div class="summary-content">
+                            <div class="summary-row">
+                                <span class="summary-label">Total cotizado:</span>
+                                <span class="summary-value">$3,000,000</span>
+                            </div>
+                            <div class="summary-row">
+                                <span class="summary-label">Items cotizados:</span>
+                                <span class="summary-value">5/5</span>
+                            </div>
+                            <div class="summary-row">
+                                <span class="summary-label">Estado:</span>
+                                <span class="quote-status quote-complete">Completa</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="summary-card">
+                        <h3>MATERIALES DEL SUR</h3>
+                        <div class="summary-content">
+                            <div class="summary-row">
+                                <span class="summary-label">Total cotizado:</span>
+                                <span class="summary-value">$2,056,000</span>
+                            </div>
+                            <div class="summary-row">
+                                <span class="summary-label">Items cotizados:</span>
+                                <span class="summary-value">4/5</span>
+                            </div>
+                            <div class="summary-row">
+                                <span class="summary-label">Estado:</span>
+                                <span class="quote-status quote-partial">Parcial</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tabla comparativa -->
+                <div class="table-container">
+                    <table class="comparison-table">
+                        <thead>
+                            <tr>
+                                <th rowspan="2">Código</th>
+                                <th rowspan="2">Descripción</th>
+                                <th rowspan="2">Cantidad</th>
+                                <th rowspan="2">Unidad</th>
+                                <th colspan="4" class="provider-header">FERRETERÍA CENTRAL</th>
+                                <th colspan="4" class="provider-header">DISTRIBUIDORA ELÉCTRICA</th>
+                                <th colspan="4" class="provider-header">MATERIALES DEL SUR</th>
+                            </tr>
+                            <tr>
+                                <th>Precio Unit.</th>
+                                <th>Total</th>
+                                <th>Plazo</th>
+                                <th>Marca</th>
+                                <th>Precio Unit.</th>
+                                <th>Total</th>
+                                <th>Plazo</th>
+                                <th>Marca</th>
+                                <th>Precio Unit.</th>
+                                <th>Total</th>
+                                <th>Plazo</th>
+                                <th>Marca</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Grupo de productos eléctricos -->
+                            <tr class="product-group">
+                                <td colspan="16">MATERIALES ELÉCTRICOS</td>
+                            </tr>
+                            <tr>
+                                <td class="product-code">EL-1245</td>
+                                <td>
+                                    Cable eléctrico NYY 3x10mm2 0.6/1kV
+                                    <span class="tooltip">
+                                        <i class="fas fa-info-circle" style="color: #3498db; font-size: 0.8rem;"></i>
+                                        <span class="tooltiptext">Normalizado de metros a metros lineales</span>
+                                    </span>
+                                </td>
+                                <td style="text-align: center;">500</td>
+                                <td style="text-align: center;">ML</td>
+                                <td class="price-cell">$3,200</td>
+                                <td class="price-cell">$1,600,000</td>
+                                <td style="text-align: center;">3 días</td>
+                                <td style="text-align: center;">NEXANS</td>
+                                <td class="price-cell best-price">
+                                    $3,150
+                                    <div class="price-variation variation-down">
+                                        <i class="fas fa-arrow-down"></i> -1.6%
+                                    </div>
+                                </td>
+                                <td class="price-cell best-price">$1,575,000</td>
+                                <td style="text-align: center;">5 días</td>
+                                <td style="text-align: center;">CABLEC</td>
+                                <td class="price-cell">$3,400</td>
+                                <td class="price-cell">$1,700,000</td>
+                                <td style="text-align: center;">2 días</td>
+                                <td style="text-align: center;">NEXANS</td>
+                            </tr>
+                            <tr>
+                                <td class="product-code">EL-0876</td>
+                                <td>
+                                    Tubo Conduit PVC 25mm
+                                    <span class="unit-normalized">UN → TRA (6 UN)</span>
+                                </td>
+                                <td style="text-align: center;">50</td>
+                                <td style="text-align: center;">TRA</td>
+                                <td class="price-cell">$11,100</td>
+                                <td class="price-cell">$555,000</td>
+                                <td style="text-align: center;">2 días</td>
+                                <td style="text-align: center;">TIGRE</td>
+                                <td class="price-cell best-price">
+                                    $10,680
+                                    <div class="price-variation variation-down">
+                                        <i class="fas fa-arrow-down"></i> -3.8%
+                                    </div>
+                                </td>
+                                <td class="price-cell best-price">$534,000</td>
+                                <td style="text-align: center;">3 días</td>
+                                <td style="text-align: center;">DURATEC</td>
+                                <td class="price-cell">$11,400</td>
+                                <td class="price-cell">$570,000</td>
+                                <td style="text-align: center;">1 día</td>
+                                <td style="text-align: center;">TIGRE</td>
+                            </tr>
+                            <tr>
+                                <td class="product-code">EL-2534</td>
+                                <td>Caja de derivación PVC 100x100mm</td>
+                                <td style="text-align: center;">150</td>
+                                <td style="text-align: center;">UN</td>
+                                <td class="price-cell best-price">
+                                    $1,250
+                                    <div class="price-variation variation-equal">
+                                        <i class="fas fa-equals"></i> 0%
+                                    </div>
+                                </td>
+                                <td class="price-cell best-price">$187,500</td>
+                                <td style="text-align: center;">1 día</td>
+                                <td style="text-align: center;">BTICINO</td>
+                                <td class="price-cell">$1,280</td>
+                                <td class="price-cell">$192,000</td>
+                                <td style="text-align: center;">2 días</td>
+                                <td style="text-align: center;">LEGRAND</td>
+                                <td class="price-cell">$1,300</td>
+                                <td class="price-cell">$195,000</td>
+                                <td style="text-align: center;">1 día</td>
+                                <td style="text-align: center;">BTICINO</td>
+                            </tr>
+                            
+                            <!-- Grupo de productos de protección -->
+                            <tr class="product-group">
+                                <td colspan="16">PROTECCIONES ELÉCTRICAS</td>
+                            </tr>
+                            <tr>
+                                <td class="product-code">EL-3698</td>
+                                <td>
+                                    Interruptor Diferencial 25A
+                                    <span class="tooltip">
+                                        <i class="fas fa-exclamation-triangle" style="color: #f39c12; font-size: 0.8rem;"></i>
+                                        <span class="tooltiptext">Productos similares agrupados</span>
+                                    </span>
+                                </td>
+                                <td style="text-align: center;">50</td>
+                                <td style="text-align: center;">UN</td>
+                                <td class="price-cell">$12,500</td>
+                                <td class="price-cell">$625,000</td>
+                                <td style="text-align: center;">2 días</td>
+                                <td style="text-align: center;">SCHNEIDER</td>
+                                <td class="price-cell best-price">
+                                    $12,200
+                                    <div class="price-variation variation-down">
+                                        <i class="fas fa-arrow-down"></i> -2.4%
+                                    </div>
+                                </td>
+                                <td class="price-cell best-price">$610,000</td>
+                                <td style="text-align: center;">3 días</td>
+                                <td style="text-align: center;">ABB</td>
+                                <td class="price-cell">$12,800</td>
+                                <td class="price-cell">$640,000</td>
+                                <td style="text-align: center;">1 día</td>
+                                <td style="text-align: center;">LEGRAND</td>
+                            </tr>
+                            <tr class="incomplete-quote">
+                                <td class="product-code">EL-4102</td>
+                                <td>Terminal de conexión 10mm²</td>
+                                <td style="text-align: center;">200</td>
+                                <td style="text-align: center;">UN</td>
+                                <td class="price-cell">$350</td>
+                                <td class="price-cell">$70,000</td>
+                                <td style="text-align: center;">1 día</td>
+                                <td style="text-align: center;">3M</td>
+                                <td class="price-cell best-price">
+                                    $320
+                                    <div class="price-variation variation-down">
+                                        <i class="fas fa-arrow-down"></i> -8.6%
+                                    </div>
+                                </td>
+                                <td class="price-cell best-price">$64,000</td>
+                                <td style="text-align: center;">2 días</td>
+                                <td style="text-align: center;">BURNDY</td>
+                                <td colspan="4" style="text-align: center; background-color: #f8d7da;">
+                                    <span class="quote-status quote-missing">No cotizado</span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Botones de acción -->
+                <div class="action-buttons">
+                    <div class="btn-group">
+                        <button class="btn btn-outline" onclick="window.history.back()">
+                            <i class="fas fa-arrow-left"></i> Volver
+                        </button>
+                        <button class="btn btn-outline" onclick="exportToExcel()">
+                            <i class="fas fa-file-excel"></i> Exportar Excel
+                        </button>
+                        <button class="btn btn-outline" onclick="printComparison()">
+                            <i class="fas fa-print"></i> Imprimir
+                        </button>
+                    </div>
+                    <div class="btn-group">
+                        <button class="btn btn-warning" onclick="showIncompleteAlert()">
+                            <i class="fas fa-exclamation-triangle"></i> Revisar Incompletas
+                        </button>
+                        <button class="btn btn-primary" onclick="saveComparison()">
+                            <i class="fas fa-save"></i> Guardar Comparación
+                        </button>
+                        <button class="btn btn-success" onclick="generateQuotes()">
+                            <i class="fas fa-file-invoice"></i> Generar Cotizaciones
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Modal para visualización individual de cotización -->
+    <div id="quotationModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Cotización - FERRETERÍA CENTRAL</h2>
+                <span class="close" onclick="closeModal()">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div style="margin-bottom: 20px;">
+                    <div class="info-item" style="margin-bottom: 10px;">
+                        <span class="info-label">Nro. Cotización:</span>
+                        <span class="info-value">COT-2025-1234</span>
+                    </div>
+                    <div class="info-item" style="margin-bottom: 10px;">
+                        <span class="info-label">Fecha:</span>
+                        <span class="info-value">25/05/2025</span>
+                    </div>
+                    <div class="info-item" style="margin-bottom: 10px;">
+                        <span class="info-label">Validez:</span>
+                        <span class="info-value">30 días</span>
+                    </div>
+                </div>
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>Código</th>
+                            <th>Descripción</th>
+                            <th>Cantidad</th>
+                            <th>Precio Unit.</th>
+                            <th>Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>EL-1245</td>
+                            <td>Cable eléctrico NYY 3x10mm2 0.6/1kV</td>
+                            <td style="text-align: center;">500 ML</td>
+                            <td style="text-align: right;">$3,200</td>
+                            <td style="text-align: right;">$1,600,000</td>
+                        </tr>
+                        <!-- Más filas... -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Toggle menu items
+        document.querySelectorAll('.menu-header').forEach(header => {
+            header.addEventListener('click', () => {
+                const menuItem = header.parentElement;
+                menuItem.classList.toggle('active');
+            });
+        });
+
+        // Toggle mobile menu
+        document.querySelector('.menu-toggle').addEventListener('click', () => {
+            document.querySelector('.sidebar').classList.toggle('active');
+        });
+        
+        // Handle submenu item clicks
+        document.querySelectorAll('.submenu-item').forEach(item => {
+            item.addEventListener('click', () => {
+                // Remove active class from all submenu items
+                document.querySelectorAll('.submenu-item').forEach(subItem => {
+                    subItem.classList.remove('active');
+                });
+                
+                // Add active class to clicked item
+                item.classList.add('active');
+                
+                // Update breadcrumb and page title
+                const menuHeader = item.closest('.menu-item').querySelector('.menu-header span').textContent;
+                const submenuText = item.textContent;
+                
+                document.querySelector('.breadcrumb').innerHTML = `
+                    <div class="breadcrumb-item"><a href="#">Inicio</a></div>
+                    <div class="breadcrumb-item"><a href="#">${menuHeader}</a></div>
+                    <div class="breadcrumb-item active">${submenuText}</div>
+                `;
+                
+                document.querySelector('.page-title').textContent = submenuText;
+            });
+        });
+
+        // User menu dropdown functionality
+        const userMenu = document.getElementById('userMenu');
+        let isUserMenuOpen = false;
+
+        userMenu.addEventListener('click', function(e) {
+            e.stopPropagation();
+            isUserMenuOpen = !isUserMenuOpen;
+            this.classList.toggle('active');
+        });
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', function(e) {
+            if (!userMenu.contains(e.target) && isUserMenuOpen) {
+                userMenu.classList.remove('active');
+                isUserMenuOpen = false;
+            }
+        });
+
+        // Prevent dropdown from closing when clicking inside
+        document.querySelector('.user-dropdown').addEventListener('click', function(e) {
+            e.stopPropagation();
+        });
+
+        // Profile function
+        function goToProfile(e) {
+            e.preventDefault();
+            alert('Navegando al perfil de usuario...\nEsta funcionalidad estará disponible próximamente.');
+            userMenu.classList.remove('active');
+            isUserMenuOpen = false;
+        }
+
+        // Settings function
+        function goToSettings(e) {
+            e.preventDefault();
+            alert('Navegando a configuración...\nEsta funcionalidad estará disponible próximamente.');
+            userMenu.classList.remove('active');
+            isUserMenuOpen = false;
+        }
+
+        // Logout function
+        function logout(e) {
+            e.preventDefault();
+            if (confirm('¿Está seguro que desea cerrar sesión?')) {
+                // Clear any session data
+                localStorage.removeItem('userToken');
+                localStorage.removeItem('userData');
+                sessionStorage.clear();
+                
+                // Redirect to login page
+                window.location.href = 'index.html';
+            }
+        }
+
+        // Update user info if available
+        document.addEventListener('DOMContentLoaded', function() {
+            // This would typically fetch user data from an API or local storage
+            const userData = localStorage.getItem('userData');
+            if (userData) {
+                try {
+                    const user = JSON.parse(userData);
+                    if (user.name) {
+                        document.querySelector('.user-name').textContent = user.name;
+                        document.querySelector('.dropdown-user-name').textContent = user.name;
+                    }
+                    if (user.email) {
+                        document.querySelector('.dropdown-user-email').textContent = user.email;
+                    }
+                } catch (e) {
+                    console.error('Error parsing user data:', e);
+                }
+            }
+
+            // Update current date
+            updateDate();
+            // Update date every minute (and time in tooltip)
+            setInterval(updateDate, 60000);
+        });
+
+        // Function to update date
+        function updateDate() {
+            const now = new Date();
+            const options = { 
+                weekday: 'long', 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric' 
+            };
+            const formattedDate = now.toLocaleDateString('es-CL', options);
+            // Capitalize first letter of weekday
+            const capitalizedDate = formattedDate.charAt(0).toUpperCase() + formattedDate.slice(1);
+            
+            // Format time for tooltip
+            const timeOptions = { hour: '2-digit', minute: '2-digit' };
+            const formattedTime = now.toLocaleTimeString('es-CL', timeOptions);
+            
+            const dateElement = document.getElementById('currentDate');
+            const dateContainer = document.querySelector('.header-date');
+            
+            // Update tooltip with current time
+            dateContainer.setAttribute('data-time', `Hora actual: ${formattedTime}`);
+            
+            // Add fade effect
+            dateElement.style.opacity = '0.5';
+            setTimeout(() => {
+                dateElement.textContent = capitalizedDate;
+                dateElement.style.opacity = '0.9';
+            }, 150);
+        }
+
+        // Keyboard navigation for dropdown
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && isUserMenuOpen) {
+                userMenu.classList.remove('active');
+                isUserMenuOpen = false;
+            }
+        });
+                
+        // Cambiar vista
+        function changeView(view) {
+            document.querySelectorAll('.view-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.closest('.view-btn').classList.add('active');
+            
+            if (view === 'individual') {
+                // Mostrar modal de cotización individual
+                document.getElementById('quotationModal').style.display = 'block';
+            } else if (view === 'grouped') {
+                // Reorganizar tabla por grupos de similitud
+                alert('Vista de productos agrupados por similitud');
+            }
+        }
+        
+        // Cerrar modal
+        function closeModal() {
+            document.getElementById('quotationModal').style.display = 'none';
+        }
+        
+        // Exportar a Excel
+        function exportToExcel() {
+            alert('Exportando cuadro comparativo a Excel...');
+        }
+        
+        // Imprimir comparación
+        function printComparison() {
+            window.print();
+        }
+        
+        // Mostrar alerta de cotizaciones incompletas
+        function showIncompleteAlert() {
+            alert('MATERIALES DEL SUR: No cotizó Terminal de conexión 10mm² (EL-4102)\n\nSe recomienda solicitar cotización completa.');
+        }
+        
+        // Guardar comparación
+        function saveComparison() {
+            alert('Cuadro comparativo guardado exitosamente');
+        }
+        
+        // Generar cotizaciones
+        function generateQuotes() {
+            if (confirm('¿Desea generar cotizaciones basadas en los mejores precios?')) {
+                alert('Generando cotizaciones para el cliente...');
+                window.location.href = '#';
+            }
+        }
+        
+        // Filtros en tiempo real
+        document.getElementById('criteriaSelect').addEventListener('change', function() {
+            const criteria = this.value;
+            // Lógica para reordenar tabla según criterio
+            console.log('Criterio seleccionado:', criteria);
+        });
+        
+        document.getElementById('providerFilter').addEventListener('change', function() {
+            const filter = this.value;
+            // Lógica para filtrar proveedores
+            console.log('Filtro de proveedores:', filter);
+        });
+        
+        document.getElementById('groupingSelect').addEventListener('change', function() {
+            const grouping = this.value;
+            // Lógica para agrupar productos
+            console.log('Agrupación:', grouping);
+        });
+        
+        // Cerrar modal al hacer clic fuera
+        window.onclick = function(event) {
+            if (event.target.classList.contains('modal')) {
+                event.target.style.display = 'none';
+            }
+        }
+    </script>
+</body>
+</html>

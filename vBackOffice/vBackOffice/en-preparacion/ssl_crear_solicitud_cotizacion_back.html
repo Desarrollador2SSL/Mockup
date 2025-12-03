@@ -1,0 +1,2193 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SSL v4.0 - Crear Solicitud de Cotización</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --accent-color: #e74c3c;
+            --success-color: #27ae60;
+            --warning-color: #f39c12;
+            --info-color: #17a2b8;
+            --text-color: #333;
+            --text-light: #ecf0f1;
+            --border-color: #ddd;
+            --hover-color: #2980b9;
+            --active-color: #1f618d;            
+            --light-bg: #f5f7fa;
+            --card-bg: #ffffff;
+            --table-header: #e9e9e9;
+            --table-row-even: #f9f9f9;
+            --table-row-hover: #f0f0f0;
+            --menu-width: 250px;
+            --header-height: 60px;
+            --transition-speed: 0.3s;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: var(--light-bg);
+            color: var(--text-color);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        /* Header Styles */
+        .header {
+            background-color: var(--primary-color);
+            color: var(--text-light);
+            height: var(--header-height);
+            padding: 0 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+        }
+
+        .logo img {
+            height: 40px;
+            margin-right: 10px;
+        }
+
+        .logo h1 {
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .header-date {
+            display: flex;
+            align-items: center;
+            font-size: 0.9rem;
+            color: var(--text-light);
+            opacity: 0.9;
+            padding: 0 15px;
+            border-right: 1px solid rgba(255, 255, 255, 0.2);
+            height: 35px;
+            cursor: default;
+            position: relative;
+            transition: opacity var(--transition-speed);
+        }
+
+        .header-date:hover {
+            opacity: 1;
+        }
+
+        .header-date:hover::after {
+            content: attr(data-time);
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            white-space: nowrap;
+            margin-top: 5px;
+            z-index: 1001;
+        }
+
+        .header-date i {
+            margin-right: 8px;
+            font-size: 1rem;
+        }
+
+        /* User Menu */
+        .user-menu {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            position: relative;
+            padding: 8px 12px;
+            border-radius: 4px;
+            transition: background-color var(--transition-speed);
+        }
+
+        .user-menu:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .user-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background-color: var(--secondary-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            margin-right: 10px;
+        }
+
+        .user-name {
+            font-weight: 500;
+            margin-right: 8px;
+        }
+
+        .user-menu-arrow {
+            font-size: 0.8rem;
+            transition: transform var(--transition-speed);
+        }
+
+        .user-menu.active .user-menu-arrow {
+            transform: rotate(180deg);
+        }
+
+        /* Dropdown menu */
+        .user-dropdown {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            margin-top: 10px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            min-width: 200px;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: all var(--transition-speed);
+        }
+
+        .user-menu.active .user-dropdown {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .user-dropdown::before {
+            content: '';
+            position: absolute;
+            top: -8px;
+            right: 20px;
+            width: 0;
+            height: 0;
+            border-left: 8px solid transparent;
+            border-right: 8px solid transparent;
+            border-bottom: 8px solid white;
+        }
+
+        .dropdown-header {
+            padding: 15px 20px;
+            border-bottom: 1px solid var(--border-color);
+            background-color: #f8f9fa;
+            border-radius: 8px 8px 0 0;
+        }
+
+        .dropdown-user-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .dropdown-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: var(--secondary-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.2rem;
+        }
+
+        .dropdown-user-details {
+            flex: 1;
+        }
+
+        .dropdown-user-name {
+            font-weight: 600;
+            color: var(--text-color);
+            font-size: 0.95rem;
+        }
+
+        .dropdown-user-email {
+            font-size: 0.85rem;
+            color: #666;
+        }
+
+        .dropdown-menu {
+            padding: 8px 0;
+        }
+
+        .dropdown-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 20px;
+            color: var(--text-color);
+            text-decoration: none;
+            transition: background-color var(--transition-speed);
+            cursor: pointer;
+        }
+
+        .dropdown-item:hover {
+            background-color: #f8f9fa;
+        }
+
+        .dropdown-item i {
+            margin-right: 12px;
+            width: 20px;
+            text-align: center;
+            color: #666;
+        }
+
+        .dropdown-divider {
+            height: 1px;
+            background-color: var(--border-color);
+            margin: 8px 0;
+        }
+
+        .dropdown-item.logout {
+            color: var(--accent-color);
+        }
+
+        .dropdown-item.logout i {
+            color: var(--accent-color);
+        }
+
+        .notifications {
+            position: relative;
+            margin-right: 20px;
+        }
+
+        .notifications i {
+            font-size: 1.2rem;
+            cursor: pointer;
+        }
+
+        .notification-count {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background-color: var(--accent-color);
+            color: white;
+            border-radius: 50%;
+            font-size: 0.7rem;
+            width: 16px;
+            height: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Menu Toggle */
+        .menu-toggle {
+            display: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        /* Container */
+        .container {
+            display: flex;
+            flex: 1;
+            margin-top: var(--header-height);
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: var(--menu-width);
+            background-color: white;
+            border-right: 1px solid var(--border-color);
+            height: calc(100vh - var(--header-height));
+            position: fixed;
+            overflow-y: auto;
+            transition: transform var(--transition-speed);
+            z-index: 900;
+        }
+
+        .menu {
+            list-style: none;
+            padding: 0;
+        }
+
+        .menu-item {
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .menu-header {
+            display: flex;
+            align-items: center;
+            padding: 15px 20px;
+            cursor: pointer;
+            color: var(--text-color);
+            font-weight: 500;
+            transition: background-color var(--transition-speed);
+        }
+
+        .menu-header:hover {
+            background-color: #f0f4f8;
+        }
+
+        .menu-header.active {
+            background-color: var(--secondary-color);
+            color: white;
+        }
+
+        .menu-header i {
+            margin-right: 10px;
+            width: 20px;
+            text-align: center;
+        }
+
+        .menu-header .arrow {
+            margin-left: auto;
+            transition: transform var(--transition-speed);
+        }
+
+        .submenu {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height var(--transition-speed);
+            background-color: #f8f9fa;
+        }
+
+        .menu-item.active .submenu {
+            max-height: 1000px;
+        }
+
+        .menu-item.active .arrow {
+            transform: rotate(90deg);
+        }
+
+        .submenu-item {
+            padding: 12px 20px 12px 50px;
+            cursor: pointer;
+            transition: background-color var(--transition-speed);
+            font-size: 0.95rem;
+        }
+
+        .submenu-item:hover {
+            background-color: #e9ecef;
+        }
+
+        .submenu-item.active {
+            background-color: #e2e6ea;
+            color: var(--secondary-color);
+            font-weight: 500;
+        }
+
+        .submenu a.submenu-item {
+            text-decoration: none;
+            color: inherit;
+            display: block;
+            padding: 12px 20px 12px 50px;
+            cursor: pointer;
+            transition: background-color var(--transition-speed);
+            font-size: 0.95rem;
+        }
+
+        .submenu a.submenu-item:hover {
+            background-color: #e9ecef;
+        }
+
+        .submenu a.submenu-item.active {
+            background-color: #e2e6ea;
+            color: var(--secondary-color);
+            font-weight: 500;
+        }
+
+        .submenu-item.disabled {
+            display: flex;
+            align-items: center;
+            opacity: 0.6;
+            cursor: not-allowed;
+            pointer-events: none;
+            text-decoration: line-through;
+            color: #999;
+        }
+
+        /* Content */
+        .content {
+            flex: 1;
+            margin-left: var(--menu-width);
+            padding: 20px;
+        }
+
+        /* Breadcrumb */
+        .breadcrumb {
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            font-size: 0.9rem;
+        }
+
+        .breadcrumb-item {
+            display: inline-block;
+        }
+
+        .breadcrumb-item:not(:last-child)::after {
+            content: "/";
+            margin: 0 10px;
+            color: #aaa;
+        }
+
+        .breadcrumb-item a {
+            color: var(--secondary-color);
+            text-decoration: none;
+        }
+
+        .breadcrumb-item a:hover {
+            text-decoration: underline;
+        }
+
+        .breadcrumb-item.active {
+            color: var(--text-color);
+            font-weight: 500;
+        }
+
+        /* Page Title */
+        .page-title {
+            font-size: 1.8rem;
+            margin-bottom: 10px;
+            color: var(--primary-color);
+        }
+
+        .page-subtitle {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.95rem;
+            color: #666;
+            margin-bottom: 20px;
+        }
+
+        .subtitle-badge {
+            background-color: var(--secondary-color);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 15px;
+            font-weight: 500;
+        }
+
+        /* Form Container */
+        .form-container {
+            background-color: var(--card-bg);
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+            border: 1px solid var(--border-color);
+        }
+
+        /* Form Section */
+        .form-section {
+            margin-bottom: 30px;
+        }
+
+        .section-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            border-bottom: 2px solid var(--secondary-color);
+            padding-bottom: 10px;
+        }
+
+        .section-title i {
+            margin-right: 10px;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group label {
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: var(--text-color);
+        }
+
+        .form-group label .required {
+            color: var(--accent-color);
+        }
+
+        .form-control {
+            padding: 10px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            font-size: 0.95rem;
+            transition: border-color var(--transition-speed);
+            background-color: white;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--secondary-color);
+            box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+        }
+
+        .form-control:disabled {
+            background-color: #f5f5f5;
+            cursor: not-allowed;
+        }
+
+        .form-value {
+            font-weight: 500;
+            color: var(--text-color);
+            padding: 10px;
+            background-color: #f8f9fa;
+            border-radius: 4px;
+            border: 1px solid #e9ecef;
+        }
+
+        /* Provider Selection */
+        .provider-list {
+            max-height: 300px;
+            overflow-y: auto;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            margin-bottom: 20px;
+        }
+
+        .provider-item {
+            padding: 15px;
+            border-bottom: 1px solid var(--border-color);
+            cursor: pointer;
+            transition: background-color var(--transition-speed);
+        }
+
+        .provider-item:hover {
+            background-color: #f8f9fa;
+        }
+
+        .provider-item.selected {
+            background-color: #e8f4f8;
+            border-left: 3px solid var(--secondary-color);
+        }
+
+        .provider-name {
+            font-weight: 600;
+            color: var(--primary-color);
+            margin-bottom: 5px;
+        }
+
+        .provider-info {
+            font-size: 0.9rem;
+            color: #666;
+            display: flex;
+            gap: 15px;
+        }
+
+        /* Selected Providers Table */
+        .providers-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.95rem;
+            margin-top: 20px;
+        }
+
+        .providers-table th {
+            background-color: var(--table-header);
+            padding: 12px;
+            text-align: left;
+            font-weight: 600;
+            border: 1px solid var(--border-color);
+        }
+
+        .providers-table td {
+            padding: 10px;
+            border: 1px solid var(--border-color);
+        }
+
+        .providers-table tbody tr:nth-child(even) {
+            background-color: var(--table-row-even);
+        }
+
+        .providers-table tbody tr:hover {
+            background-color: var(--table-row-hover);
+        }
+
+        /* Products Table */
+        .products-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+            font-size: 0.95rem;
+        }
+
+        .products-table th {
+            background-color: var(--table-header);
+            padding: 12px;
+            text-align: left;
+            font-weight: 600;
+            border: 1px solid var(--border-color);
+            font-size: 0.9rem;
+        }
+
+        .products-table td {
+            padding: 8px;
+            border: 1px solid var(--border-color);
+        }
+
+        .products-table tbody tr:nth-child(even) {
+            background-color: var(--table-row-even);
+        }
+
+        .products-table tbody tr:hover {
+            background-color: var(--table-row-hover);
+        }
+
+        .products-table input {
+            width: 100%;
+            padding: 6px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            font-size: 0.9rem;
+        }
+
+        /* File Upload */
+        .file-upload-area {
+            border: 2px dashed var(--border-color);
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+            transition: all var(--transition-speed);
+            background-color: #f8f9fa;
+        }
+
+        .file-upload-area:hover {
+            border-color: var(--secondary-color);
+            background-color: #e8f4f8;
+        }
+
+        .file-upload-area.dragover {
+            border-color: var(--secondary-color);
+            background-color: #e8f4f8;
+        }
+
+        .file-list {
+            margin-top: 15px;
+        }
+
+        .file-item {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            background-color: #f8f9fa;
+            border-radius: 4px;
+            margin-bottom: 5px;
+        }
+
+        .file-item i {
+            margin-right: 10px;
+            color: var(--secondary-color);
+        }
+
+        .file-name {
+            flex: 1;
+            font-weight: 500;
+        }
+
+        .file-size {
+            color: #666;
+            font-size: 0.9rem;
+            margin-right: 10px;
+        }
+
+        .file-remove {
+            color: var(--accent-color);
+            cursor: pointer;
+        }
+
+        /* Summary */
+        .summary-box {
+            background-color: #f8f9fa;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+
+        .summary-title {
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: var(--primary-color);
+        }
+
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .summary-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .summary-label {
+            color: #666;
+        }
+
+        .summary-value {
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+
+        /* Action Buttons */
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid var(--border-color);
+        }
+
+        /* Button Styles */
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all var(--transition-speed);
+            display: inline-flex;
+            align-items: center;
+            text-decoration: none;
+            font-size: 0.95rem;
+        }
+
+        .btn i {
+            margin-right: 8px;
+        }
+
+        .btn-primary {
+            background-color: var(--secondary-color);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: #2980b9;
+        }
+
+        .btn-success {
+            background-color: var(--success-color);
+            color: white;
+        }
+
+        .btn-success:hover {
+            background-color: #219653;
+        }
+
+        .btn-warning {
+            background-color: var(--warning-color);
+            color: white;
+        }
+
+        .btn-warning:hover {
+            background-color: #d68910;
+        }
+
+        .btn-outline {
+            background-color: transparent;
+            border: 1px solid var(--border-color);
+            color: var(--text-color);
+        }
+
+        .btn-outline:hover {
+            background-color: #f0f4f8;
+            border-color: var(--secondary-color);
+            color: var(--secondary-color);
+        }
+
+        .btn-sm {
+            padding: 6px 12px;
+            font-size: 0.85rem;
+        }
+
+        .btn-icon {
+            padding: 5px 8px;
+        }
+
+        /* Info Box */
+        .info-box {
+            background-color: #e8f4f8;
+            border: 1px solid #bee5eb;
+            border-radius: 4px;
+            padding: 15px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+        }
+
+        .info-box i {
+            color: var(--info-color);
+            margin-right: 10px;
+            font-size: 1.2rem;
+        }
+
+        /* Warning Box */
+        .warning-box {
+            background-color: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: 4px;
+            padding: 15px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: start;
+        }
+
+        .warning-box i {
+            color: var(--warning-color);
+            margin-right: 10px;
+            font-size: 1.2rem;
+            margin-top: 2px;
+        }
+
+        /* Confirmation */
+        .confirmation-box {
+            background-color: #d4edda;
+            border: 1px solid #c3e6cb;
+            border-radius: 4px;
+            padding: 15px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+        }
+
+        .confirmation-box i {
+            color: var(--success-color);
+            margin-right: 10px;
+            font-size: 1.2rem;
+        }
+
+        /* Credit Info */
+        .credit-info {
+            display: inline-block;
+            padding: 5px 10px;
+            background-color: #e8f4f8;
+            border-radius: 4px;
+            font-size: 0.9rem;
+            margin-left: 10px;
+        }
+
+        .credit-available {
+            color: var(--success-color);
+            font-weight: 600;
+        }
+
+        .credit-low {
+            color: var(--warning-color);
+            font-weight: 600;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+
+        .modal-content {
+            background-color: white;
+            margin: 5% auto;
+            padding: 0;
+            border-radius: 8px;
+            width: 90%;
+            max-width: 600px;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            border-bottom: 1px solid var(--border-color);
+            background-color: var(--primary-color);
+            color: white;
+            border-radius: 8px 8px 0 0;
+        }
+
+        .modal-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+        }
+
+        .close {
+            color: white;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            line-height: 20px;
+        }
+
+        .close:hover {
+            opacity: 0.8;
+        }
+
+        .modal-body {
+            padding: 20px;
+        }
+
+        .modal-footer {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            padding: 20px;
+            border-top: 1px solid var(--border-color);
+            background-color: #f8f9fa;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .menu-toggle {
+                display: block;
+            }
+
+            .sidebar {
+                transform: translateX(-100%);
+            }
+
+            .sidebar.active {
+                transform: translateX(0);
+            }
+
+            .content {
+                margin-left: 0;
+            }
+
+            .user-name {
+                display: none;
+            }
+
+            .header-date {
+                display: none;
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .summary-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .products-table {
+                font-size: 0.8rem;
+                overflow-x: auto;
+                display: block;
+            }
+
+            .providers-table {
+                font-size: 0.8rem;
+                overflow-x: auto;
+                display: block;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="menu-toggle">
+            <i class="fas fa-bars"></i>
+        </div>
+        <div class="logo">
+            <img src="logo_ssl.png" alt="SSL Logo">
+            <h1>SSL v4.0</h1>
+        </div>
+        <div class="header-right">
+            <div class="header-date" data-time="Hora actual: 00:00">
+                <i class="fas fa-calendar-alt"></i>
+                <span id="currentDate">Lunes, 26 de Mayo de 2025</span>
+            </div>
+            <div class="notifications">
+                <i class="fas fa-bell"></i>
+                <span class="notification-count">5</span>
+            </div>
+            <div class="user-menu" id="userMenu">
+                <div class="user-avatar">
+                    <i class="fas fa-user"></i>
+                </div>
+                <span class="user-name">Usuario SSL</span>
+                <i class="fas fa-chevron-down user-menu-arrow"></i>
+                
+                <!-- Dropdown Menu -->
+                <div class="user-dropdown">
+                    <div class="dropdown-header">
+                        <div class="dropdown-user-info">
+                            <div class="dropdown-avatar">
+                                <i class="fas fa-user"></i>
+                            </div>
+                            <div class="dropdown-user-details">
+                                <div class="dropdown-user-name">Usuario SSL</div>
+                                <div class="dropdown-user-email">usuario@seashipping.cl</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="dropdown-menu">
+                        <a href="#" class="dropdown-item" onclick="goToProfile(event)">
+                            <i class="fas fa-user-circle"></i>
+                            <span>Mi Perfil</span>
+                        </a>
+                        <a href="#" class="dropdown-item" onclick="goToSettings(event)">
+                            <i class="fas fa-cog"></i>
+                            <span>Configuración</span>
+                        </a>
+                        <div class="dropdown-divider"></div>
+                        <a href="#" class="dropdown-item logout" onclick="logout(event)">
+                            <i class="fas fa-sign-out-alt"></i>
+                            <span>Cerrar Sesión</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+
+    <div class="container">
+        <!-- Sidebar -->
+        <nav class="sidebar">
+            <ul class="menu">
+                <!-- Acceso -->
+                <li class="menu-item">
+                    <div class="menu-header">
+                        <i class="fas fa-lock"></i>
+                        <span>Acceso</span>
+                        <i class="fas fa-chevron-right arrow"></i>
+                    </div>
+                    <div class="submenu">
+                        <div class="submenu-item">Página llegada</div>
+                        <div class="submenu-item">Login</div>
+                        <div class="submenu-item">Recuperar Contraseña</div>
+                    </div>
+                </li>
+
+                <!-- Inicio -->
+                <li class="menu-item">
+                    <div class="menu-header">
+                        <i class="fas fa-home"></i>
+                        <span>Inicio</span>
+                        <i class="fas fa-chevron-right arrow"></i>
+                    </div>
+                    <div class="submenu">
+                        <div class="submenu-item">Dashboard General</div>
+                        <div class="submenu-item disabled" title="Próximamente">Notificaciones</div>
+                        <div class="submenu-item disabled" title="Próximamente">Perfil de Usuario</div>                        
+                    </div>
+                </li>
+
+                <!-- Recepción de Solicitudes -->
+                <li class="menu-item">
+                    <div class="menu-header">
+                        <i class="fas fa-clipboard-list"></i>
+                        <span>Recepción de Solicitudes</span>
+                        <i class="fas fa-chevron-right arrow"></i>
+                    </div>
+                    <div class="submenu">
+                        <a href="ingreso_solicitud_pedido_v2.html" class="submenu-item">Ingreso Manual</a>
+                        <a href="listado_solicitud_pedido.html" class="submenu-item">Listado de Solicitudes</a>
+                    </div>
+                </li>
+
+                <!-- Carpeta Digital -->
+                <li class="menu-item">
+                    <div class="menu-header">
+                        <i class="fas fa-folder-open"></i>
+                        <span>Carpeta Digital</span>
+                        <i class="fas fa-chevron-right arrow"></i>
+                    </div>
+                    <div class="submenu">
+                        <a href="listado_carpeta_digital.html" class="submenu-item">Carpeta Digital</a>
+                    </div>
+                </li>
+
+                <!-- Cotización a Proveedores -->
+                <li class="menu-item active">
+                    <div class="menu-header active">
+                        <i class="fas fa-file-invoice-dollar"></i>
+                        <span>Cotización a Proveedores</span>
+                        <i class="fas fa-chevron-right arrow"></i>
+                    </div>
+                    <div class="submenu">
+                        <a href="listado_solicitudes_cotizar.html" class="submenu-item active">Generación y Distribución</a>
+                        <a href="recepcion_respuesta.html" class="submenu-item">Recepción de Cotizaciones</a>
+                    </div>
+                </li>
+
+                <!-- Evaluación y Análisis -->
+                <li class="menu-item">
+                    <div class="menu-header">
+                        <i class="fas fa-chart-line"></i>
+                        <span>Evaluación y Análisis</span>
+                        <i class="fas fa-chevron-right arrow"></i>
+                    </div>
+                    <div class="submenu">
+                        <a href="lista_cuadro_comparativo.html" class="submenu-item">Cuadros Comparativos</a>
+                        <div class="submenu-item disabled" title="Próximamente">Márgenes y Rentabilidad</div>
+                    </div>
+                </li>
+
+                <!-- Órdenes de Compra -->
+                <li class="menu-item">
+                    <div class="menu-header">
+                        <i class="fas fa-shopping-cart"></i>
+                        <span>Órdenes de Compra</span>
+                        <i class="fas fa-chevron-right arrow"></i>
+                    </div>
+                    <div class="submenu">
+                        <a href="oc_cliente.html" class="submenu-item">OC Cliente</a>
+                        <a href="oc_proveedor.html" class="submenu-item">OC Proveedor</a>
+                        <div class="submenu-item disabled" title="Próximamente">Gestión de Cambios</div>                           
+                    </div>
+                </li>
+
+                <!-- Gestión Logística -->
+                <li class="menu-item">
+                    <div class="menu-header">
+                        <i class="fas fa-truck"></i>
+                        <span>Gestión Logística</span>
+                        <i class="fas fa-chevron-right arrow"></i>
+                    </div>
+                    <div class="submenu">
+                        <div class="submenu-item disabled" title="Próximamente">Planificación Logística (Swisslog)</div>                          
+                        <div class="submenu-item disabled" title="Próximamente">Seguimiento de Entregas</div>                          
+                    </div>
+                </li>
+
+                <!-- Zona Franca -->
+                <li class="menu-item">
+                    <div class="menu-header">
+                        <i class="fas fa-warehouse"></i>
+                        <span>Zona Franca</span>
+                        <i class="fas fa-chevron-right arrow"></i>
+                    </div>
+                    <div class="submenu">
+                        <div class="submenu-item disabled" title="Próximamente">Declaraciones DI/DSZF</div>                            
+                        <div class="submenu-item disabled" title="Próximamente">Documentos Aduaneros</div>                            
+                        <div class="submenu-item disabled" title="Próximamente">Alertas y Condiciones ZF</div>                            
+                    </div>
+                </li>
+
+                <!-- Entregas y Conformidad -->
+                <li class="menu-item">
+                    <div class="menu-header">
+                        <i class="fas fa-box-open"></i>
+                        <span>Entregas y Conformidad</span>
+                        <i class="fas fa-chevron-right arrow"></i>
+                    </div>
+                    <div class="submenu">
+                        <div class="submenu-item disabled" title="Próximamente">Confirmación Cliente</div>                        
+                        <div class="submenu-item disabled" title="Próximamente">Gestión de Incidencias</div>                        
+                        <div class="submenu-item disabled" title="Próximamente">Documentación Firmada</div>                        
+                    </div>
+                </li>
+
+                <!-- Reportes y BI -->
+                <li class="menu-item">
+                    <div class="menu-header">
+                        <i class="fas fa-chart-pie"></i>
+                        <span>Reportes y BI</span>
+                        <i class="fas fa-chevron-right arrow"></i>
+                    </div>
+                    <div class="submenu">
+                        <div class="submenu-item disabled" title="Próximamente">KPI Operacionales</div>                          
+                        <div class="submenu-item disabled" title="Próximamente">Métricas por Cliente / Proveedor</div>                          
+                        <div class="submenu-item disabled" title="Próximamente">Análisis Avanzado</div>                          
+                    </div>
+                </li>
+
+                <!-- Usuarios y Accesos -->
+                <li class="menu-item">
+                    <div class="menu-header">
+                        <i class="fas fa-users"></i>
+                        <span>Usuarios y Accesos</span>
+                        <i class="fas fa-chevron-right arrow"></i>
+                    </div>
+                    <div class="submenu">
+                        <div class="submenu-item disabled" title="Próximamente">Gestión de Usuarios</div>                          
+                        <div class="submenu-item disabled" title="Próximamente">Perfiles y Roles</div>                          
+                    </div>
+                </li>
+
+                <!-- Empresas y Organizaciones -->
+                <li class="menu-item">
+                    <div class="menu-header">
+                        <i class="fas fa-building"></i>
+                        <span>Empresas y Organizaciones</span>
+                        <i class="fas fa-chevron-right arrow"></i>
+                    </div>
+                    <div class="submenu">
+                        <a href="cliente_proveedor.html" class="submenu-item">Clientes y Proveedores</a>
+                        <a href="obras.html" class="submenu-item">Obras y Proyectos</a>
+                        <div class="submenu-item disabled" title="Próximamente">Transportistas / Financieras</div>                             
+                    </div>
+                </li>
+
+                <!-- Catálogos y Configuración -->
+                <li class="menu-item">
+                    <div class="menu-header">
+                        <i class="fas fa-cogs"></i>
+                        <span>Catálogos y Configuración</span>
+                        <i class="fas fa-chevron-right arrow"></i>
+                    </div>
+                    <div class="submenu">
+                        <a href="catalogo_producto.html" class="submenu-item">Catálogo Maestro</a>    
+                        <div class="submenu-item disabled" title="Próximamente">Divisas y Parámetros Globales</div>                          
+                        <div class="submenu-item disabled" title="Próximamente">Zona Franca (ZF)</div>                          
+                        <div class="submenu-item disabled" title="Próximamente">Flujos de Aprobación</div>                          
+                    </div>
+                </li>
+
+                <!-- Administración -->
+                <li class="menu-item">
+                    <div class="menu-header">
+                        <i class="fas fa-sliders-h"></i>
+                        <span>Administración</span>
+                        <i class="fas fa-chevron-right arrow"></i>
+                    </div>
+                    <div class="submenu">
+                        <div class="submenu-item disabled" title="Próximamente">Parámetros Comerciales</div>                         
+                        <div class="submenu-item disabled" title="Próximamente">Límites de Crédito</div>                         
+                        <div class="submenu-item disabled" title="Próximamente">Condiciones de Pago</div>                         
+                    </div>
+                </li>
+
+                <!-- Auditoría y Seguridad -->
+                <li class="menu-item">
+                    <div class="menu-header">
+                        <i class="fas fa-shield-alt"></i>
+                        <span>Auditoría y Seguridad</span>
+                        <i class="fas fa-chevron-right arrow"></i>
+                    </div>
+                    <div class="submenu">
+                        <div class="submenu-item disabled" title="Próximamente">Exportación Auditorías</div>                             
+                        <div class="submenu-item disabled" title="Próximamente">Políticas de Backup</div>                             
+                    </div>
+                </li>
+
+            </ul>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="content">
+            <!-- Breadcrumb -->
+            <div class="breadcrumb">
+                <div class="breadcrumb-item"><a href="menu.html">Inicio</a></div>
+                <div class="breadcrumb-item"><a href="#">Cotización a Proveedores</a></div>
+                <div class="breadcrumb-item"><a href="listado_solicitudes_cotizar.html">Generación y Distribución</a></div>
+                <div class="breadcrumb-item"><a href="detalle_solicitud_cotizacion.html">Detalle de Solicitud</a></div>
+                <div class="breadcrumb-item active">Nueva Solicitud de Cotización</div>
+            </div>
+
+            <!-- Page Title -->
+            <h1 class="page-title" id="pageTitle">Nueva Solicitud de Cotización</h1>
+            <div class="page-subtitle">
+                <span>Solicitud: <strong id="numeroSolicitud">SOL-2025-0001</strong></span>
+                <span class="subtitle-badge">Versión 1</span>
+                <span>Correlativo: <strong id="correlativo">003</strong></span>
+            </div>
+
+            <div class="form-container">
+                <form id="cotizacionForm">
+                    <!-- Identificación -->
+                    <div class="form-section">
+                        <h2 class="section-title">
+                            <i class="fas fa-id-card"></i>
+                            Identificación
+                        </h2>
+                        
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label>Número de Solicitud - Versión</label>
+                                <div class="form-value">SOL-2025-0001-V1</div>
+                            </div>
+                            <div class="form-group">
+                                <label>Correlativo de Solicitud</label>
+                                <div class="form-value">003</div>
+                            </div>
+                            <div class="form-group">
+                                <label>Cliente</label>
+                                <div class="form-value">CONSTRUCTORA ALMAGRO S.A.</div>
+                            </div>
+                            <div class="form-group">
+                                <label>Obra</label>
+                                <div class="form-value">EDIFICIO PACIFIC BLUE</div>
+                            </div>
+                            <div class="form-group">
+                                <label>Doc. Referencia Cliente</label>
+                                <div class="form-value">SOLPED-2025-001</div>
+                            </div>
+                            <div class="form-group">
+                                <label>Subclasificación</label>
+                                <div class="form-value">PEP</div>
+                            </div>
+                            <div class="form-group">
+                                <label>Número Subclasificación</label>
+                                <div class="form-value">PEP-001-2025</div>
+                            </div>
+                            <div class="form-group">
+                                <label>Dirección de la Obra</label>
+                                <div class="form-value">Av. Las Condes 1234, Las Condes</div>
+                            </div>
+                            <div class="form-group">
+                                <label>Región de la Obra</label>
+                                <div class="form-value">Región Metropolitana</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Condiciones -->
+                    <div class="form-section">
+                        <h2 class="section-title">
+                            <i class="fas fa-clipboard-list"></i>
+                            Condiciones de la Cotización
+                        </h2>
+                        
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label for="tipoFactura">Tipo de Factura <span class="required">*</span></label>
+                                <select id="tipoFactura" class="form-control" required>
+                                    <option value="">Seleccione tipo</option>
+                                    <option value="AFECTA" selected>Con Factura AFECTA</option>
+                                    <option value="EXENTA">Con Factura EXENTA</option>
+                                    <option value="OTRO">OTRO</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="condicionesEntrega">Condiciones de Entrega <span class="required">*</span></label>
+                                <select id="condicionesEntrega" class="form-control" required>
+                                    <option value="">Seleccione condición</option>
+                                    <option value="puesto-obra" selected>Puesto en Obra</option>
+                                    <option value="retiro-tienda">Retiro en Tienda</option>
+                                    <option value="bodega-ssl">En Bodega SSL</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="fechaEntrega">Fecha de Entrega Esperada <span class="required">*</span></label>
+                                <input type="date" id="fechaEntrega" class="form-control" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="formaPago">Forma de Pago</label>
+                                <select id="formaPago" class="form-control">
+                                    <option value="30-dias" selected>30 días fecha factura</option>
+                                    <option value="60-dias">60 días fecha factura</option>
+                                    <option value="contado">Contado</option>
+                                    <option value="otro">Otro</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group" style="margin-top: 15px;">
+                            <label for="infoAdicional">Información Adicional para Proveedores</label>
+                            <textarea id="infoAdicional" class="form-control" rows="3" 
+                                      placeholder="Incluya cualquier información relevante para los proveedores como condiciones especiales, requisitos técnicos, etc."></textarea>
+                        </div>
+                    </div>
+
+                    <!-- Selección de Proveedores -->
+                    <div class="form-section">
+                        <h2 class="section-title">
+                            <i class="fas fa-users"></i>
+                            Selección de Proveedores
+                        </h2>
+
+                        <div class="info-box">
+                            <i class="fas fa-info-circle"></i>
+                            <p>Seleccione los proveedores a quienes desea enviar esta solicitud de cotización. El sistema muestra proveedores recomendados según el tipo de productos.</p>
+                        </div>
+
+                        <div class="provider-list" id="providerList">
+                            <!-- Proveedor 1 -->
+                            <div class="provider-item" onclick="toggleProvider(this, '1')">
+                                <div class="provider-name">
+                                    <input type="checkbox" id="prov1" value="1" style="margin-right: 10px;">
+                                    CEMENTOS BIO BIO S.A.
+                                </div>
+                                <div class="provider-info">
+                                    <span><i class="fas fa-id-card"></i> RUT: 91.755.000-K</span>
+                                    <span><i class="fas fa-building"></i> Casa Matriz</span>
+                                    <span><i class="fas fa-credit-card"></i> LC: $50,000,000</span>
+                                </div>
+                            </div>
+                            
+                            <!-- Proveedor 2 -->
+                            <div class="provider-item" onclick="toggleProvider(this, '2')">
+                                <div class="provider-name">
+                                    <input type="checkbox" id="prov2" value="2" style="margin-right: 10px;">
+                                    FERRETERÍA INDUSTRIAL LTDA.
+                                </div>
+                                <div class="provider-info">
+                                    <span><i class="fas fa-id-card"></i> RUT: 76.123.456-7</span>
+                                    <span><i class="fas fa-building"></i> Sucursal Santiago</span>
+                                    <span><i class="fas fa-credit-card"></i> LC: $35,000,000</span>
+                                </div>
+                            </div>
+                            
+                            <!-- Proveedor 3 -->
+                            <div class="provider-item" onclick="toggleProvider(this, '3')">
+                                <div class="provider-name">
+                                    <input type="checkbox" id="prov3" value="3" style="margin-right: 10px;">
+                                    MATERIALES DEL SUR S.A.
+                                </div>
+                                <div class="provider-info">
+                                    <span><i class="fas fa-id-card"></i> RUT: 85.741.963-2</span>
+                                    <span><i class="fas fa-building"></i> Casa Matriz</span>
+                                    <span><i class="fas fa-credit-card"></i> LC: $28,500,000</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <table class="providers-table" id="selectedProvidersTable">
+                            <thead>
+                                <tr>
+                                    <th>Código</th>
+                                    <th>Nombre Proveedor</th>
+                                    <th>Sucursal</th>
+                                    <th>Encargado Cotización</th>
+                                    <th>Email</th>
+                                    <th>Celular</th>
+                                    <th>LC Disponible</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody id="selectedProvidersBody">
+                                <!-- Los proveedores seleccionados se mostrarán aquí -->
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Selección de Productos -->
+                    <div class="form-section">
+                        <h2 class="section-title">
+                            <i class="fas fa-boxes"></i>
+                            Selección de Productos
+                        </h2>
+
+                        <div class="info-box">
+                            <i class="fas fa-info-circle"></i>
+                            <p>Seleccione los productos de la solicitud de pedido que desea cotizar. Puede ajustar las cantidades y valores referenciales si es necesario.</p>
+                        </div>
+
+                        <button type="button" class="btn btn-primary" onclick="agregarProducto()">
+                            <i class="fas fa-plus"></i> Agregar Producto
+                        </button>
+
+                        <table class="products-table" id="productsTable">
+                            <thead>
+                                <tr>
+                                    <th width="10%">Seleccionar</th>
+                                    <th width="10%">Código Cliente</th>
+                                    <th width="20%">Descripción Cliente</th>
+                                    <th width="10%">Código SSL</th>
+                                    <th width="20%">Descripción SSL</th>
+                                    <th width="5%">U.M.</th>
+                                    <th width="8%">Cantidad</th>
+                                    <th width="10%">Fecha Req.</th>
+                                    <th width="12%">Valor Ref.</th>
+                                    <th width="5%">Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody id="productTableBody">
+                                <!-- Los productos se agregarán dinámicamente -->
+                            </tbody>
+                        </table>
+
+                        <div class="summary-box">
+                            <div class="summary-title">Resumen</div>
+                            <div class="summary-grid">
+                                <div class="summary-item">
+                                    <span class="summary-label">Total Productos:</span>
+                                    <span class="summary-value" id="totalProductos">0</span>
+                                </div>
+                                <div class="summary-item">
+                                    <span class="summary-label">Total Proveedores:</span>
+                                    <span class="summary-value" id="totalProveedores">0</span>
+                                </div>
+                                <div class="summary-item">
+                                    <span class="summary-label">Monto Referencial:</span>
+                                    <span class="summary-value" id="montoReferencial">$0</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Documentos Adjuntos -->
+                    <div class="form-section">
+                        <h2 class="section-title">
+                            <i class="fas fa-paperclip"></i>
+                            Documentos Adjuntos
+                        </h2>
+
+                        <div class="file-upload-area" ondrop="dropHandler(event);" ondragover="dragOverHandler(event);" ondragenter="dragEnterHandler(event);" ondragleave="dragLeaveHandler(event);">
+                            <i class="fas fa-cloud-upload-alt" style="font-size: 3rem; color: var(--secondary-color); margin-bottom: 15px;"></i>
+                            <p>Arrastra archivos aquí o <button type="button" class="btn btn-primary" onclick="document.getElementById('file-upload').click()">selecciona archivos</button></p>
+                            <input type="file" id="file-upload" multiple style="display: none;" onchange="handleFiles(this.files)" accept=".pdf,.doc,.docx,.xls,.xlsx,.jpg,.jpeg,.png">
+                            <p style="font-size: 0.9rem; color: #666; margin-top: 10px;">Formatos permitidos: PDF, Excel, Word, Imágenes | Máximo: 10MB por archivo</p>
+                        </div>
+
+                        <div class="file-list" id="fileList">
+                            <!-- Los archivos se mostrarán aquí -->
+                        </div>
+                    </div>
+
+                    <!-- Confirmación -->
+                    <div class="form-section">
+                        <h2 class="section-title">
+                            <i class="fas fa-check-circle"></i>
+                            Confirmación
+                        </h2>
+
+                        <div class="confirmation-box">
+                            <i class="fas fa-check-circle"></i>
+                            <div>
+                                <strong>Confirmo que la información es correcta y está lista para envío</strong>
+                                <br>
+                                <small>Una vez enviada la solicitud, no podrá ser modificada. Los proveedores recibirán la notificación por email y portal web.</small>
+                            </div>
+                        </div>
+
+                        <div class="warning-box">
+                            <i class="fas fa-exclamation-triangle"></i>
+                            <div>
+                                <strong>Importante:</strong>
+                                <ul style="margin: 5px 0 0 20px;">
+                                    <li>Verifique que todos los datos estén correctos antes de enviar</li>
+                                    <li>Los proveedores tendrán hasta el <strong id="fechaLimite">05/06/2025</strong> para responder</li>
+                                    <li>Se generarán <strong id="numSolicitudes">0</strong> solicitudes de cotización</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Botones de Acción -->
+                    <div class="action-buttons">
+                        <button type="button" class="btn btn-outline" onclick="cancelar()">
+                            <i class="fas fa-times"></i> Cancelar
+                        </button>
+                        <button type="button" class="btn btn-warning" onclick="guardarBorrador()">
+                            <i class="fas fa-save"></i> Guardar Borrador
+                        </button>
+                        <button type="button" class="btn btn-primary" onclick="vistaPrevia()">
+                            <i class="fas fa-eye"></i> Vista Previa
+                        </button>
+                        <button type="submit" class="btn btn-success">
+                            <i class="fas fa-paper-plane"></i> Enviar Solicitudes
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </main>
+    </div>
+
+    <!-- Modal para Agregar Producto -->
+    <div id="modalProducto" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">
+                    <i class="fas fa-box"></i>
+                    Seleccionar Producto
+                </h2>
+                <span class="close" onclick="cerrarModalProducto()">&times;</span>
+            </div>
+            
+            <div class="modal-body">
+                <div class="info-box">
+                    <i class="fas fa-info-circle"></i>
+                    <p>Seleccione un producto de la solicitud de pedido original</p>
+                </div>
+
+                <div style="max-height: 300px; overflow-y: auto; border: 1px solid var(--border-color); border-radius: 4px;">
+                    <!-- Productos disponibles -->
+                    <div class="provider-item" onclick="seleccionarProducto('CLI-001', 'Cable eléctrico 3x10 cliente', 'EL-1245', 'Cable eléctrico NYY 3x10mm2 0.6/1kV', 'MT', 100, '22/05/2025')">
+                        <div class="provider-name">CLI-001 - Cable eléctrico 3x10 cliente</div>
+                        <div class="provider-info">
+                            <span>SSL: EL-1245</span>
+                            <span>Cantidad: 100 MT</span>
+                            <span>Fecha Req: 22/05/2025</span>
+                        </div>
+                    </div>
+                    
+                    <div class="provider-item" onclick="seleccionarProducto('CLI-002', 'Tubo conduit 25mm cliente', 'EL-0876', 'Tubo Conduit PVC 25mm', 'UN', 50, '22/05/2025')">
+                        <div class="provider-name">CLI-002 - Tubo conduit 25mm cliente</div>
+                        <div class="provider-info">
+                            <span>SSL: EL-0876</span>
+                            <span>Cantidad: 50 UN</span>
+                            <span>Fecha Req: 22/05/2025</span>
+                        </div>
+                    </div>
+                    
+                    <div class="provider-item" onclick="seleccionarProducto('CLI-CN-001', 'Cemento bolsa 25kg', 'CN-1001', 'Cemento Portland tipo I - Saco 25kg', 'UN', 150, '25/05/2025')">
+                        <div class="provider-name">CLI-CN-001 - Cemento bolsa 25kg</div>
+                        <div class="provider-info">
+                            <span>SSL: CN-1001</span>
+                            <span>Cantidad: 150 UN</span>
+                            <span>Fecha Req: 25/05/2025</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline" onclick="cerrarModalProducto()">
+                    <i class="fas fa-times"></i> Cancelar
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Variables globales
+        let selectedProviders = {};
+        let selectedProducts = [];
+        let productIndex = 0;
+        let modo = 'crear'; // crear, editar, ver
+        
+        // Toggle menu items
+        document.querySelectorAll('.menu-header').forEach(header => {
+            header.addEventListener('click', () => {
+                const menuItem = header.parentElement;
+                menuItem.classList.toggle('active');
+            });
+        });
+
+        // Toggle mobile menu
+        document.querySelector('.menu-toggle').addEventListener('click', () => {
+            document.querySelector('.sidebar').classList.toggle('active');
+        });
+
+        // User menu dropdown functionality
+        const userMenu = document.getElementById('userMenu');
+        let isUserMenuOpen = false;
+
+        userMenu.addEventListener('click', function(e) {
+            e.stopPropagation();
+            isUserMenuOpen = !isUserMenuOpen;
+            this.classList.toggle('active');
+        });
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', function(e) {
+            if (!userMenu.contains(e.target) && isUserMenuOpen) {
+                userMenu.classList.remove('active');
+                isUserMenuOpen = false;
+            }
+        });
+
+        // Prevent dropdown from closing when clicking inside
+        document.querySelector('.user-dropdown').addEventListener('click', function(e) {
+            e.stopPropagation();
+        });
+
+        // Profile function
+        function goToProfile(e) {
+            e.preventDefault();
+            alert('Navegando al perfil de usuario...\nEsta funcionalidad estará disponible próximamente.');
+            userMenu.classList.remove('active');
+            isUserMenuOpen = false;
+        }
+
+        // Settings function
+        function goToSettings(e) {
+            e.preventDefault();
+            alert('Navegando a configuración...\nEsta funcionalidad estará disponible próximamente.');
+            userMenu.classList.remove('active');
+            isUserMenuOpen = false;
+        }
+
+        // Logout function
+        function logout(e) {
+            e.preventDefault();
+            if (confirm('¿Está seguro que desea cerrar sesión?')) {
+                localStorage.removeItem('userToken');
+                localStorage.removeItem('userData');
+                sessionStorage.clear();
+                window.location.href = 'index.html';
+            }
+        }
+
+        // Function to update date
+        function updateDate() {
+            const now = new Date();
+            const options = { 
+                weekday: 'long', 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric' 
+            };
+            const formattedDate = now.toLocaleDateString('es-CL', options);
+            const capitalizedDate = formattedDate.charAt(0).toUpperCase() + formattedDate.slice(1);
+            
+            const timeOptions = { hour: '2-digit', minute: '2-digit' };
+            const formattedTime = now.toLocaleTimeString('es-CL', timeOptions);
+            
+            const dateElement = document.getElementById('currentDate');
+            const dateContainer = document.querySelector('.header-date');
+            
+            dateContainer.setAttribute('data-time', `Hora actual: ${formattedTime}`);
+            
+            dateElement.style.opacity = '0.5';
+            setTimeout(() => {
+                dateElement.textContent = capitalizedDate;
+                dateElement.style.opacity = '0.9';
+            }, 150);
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            updateDate();
+            setInterval(updateDate, 60000);
+            
+            // Cargar parámetros URL
+            checkUrlParams();
+            
+            // Set fechas por defecto
+            const nextWeek = new Date();
+            nextWeek.setDate(nextWeek.getDate() + 7);
+            document.getElementById('fechaEntrega').value = nextWeek.toISOString().split('T')[0];
+            
+            // Fecha límite para cotizar (15 días)
+            const fechaLimite = new Date();
+            fechaLimite.setDate(fechaLimite.getDate() + 15);
+            document.getElementById('fechaLimite').textContent = fechaLimite.toLocaleDateString('es-CL');
+        });
+
+        // Verificar parámetros de URL
+        function checkUrlParams() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const solicitud = urlParams.get('solicitud') || 'SOL-2025-0001';
+            const correlativo = urlParams.get('correlativo') || '003';
+            modo = urlParams.get('modo') || 'crear';
+            
+            document.getElementById('numeroSolicitud').textContent = solicitud;
+            document.getElementById('correlativo').textContent = correlativo;
+            
+            // Ajustar interfaz según modo
+            if (modo === 'ver') {
+                document.getElementById('pageTitle').textContent = 'Ver Solicitud de Cotización';
+                // Deshabilitar todos los campos
+                document.querySelectorAll('input, select, textarea').forEach(el => {
+                    el.disabled = true;
+                });
+                // Ocultar botones de acción excepto cancelar
+                document.querySelector('.btn-warning').style.display = 'none';
+                document.querySelector('.btn-success').style.display = 'none';
+                document.querySelector('.btn-primary').style.display = 'none';
+                
+                // Cargar datos existentes
+                cargarDatosExistentes(correlativo);
+            } else if (modo === 'editar') {
+                document.getElementById('pageTitle').textContent = 'Editar Solicitud de Cotización';
+                // Cargar datos existentes
+                cargarDatosExistentes(correlativo);
+            }
+        }
+
+        // Cargar datos existentes (simulación)
+        function cargarDatosExistentes(correlativo) {
+            if (correlativo === '001' || correlativo === '002') {
+                // Simular carga de datos
+                // Agregar proveedores
+                document.getElementById('prov1').checked = true;
+                toggleProvider(document.querySelector('.provider-item'), '1');
+                
+                // Agregar productos
+                agregarProducto();
+                setTimeout(() => {
+                    seleccionarProducto('CLI-001', 'Cable eléctrico 3x10 cliente', 'EL-1245', 'Cable eléctrico NYY 3x10mm2 0.6/1kV', 'MT', 100, '22/05/2025');
+                }, 100);
+            }
+        }
+
+        // Toggle provider selection
+        function toggleProvider(element, providerId) {
+            const checkbox = element.querySelector('input[type="checkbox"]');
+            
+            if (event.target.type !== 'checkbox') {
+                checkbox.checked = !checkbox.checked;
+            }
+            
+            if (checkbox.checked) {
+                element.classList.add('selected');
+                // Agregar proveedor a la tabla
+                agregarProveedorTabla(providerId);
+            } else {
+                element.classList.remove('selected');
+                // Remover proveedor de la tabla
+                removerProveedorTabla(providerId);
+            }
+            
+            actualizarResumen();
+        }
+
+        // Agregar proveedor a tabla
+        function agregarProveedorTabla(providerId) {
+            const proveedores = {
+                '1': {
+                    codigo: 'P001',
+                    nombre: 'CEMENTOS BIO BIO S.A.',
+                    sucursal: 'Casa Matriz',
+                    encargado: 'Juan Pérez',
+                    email: 'jperez@cbb.cl',
+                    celular: '+56 9 8765 4321',
+                    lcDisponible: '$50,000,000'
+                },
+                '2': {
+                    codigo: 'P002',
+                    nombre: 'FERRETERÍA INDUSTRIAL LTDA.',
+                    sucursal: 'Sucursal Santiago',
+                    encargado: 'María González',
+                    email: 'mgonzalez@ferreteria.cl',
+                    celular: '+56 9 9876 5432',
+                    lcDisponible: '$35,000,000'
+                },
+                '3': {
+                    codigo: 'P003',
+                    nombre: 'MATERIALES DEL SUR S.A.',
+                    sucursal: 'Casa Matriz',
+                    encargado: 'Carlos Rodríguez',
+                    email: 'crodriguez@materialsur.cl',
+                    celular: '+56 9 8765 1234',
+                    lcDisponible: '$28,500,000'
+                }
+            };
+            
+            if (proveedores[providerId]) {
+                const tbody = document.getElementById('selectedProvidersBody');
+                const row = document.createElement('tr');
+                row.id = `provider-row-${providerId}`;
+                row.innerHTML = `
+                    <td>${proveedores[providerId].codigo}</td>
+                    <td>${proveedores[providerId].nombre}</td>
+                    <td>${proveedores[providerId].sucursal}</td>
+                    <td>${proveedores[providerId].encargado}</td>
+                    <td>${proveedores[providerId].email}</td>
+                    <td>${proveedores[providerId].celular}</td>
+                    <td class="${getLCClass(proveedores[providerId].lcDisponible)}">${proveedores[providerId].lcDisponible}</td>
+                    <td>
+                        <button type="button" class="btn btn-outline btn-sm btn-icon" onclick="removerProveedor('${providerId}')" title="Quitar">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </td>
+                `;
+                tbody.appendChild(row);
+                
+                selectedProviders[providerId] = proveedores[providerId];
+            }
+        }
+
+        // Obtener clase según LC disponible
+        function getLCClass(lc) {
+            const valor = parseInt(lc.replace(/[$,]/g, ''));
+            if (valor < 10000000) {
+                return 'credit-low';
+            }
+            return 'credit-available';
+        }
+
+        // Remover proveedor de tabla
+        function removerProveedorTabla(providerId) {
+            const row = document.getElementById(`provider-row-${providerId}`);
+            if (row) {
+                row.remove();
+            }
+            delete selectedProviders[providerId];
+        }
+
+        // Remover proveedor
+        function removerProveedor(providerId) {
+            document.getElementById(`prov${providerId}`).checked = false;
+            document.querySelector(`#prov${providerId}`).closest('.provider-item').classList.remove('selected');
+            removerProveedorTabla(providerId);
+            actualizarResumen();
+        }
+
+        // Agregar producto
+        function agregarProducto() {
+            document.getElementById('modalProducto').style.display = 'block';
+        }
+
+        // Seleccionar producto
+        function seleccionarProducto(codCliente, descCliente, codSSL, descSSL, um, cantidad, fechaReq) {
+            const tbody = document.getElementById('productTableBody');
+            const row = document.createElement('tr');
+            row.id = `product-row-${productIndex}`;
+            
+            row.innerHTML = `
+                <td style="text-align: center;">
+                    <input type="checkbox" checked onchange="actualizarResumen()">
+                </td>
+                <td>${codCliente}</td>
+                <td>${descCliente}</td>
+                <td>${codSSL}</td>
+                <td>${descSSL}</td>
+                <td>${um}</td>
+                <td>
+                    <input type="number" value="${cantidad}" min="1" class="form-control" onchange="actualizarResumen()">
+                </td>
+                <td>
+                    <input type="date" value="${fechaReq}" class="form-control">
+                </td>
+                <td>
+                    <input type="number" value="0" min="0" class="form-control" placeholder="Opcional" onchange="actualizarResumen()">
+                </td>
+                <td>
+                    <button type="button" class="btn btn-outline btn-sm btn-icon" onclick="eliminarProducto(${productIndex})" title="Eliminar">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </td>
+            `;
+            
+            tbody.appendChild(row);
+            productIndex++;
+            
+            cerrarModalProducto();
+            actualizarResumen();
+        }
+
+        // Cerrar modal producto
+        function cerrarModalProducto() {
+            document.getElementById('modalProducto').style.display = 'none';
+        }
+
+        // Eliminar producto
+        function eliminarProducto(index) {
+            if (confirm('¿Está seguro de eliminar este producto?')) {
+                document.getElementById(`product-row-${index}`).remove();
+                actualizarResumen();
+            }
+        }
+
+        // Actualizar resumen
+        function actualizarResumen() {
+            // Contar productos seleccionados
+            const productosSeleccionados = document.querySelectorAll('#productTableBody input[type="checkbox"]:checked').length;
+            document.getElementById('totalProductos').textContent = productosSeleccionados;
+            
+            // Contar proveedores
+            const proveedoresSeleccionados = Object.keys(selectedProviders).length;
+            document.getElementById('totalProveedores').textContent = proveedoresSeleccionados;
+            document.getElementById('numSolicitudes').textContent = proveedoresSeleccionados;
+            
+            // Calcular monto referencial
+            let montoTotal = 0;
+            document.querySelectorAll('#productTableBody tr').forEach(row => {
+                if (row.querySelector('input[type="checkbox"]').checked) {
+                    const cantidad = parseFloat(row.querySelector('input[type="number"]').value) || 0;
+                    const valorRef = parseFloat(row.querySelectorAll('input[type="number"]')[1].value) || 0;
+                    montoTotal += cantidad * valorRef;
+                }
+            });
+            
+            document.getElementById('montoReferencial').textContent = formatearMonto(montoTotal);
+        }
+
+        // Formatear monto
+        function formatearMonto(monto) {
+            return new Intl.NumberFormat('es-CL', {
+                style: 'currency',
+                currency: 'CLP',
+                minimumFractionDigits: 0,
+                maximumFractionDigits: 0
+            }).format(monto);
+        }
+
+        // Manejo de archivos
+        function dragOverHandler(ev) {
+            ev.preventDefault();
+            ev.currentTarget.classList.add('dragover');
+        }
+
+        function dragEnterHandler(ev) {
+            ev.preventDefault();
+            ev.currentTarget.classList.add('dragover');
+        }
+
+        function dragLeaveHandler(ev) {
+            ev.preventDefault();
+            ev.currentTarget.classList.remove('dragover');
+        }
+
+        function dropHandler(ev) {
+            ev.preventDefault();
+            ev.currentTarget.classList.remove('dragover');
+            
+            const files = ev.dataTransfer.files;
+            handleFiles(files);
+        }
+
+        function handleFiles(files) {
+            const fileList = document.getElementById('fileList');
+            
+            for (let i = 0; i < files.length; i++) {
+                const file = files[i];
+                const fileItem = document.createElement('div');
+                fileItem.className = 'file-item';
+                fileItem.id = `file-${Date.now()}-${i}`;
+                
+                const fileIcon = getFileIcon(file.name);
+                const fileSize = formatFileSize(file.size);
+                
+                fileItem.innerHTML = `
+                    <i class="${fileIcon}"></i>
+                    <span class="file-name">${file.name}</span>
+                    <span class="file-size">${fileSize}</span>
+                    <span class="file-remove" onclick="removeFile('${fileItem.id}')">
+                        <i class="fas fa-times"></i>
+                    </span>
+                `;
+                
+                fileList.appendChild(fileItem);
+            }
+        }
+
+        function getFileIcon(fileName) {
+            const extension = fileName.split('.').pop().toLowerCase();
+            switch (extension) {
+                case 'pdf':
+                    return 'fas fa-file-pdf';
+                case 'doc':
+                case 'docx':
+                    return 'fas fa-file-word';
+                case 'xls':
+                case 'xlsx':
+                    return 'fas fa-file-excel';
+                case 'jpg':
+                case 'jpeg':
+                case 'png':
+                    return 'fas fa-file-image';
+                default:
+                    return 'fas fa-file';
+            }
+        }
+
+        function formatFileSize(bytes) {
+            if (bytes === 0) return '0 Bytes';
+            const k = 1024;
+            const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+        }
+
+        function removeFile(fileId) {
+            document.getElementById(fileId).remove();
+        }
+
+        // Cancelar
+        function cancelar() {
+            if (confirm('¿Está seguro de cancelar? Se perderán todos los cambios no guardados.')) {
+                window.history.back();
+            }
+        }
+
+        // Guardar borrador
+        function guardarBorrador() {
+            alert('Borrador guardado exitosamente. Puede continuar editando más tarde.');
+        }
+
+        // Vista previa
+        function vistaPrevia() {
+            const proveedores = Object.keys(selectedProviders).length;
+            const productos = document.querySelectorAll('#productTableBody input[type="checkbox"]:checked').length;
+            
+            if (proveedores === 0) {
+                alert('Debe seleccionar al menos un proveedor');
+                return;
+            }
+            
+            if (productos === 0) {
+                alert('Debe seleccionar al menos un producto');
+                return;
+            }
+            
+            alert('Abriendo vista previa de las solicitudes de cotización...');
+            // Aquí se abriría una ventana con la vista previa
+        }
+
+        // Submit form
+        document.getElementById('cotizacionForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Validaciones
+            const proveedores = Object.keys(selectedProviders).length;
+            const productos = document.querySelectorAll('#productTableBody input[type="checkbox"]:checked').length;
+            
+            if (proveedores === 0) {
+                alert('Debe seleccionar al menos un proveedor');
+                return;
+            }
+            
+            if (productos === 0) {
+                alert('Debe seleccionar al menos un producto');
+                return;
+            }
+            
+            if (confirm(`¿Está seguro de enviar ${proveedores} solicitud(es) de cotización?\n\nEsta acción no se puede deshacer.`)) {
+                alert('Solicitudes de cotización enviadas exitosamente');
+                
+                // Redireccionar al detalle
+                const numeroSolicitud = document.getElementById('numeroSolicitud').textContent;
+                window.location.href = `detalle_solicitud_cotizacion.html?solicitud=${numeroSolicitud}`;
+            }
+        });
+
+        // Cerrar modales al hacer clic fuera
+        window.onclick = function(event) {
+            if (event.target.classList.contains('modal')) {
+                event.target.style.display = 'none';
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SSL v4.0 - Listado de Cuadros Comparativos</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- CSS del menú reutilizable -->
+    <link rel="stylesheet" href="../css/ssl-menu.css">
+    <link rel="stylesheet" href="../css/ssl-general.css">
+
+    <!-- CSS del menú especifico -->
+    <link rel="stylesheet" href="../css/ssl-cp-listado-solicitudes-cotizar.css">
+    <link rel="stylesheet" href="../css/ssl_ea_listado_cuadro_comparativo.css">
+    
+</head>
+<body>
+    <!-- El menú se carga dinámicamente aquí -->
+    <div id="menu-container"></div>
+
+    <main class="content">
+        <!-- Breadcrumb -->
+        <div class="breadcrumb">
+            <div class="breadcrumb-item"><a href="../inicio/ssl_menu.html">Inicio</a></div>
+            <div class="breadcrumb-item"><a href="#">Evaluación y Análisis</a></div>
+            <div class="breadcrumb-item active">Listado de Cuadros Comparativos</div>
+        </div>
+
+
+        <!-- Page Header -->
+        <div class="page-header">
+            <h1 class="page-title">
+                Cuadros Comparativos Pendientes de Revisión
+            </h1>
+        </div>    
+            
+        <!-- Filters -->
+        <div class="filter-container">
+            <h2 class="filter-title">
+                <i class="fas fa-filter"></i>
+                Filtros de Búsqueda
+            </h2>
+            
+            <div class="filter-grid">
+                <div class="form-group">
+                    <label>Cliente</label>
+                    <select class="filter-control">
+                        <option value="">Todos los clientes</option>
+                        <option value="1">CONSTRUCTORA ALMAGRO S.A.</option>
+                        <option value="2">INMOBILIARIA INGEVEC</option>
+                        <option value="3">CONSTRUCTORA MOLLER Y PÉREZ-COTAPOS</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label>Estado</label>
+                    <select class="filter-control">
+                        <option value="">Todos</option>
+                        <option value="pending">Pendiente</option>
+                        <option value="review">En Revisión</option>
+                        <option value="approved">Aprobado</option>
+                        <option value="incomplete">Incompleto</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label>Fecha</label>
+                    <input type="date" class="filter-control">                    
+                </div>
+                
+                <div class="form-group">
+                    <label>Buscar</label>
+                    <input type="text" class="filter-control" placeholder="Nro. Solicitud o Referencia">
+                </div>
+                
+                <div class="form-group">
+                </div>
+            </div>
+            
+            <div class="filter-actions">
+                <button type="button" class="btn btn-outline" onclick="limpiarFiltros()">
+                    <i class="fas fa-times"></i> Limpiar
+                </button>
+                <button type="button" class="btn btn-primary" onclick="buscarSolicitudes()">
+                    <i class="fas fa-search"></i> Buscar
+                </button>
+                <button type="button" class="btn btn-success" onclick="exportarDatos('excel')">
+                    <i class="fas fa-file-excel"></i> Exportar
+                </button>
+            </div>
+        </div>
+        <div class="main-container">
+            <div class="results-header">
+                <div>
+                    <h2 class="results-title">
+                        <i class="fas fa-list"></i>
+                        Solicitudes Recibidas
+                    </h2>
+                    <div class="results-count">Mostrando 8 de 24 Solicitudes</div>
+                </div>                    
+            </div>
+
+            <!-- Tabla de cuadros comparativos -->
+            <table class="comparatives-list">
+                <thead>
+                    <tr>
+                        <th width="5%"></th>
+                        <th width="12%">Solicitud Pedido</th>
+                        <th width="25%">Cliente / Obra</th>
+                        <th width="15%">Solicitudes Cotización</th>
+                        <th width="15%">Cotizaciones</th>
+                        <th width="10%">Estado</th>
+                        <th width="10%">Monto Total</th>
+                        <th width="8%">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Fila 1 -->
+                    <tr class="expandable-row" onclick="toggleRow(this)">
+                        <td><i class="fas fa-chevron-right expand-icon"></i></td>
+                        <td>
+                            <strong>SOLPED-2025-0847</strong>
+                            <br>
+                            <span class="date-info">25/05/2025</span>
+                        </td>
+                        <td>
+                            <span class="client-info">CONSTRUCTORA ALMAGRO S.A.</span>
+                            <br>
+                            <span>EDIFICIO PACIFIC BLUE</span>
+                        </td>
+                        <td>
+                            <strong>3</strong> Solicitudes
+                            <span class="provider-count">
+                                <i class="fas fa-building"></i> 8 proveedores
+                            </span>
+                        </td>
+                        <td>
+                            <div class="quote-progress">
+                                <span>7/8</span>
+                                <div class="progress-bar">
+                                    <div class="progress-fill" style="width: 87.5%"></div>
+                                </div>
+                                <span>87.5%</span>
+                            </div>
+                        </td>
+                        <td>
+                            <span class="status-badge status-pending">Pendiente</span>
+                        </td>
+                        <td class="amount-info">$15,750,000</td>
+                        <td>
+                            <div class="action-buttons">
+                                <a href="ssl_ea_detalle_cuadro_comparativo.html" class="btn btn-primary btn-sm" title="Revisar">
+                                    <i class="fas fa-eye"></i>
+                                </a>
+                                <button class="btn btn-outline btn-sm" title="Historial">
+                                    <i class="fas fa-history"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr class="sub-table">
+                        <td colspan="8">
+                            <div class="sub-table-content">
+                                <div class="sub-table-row">
+                                    <strong>Solicitudes de Cotización:</strong>
+                                </div>
+                                <div class="sub-table-row">
+                                    <span>SOL-COT-2025-1234 - Materiales Eléctricos</span>
+                                    <span>3 proveedores | 3/3 cotizaciones</span>
+                                    <a href="ssl_ea_detalle_cuadro_comparativo.html" class="btn btn-info btn-sm">Ver Cuadro</a>
+                                </div>
+                                <div class="sub-table-row">
+                                    <span>SOL-COT-2025-1235 - Materiales Hidráulicos</span>
+                                    <span>2 proveedores | 2/3 cotizaciones</span>
+                                    <a href="ssl_ea_detalle_cuadro_comparativo.html" class="btn btn-info btn-sm">Ver Cuadro</a>
+                                </div>
+                                <div class="sub-table-row">
+                                    <span>SOL-COT-2025-1236 - Ferretería General</span>
+                                    <span>2 proveedores | 2/2 cotizaciones</span>
+                                    <a href="ssl_ea_detalle_cuadro_comparativo.html" class="btn btn-info btn-sm">Ver Cuadro</a>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+
+                    <!-- Fila 2 -->
+                    <tr class="expandable-row" onclick="toggleRow(this)">
+                        <td><i class="fas fa-chevron-right expand-icon"></i></td>
+                        <td>
+                            <strong>SOLPED-2025-0848</strong>
+                            <br>
+                            <span class="date-info">24/05/2025</span>
+                        </td>
+                        <td>
+                            <span class="client-info">INMOBILIARIA INGEVEC</span>
+                            <br>
+                            <span>CONDOMINIO VISTA MAR</span>
+                        </td>
+                        <td>
+                            <strong>2</strong> Solicitudes
+                            <span class="provider-count">
+                                <i class="fas fa-building"></i> 5 proveedores
+                            </span>
+                        </td>
+                        <td>
+                            <div class="quote-progress">
+                                <span>5/5</span>
+                                <div class="progress-bar">
+                                    <div class="progress-fill" style="width: 100%"></div>
+                                </div>
+                                <span>100%</span>
+                            </div>
+                        </td>
+                        <td>
+                            <span class="status-badge status-review">En Revisión</span>
+                        </td>
+                        <td class="amount-info">$8,320,000</td>
+                        <td>
+                            <div class="action-buttons">
+                                <a href="ssl_ea_detalle_cuadro_comparativo.html" class="btn btn-primary btn-sm" title="Revisar">
+                                    <i class="fas fa-eye"></i>
+                                </a>
+                                <button class="btn btn-outline btn-sm" title="Historial">
+                                    <i class="fas fa-history"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr class="sub-table">
+                        <td colspan="8">
+                            <div class="sub-table-content">
+                                <div class="sub-table-row">
+                                    <strong>Solicitudes de Cotización:</strong>
+                                </div>
+                                <div class="sub-table-row">
+                                    <span>SOL-COT-2025-1237 - Cerámicos y Porcelanatos</span>
+                                    <span>3 proveedores | 3/3 cotizaciones</span>
+                                    <a href="ssl_ea_detalle_cuadro_comparativo.html" class="btn btn-info btn-sm">Ver Cuadro</a>
+                                </div>
+                                <div class="sub-table-row">
+                                    <span>SOL-COT-2025-1238 - Pinturas y Revestimientos</span>
+                                    <span>2 proveedores | 2/2 cotizaciones</span>
+                                    <a href="ssl_ea_detalle_cuadro_comparativo.html" class="btn btn-info btn-sm">Ver Cuadro</a>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+
+                    <!-- Fila 3 -->
+                    <tr class="expandable-row" onclick="toggleRow(this)">
+                        <td><i class="fas fa-chevron-right expand-icon"></i></td>
+                        <td>
+                            <strong>SOLPED-2025-0849</strong>
+                            <br>
+                            <span class="date-info">24/05/2025</span>
+                        </td>
+                        <td>
+                            <span class="client-info">CONSTRUCTORA MOLLER Y PÉREZ-COTAPOS</span>
+                            <br>
+                            <span>EDIFICIO CENTRAL PARK</span>
+                        </td>
+                        <td>
+                            <strong>1</strong> Solicitud
+                            <span class="provider-count">
+                                <i class="fas fa-building"></i> 4 proveedores
+                            </span>
+                        </td>
+                        <td>
+                            <div class="quote-progress">
+                                <span>3/4</span>
+                                <div class="progress-bar">
+                                    <div class="progress-fill" style="width: 75%"></div>
+                                </div>
+                                <span>75%</span>
+                            </div>
+                        </td>
+                        <td>
+                            <span class="status-badge status-incomplete">Incompleto</span>
+                        </td>
+                        <td class="amount-info">$12,450,000</td>
+                        <td>
+                            <div class="action-buttons">
+                                <a href="ssl_ea_detalle_cuadro_comparativo.html" class="btn btn-primary btn-sm" title="Revisar">
+                                    <i class="fas fa-eye"></i>
+                                </a>
+                                <button class="btn btn-outline btn-sm" title="Historial">
+                                    <i class="fas fa-history"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr class="sub-table">
+                        <td colspan="8">
+                            <div class="sub-table-content">
+                                <div class="sub-table-row">
+                                    <strong>Solicitudes de Cotización:</strong>
+                                </div>
+                                <div class="sub-table-row">
+                                    <span>SOL-COT-2025-1239 - Estructuras Metálicas</span>
+                                    <span>4 proveedores | 3/4 cotizaciones</span>
+                                    <a href="ssl_ea_detalle_cuadro_comparativo.html" class="btn btn-info btn-sm">Ver Cuadro</a>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+
+                    <!-- Fila 4 -->
+                    <tr class="expandable-row" onclick="toggleRow(this)">
+                        <td><i class="fas fa-chevron-right expand-icon"></i></td>
+                        <td>
+                            <strong>SOLPED-2025-0850</strong>
+                            <br>
+                            <span class="date-info">23/05/2025</span>
+                        </td>
+                        <td>
+                            <span class="client-info">CONSTRUCTORA ALMAGRO S.A.</span>
+                            <br>
+                            <span>TORRE ALMAGRO</span>
+                        </td>
+                        <td>
+                            <strong>4</strong> Solicitudes
+                            <span class="provider-count">
+                                <i class="fas fa-building"></i> 12 proveedores
+                            </span>
+                        </td>
+                        <td>
+                            <div class="quote-progress">
+                                <span>12/12</span>
+                                <div class="progress-bar">
+                                    <div class="progress-fill" style="width: 100%"></div>
+                                </div>
+                                <span>100%</span>
+                            </div>
+                        </td>
+                        <td>
+                            <span class="status-badge status-approved">Aprobado</span>
+                        </td>
+                        <td class="amount-info">$45,780,000</td>
+                        <td>
+                            <div class="action-buttons">
+                                <a href="ssl_ea_detalle_cuadro_comparativo.html" class="btn btn-success btn-sm" title="Ver">
+                                    <i class="fas fa-check"></i>
+                                </a>
+                                <button class="btn btn-outline btn-sm" title="Historial">
+                                    <i class="fas fa-history"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr class="sub-table">
+                        <td colspan="8">
+                            <div class="sub-table-content">
+                                <div class="sub-table-row">
+                                    <strong>Solicitudes de Cotización:</strong>
+                                </div>
+                                <div class="sub-table-row">
+                                    <span>SOL-COT-2025-1240 - Hormigón y Áridos</span>
+                                    <span>3 proveedores | 3/3 cotizaciones</span>
+                                    <a href="#" class="btn btn-success btn-sm">Aprobado</a>
+                                </div>
+                                <div class="sub-table-row">
+                                    <span>SOL-COT-2025-1241 - Acero Estructural</span>
+                                    <span>3 proveedores | 3/3 cotizaciones</span>
+                                    <a href="#" class="btn btn-success btn-sm">Aprobado</a>
+                                </div>
+                                <div class="sub-table-row">
+                                    <span>SOL-COT-2025-1242 - Maderas y Molduras</span>
+                                    <span>3 proveedores | 3/3 cotizaciones</span>
+                                    <a href="#" class="btn btn-success btn-sm">Aprobado</a>
+                                </div>
+                                <div class="sub-table-row">
+                                    <span>SOL-COT-2025-1243 - Vidrios y Cristales</span>
+                                    <span>3 proveedores | 3/3 cotizaciones</span>
+                                    <a href="#" class="btn btn-success btn-sm">Aprobado</a>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <!-- Paginación -->
+            <div class="pagination">
+                <button class="pagination-btn" disabled>
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+                <button class="pagination-btn active">1</button>
+                <button class="pagination-btn">2</button>
+                <button class="pagination-btn">3</button>
+                <span>...</span>
+                <button class="pagination-btn">8</button>
+                <button class="pagination-btn">
+                    <i class="fas fa-chevron-right"></i>
+                </button>
+            </div>
+        </div>
+    </main>
+
+    <!-- Scripts -->
+    <script src="../js/menu-component.js"></script>
+    <script src="../js/ssl_ea_listado_cuadro_comparativo.js"></script>
+    
+    <script>
+        // Inicializar menú con la sección activa
+        SSLMenu.load('evaluacion-analisis', 'cuadros-comparativos');
+    </script>
+</body>
+</html>

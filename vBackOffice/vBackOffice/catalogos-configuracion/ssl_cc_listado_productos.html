@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SSL v4.0 - Catálogo Maestro</title>
+    
+    <!-- External CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- CSS del menú reutilizable -->
+    <link rel="stylesheet" href="../css/ssl-menu.css">
+    <link rel="stylesheet" href="../css/ssl-general.css">
+
+    <!-- CSS del menú especifico -->        
+    <link rel="stylesheet" href="../css/ssl-cc-listado-productos.css">
+
+</head>
+<body>
+    <!-- Menu Container -->
+    <div id="menu-container"></div>
+    
+    <!-- Main Content -->
+    <main class="content">
+        <div class="breadcrumb">
+            <div class="breadcrumb-item"><a href="../inicio/ssl_menu.html">Inicio</a></div>
+            <div class="breadcrumb-item"><a href="#">Catálogos y Configuración</a></div>
+            <div class="breadcrumb-item active">Catálogo Maestro</div>
+        </div>
+
+        <!-- Page Header -->
+        <div class="page-header">
+            <h1 class="page-title">
+                Catálogo Maestro de Productos
+            </h1>
+            <div class="header-actions">       
+                <button class="btn btn-success" onclick="ProductCatalog.abrirModalNuevoProducto()">
+                    <i class="fas fa-plus"></i> Nuevo Producto
+                </button>                
+            </div>                        
+        </div>      
+
+        <!-- Búsqueda y Filtros -->
+        <div class="search-container">
+            <h2 class="search-title">
+                <i class="fas fa-search"></i>
+                Búsqueda y Filtros
+            </h2>
+            
+            <form class="search-form">
+                <div class="form-group">
+                    <label for="searchCodigo">Código SSL</label>
+                    <input type="text" id="searchCodigo" class="form-control" placeholder="Ej: EL-1245">
+                </div>
+                
+                <div class="form-group">
+                    <label for="searchNombre">Nombre Producto</label>
+                    <input type="text" id="searchNombre" class="form-control" placeholder="Buscar por nombre">
+                </div>
+                
+                <div class="form-group">
+                    <label for="searchClasificacion">Clasificación</label>
+                    <select id="searchClasificacion" class="form-control">
+                        <option value="">Todas las clasificaciones</option>
+                        <option value="electrico">Eléctrico</option>
+                        <option value="madera">Madera</option>
+                        <option value="muebles">Muebles</option>
+                        <option value="planchas">Planchas</option>
+                        <option value="pinturas">Pinturas</option>
+                        <option value="sanitarios">Sanitarios</option>
+                        <option value="ferreteria">Ferretería</option>
+                        <option value="construccion">Construcción</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="searchEstado">Estado</label>
+                    <select id="searchEstado" class="form-control">
+                        <option value="">Todos</option>
+                        <option value="vigente">Vigente</option>
+                        <option value="no-vigente">No Vigente</option>
+                    </select>
+                </div>
+            </form>
+            
+            <div class="search-actions">
+                <button type="button" class="btn btn-outline" onclick="ProductCatalog.limpiarBusqueda()">
+                    <i class="fas fa-times"></i> Limpiar
+                </button>
+                <button type="button" class="btn btn-primary" onclick="ProductCatalog.buscarProductos()">
+                    <i class="fas fa-search"></i> Buscar
+                </button>
+            </div>
+        </div>
+
+        <!-- Resultados -->
+        <div class="results-container">
+            <div class="results-header">
+                <div>
+                    <h2 class="results-title">
+                        <i class="fas fa-list"></i>
+                        Listado de Productos
+                    </h2>
+                    <div class="results-count">Mostrando 8 de 1,245 productos</div>
+                </div>
+            </div>
+
+            <table class="products-table">
+                <thead>
+                    <tr>
+                        <th width="10%">Código SSL</th>
+                        <th width="25%">Nombre Producto</th>
+                        <th width="8%">U.M.</th>
+                        <th width="12%">Clasificación</th>
+                        <th width="10%">Precio Mín.</th>
+                        <th width="10%">Precio Máx.</th>
+                        <th width="10%">Ventas Año</th>
+                        <th width="8%">Estado</th>
+                        <th width="7%">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody id="productTableBody">
+                    <!-- Tabla poblada dinámicamente -->
+                </tbody>
+            </table>
+
+            <!-- Paginación -->
+            <div class="pagination-container">
+                <div class="pagination-info">
+                    Página <span id="currentPage">1</span> de <span id="totalPages">156</span>
+                </div>
+                <div class="pagination-controls">
+                    <button class="btn btn-outline btn-sm" onclick="ProductCatalog.changePage('first')" title="Primera página">
+                        <i class="fas fa-angle-double-left"></i>
+                    </button>
+                    <button class="btn btn-outline btn-sm" onclick="ProductCatalog.changePage('prev')" title="Página anterior">
+                        <i class="fas fa-angle-left"></i>
+                    </button>
+                    <button class="btn btn-outline btn-sm" onclick="ProductCatalog.changePage('next')" title="Página siguiente">
+                        <i class="fas fa-angle-right"></i>
+                    </button>
+                    <button class="btn btn-outline btn-sm" onclick="ProductCatalog.changePage('last')" title="Última página">
+                        <i class="fas fa-angle-double-right"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Modal Detalle/Edición Producto -->
+    <div id="modalProducto" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">
+                    <i class="fas fa-box"></i>
+                    <span id="modalTitulo">Detalle del Producto</span>
+                </h2>
+                <span class="close" onclick="ProductCatalog.cerrarModal()">&times;</span>
+            </div>
+            
+            <div class="modal-body">
+                <!-- Tabs -->
+                <div class="tabs-container">
+                    <div class="tabs-nav">
+                        <button class="tab-button active" data-tab="informacion">
+                            <i class="fas fa-info-circle"></i> Información General
+                        </button>
+                        <button class="tab-button" data-tab="correlaciones">
+                            <i class="fas fa-link"></i> Correlaciones
+                        </button>
+                        <button class="tab-button" data-tab="ventas">
+                            <i class="fas fa-chart-line"></i> Historial de Ventas
+                        </button>
+                    </div>
+
+                    <!-- Tab: Información General -->
+                    <div class="tab-content active" id="informacion">
+                        <form id="formProducto">
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label for="codigoSSL">Código Producto SSL <span class="required">*</span></label>
+                                    <input type="text" id="codigoSSL" class="form-control" required>
+                                </div>
+                                
+                                <div class="form-group" style="grid-column: span 2;">
+                                    <label for="nombreSSL">Nombre Producto SSL <span class="required">*</span></label>
+                                    <input type="text" id="nombreSSL" class="form-control" required>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="unidadMedida">Unidad de Medida <span class="required">*</span></label>
+                                    <select id="unidadMedida" class="form-control" required>
+                                        <option value="">Seleccione U.M.</option>
+                                        <option value="UN">UN - Unidad</option>
+                                        <option value="CJ">CJ - Caja</option>
+                                        <option value="PQ">PQ - Paquete</option>
+                                        <option value="KG">KG - Kilogramo</option>
+                                        <option value="MT">MT - Metro</option>
+                                        <option value="M2">M2 - Metro Cuadrado</option>
+                                        <option value="M3">M3 - Metro Cúbico</option>
+                                        <option value="LT">LT - Litro</option>
+                                        <option value="GL">GL - Galón</option>
+                                        <option value="PL">PL - Plancha</option>
+                                        <option value="SC">SC - Saco</option>
+                                    </select>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="clasificacion">Clasificación <span class="required">*</span></label>
+                                    <select id="clasificacion" class="form-control" required>
+                                        <option value="">Seleccione clasificación</option>
+                                        <option value="electrico">Eléctrico</option>
+                                        <option value="madera">Madera</option>
+                                        <option value="muebles">Muebles</option>
+                                        <option value="planchas">Planchas</option>
+                                        <option value="pinturas">Pinturas</option>
+                                        <option value="sanitarios">Sanitarios</option>
+                                        <option value="ferreteria">Ferretería</option>
+                                        <option value="construccion">Construcción</option>
+                                    </select>
+                                </div>
+                                
+                                <div class="form-group full-width">
+                                    <label for="descripcion">Descripción Detallada</label>
+                                    <textarea id="descripcion" class="form-control" rows="4" 
+                                        placeholder="Características técnicas, especificaciones, materiales, dimensiones, etc."></textarea>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="precioMin">Precio Más Bajo</label>
+                                    <input type="number" id="precioMin" class="form-control" placeholder="$0" readonly>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="precioMax">Precio Más Alto</label>
+                                    <input type="number" id="precioMax" class="form-control" placeholder="$0" readonly>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="cantidadVendida">Cantidad Vendida (Último Año)</label>
+                                    <input type="number" id="cantidadVendida" class="form-control" placeholder="0" readonly>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="estado">Estado <span class="required">*</span></label>
+                                    <select id="estado" class="form-control" required>
+                                        <option value="vigente">Vigente</option>
+                                        <option value="no-vigente">No Vigente</option>
+                                    </select>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="fechaIngreso">Fecha de Ingreso</label>
+                                    <input type="date" id="fechaIngreso" class="form-control" readonly>
+                                </div>
+                            </div>
+
+                            <!-- Estadísticas -->
+                            <div class="stats-cards">
+                                <div class="stat-card">
+                                    <div class="stat-value" id="statVentasTotal">$4.58M</div>
+                                    <div class="stat-label">Ventas Totales (Año)</div>
+                                </div>
+                                <div class="stat-card">
+                                    <div class="stat-value" id="statProveedores">5</div>
+                                    <div class="stat-label">Proveedores Activos</div>
+                                </div>
+                                <div class="stat-card">
+                                    <div class="stat-value" id="statClientes">4</div>
+                                    <div class="stat-label">Clientes Activos</div>
+                                </div>
+                                <div class="stat-card">
+                                    <div class="stat-value" id="statMargen">13.8%</div>
+                                    <div class="stat-label">Margen Promedio</div>
+                                </div>
+                            </div>
+
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-outline" onclick="ProductCatalog.cerrarModal()">
+                                    <i class="fas fa-times"></i> Cancelar
+                                </button>
+                                <button type="submit" class="btn btn-success" id="btnGuardar">
+                                    <i class="fas fa-save"></i> Guardar Cambios
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <!-- Tab: Correlaciones -->
+                    <div class="tab-content" id="correlaciones">
+                        <div class="tab-header">
+                            <h3>Correlaciones con Clientes y Proveedores</h3>
+                            <button class="btn btn-primary btn-sm" onclick="ProductCatalog.agregarCorrelacion()">
+                                <i class="fas fa-plus"></i> Agregar Correlación
+                            </button>
+                        </div>
+
+                        <div class="table-responsive">
+                            <table class="products-table">
+                                <thead>
+                                    <tr>
+                                        <th>Código C/P</th>
+                                        <th>Descripción C/P</th>
+                                        <th>U.M. C/P</th>
+                                        <th>Factor Conv.</th>
+                                        <th>Nombre/RUT</th>
+                                        <th>Tipo</th>
+                                        <th>Último Precio</th>
+                                        <th>Cant. Solic.</th>
+                                        <th>Última Fecha</th>
+                                        <th>Estado</th>
+                                        <th>Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tablaCorrelaciones">
+                                    <!-- Tabla poblada dinámicamente -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Tab: Historial de Ventas -->
+                    <div class="tab-content" id="ventas">
+                        <div class="tab-header">
+                            <h3>Historial de Ventas</h3>
+                            <button class="btn btn-info btn-sm" onclick="ProductCatalog.exportarVentas()">
+                                <i class="fas fa-file-excel"></i> Exportar
+                            </button>
+                        </div>
+
+                        <div class="table-responsive">
+                            <table class="products-table">
+                                <thead>
+                                    <tr>
+                                        <th>Fecha Venta</th>
+                                        <th>OC Cliente</th>
+                                        <th>Cliente</th>
+                                        <th>OC Proveedor</th>
+                                        <th>Proveedor</th>
+                                        <th>Cantidad</th>
+                                        <th>Valor Compra</th>
+                                        <th>Valor Venta</th>
+                                        <th>Margen</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tablaVentas">
+                                    <!-- Tabla poblada dinámicamente -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Menu Component Script -->
+    <script src="../js/menu-component.js"></script>
+    
+    <!-- Page Specific Script -->
+    <script src="--/js/ssl-cc-listado-productos.js"></script>
+    
+    <!-- Initialize Menu -->
+    <script>
+        // Cargar el menú con la sección activa correcta
+        SSLMenu.load('catalogos-configuracion', 'catalogo-maestro');
+    </script>
+</body>
+</html>

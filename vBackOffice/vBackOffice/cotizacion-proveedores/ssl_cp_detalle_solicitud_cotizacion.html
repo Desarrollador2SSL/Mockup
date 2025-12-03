@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SSL - Solicitudes de Cotización a Proveedores</title>
+    
+    <!-- External CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    
+    <!-- CSS del menú reutilizable -->
+    <link rel="stylesheet" href="../css/ssl-menu.css">
+    <link rel="stylesheet" href="../css/ssl-general.css">
+
+    <!-- CSS del menú especifico -->        
+    <link rel="stylesheet" href="../css/ssl-cp-detalle-solicitud-cotizacion.css">
+
+</head>
+<body>
+    <!-- Menu Container -->
+    <div id="menu-container"></div>
+    
+    <!-- Main content wrapper -->
+    <div class="content-wrapper">
+        <main class="content">
+            <!-- Breadcrumb -->
+            <div class="breadcrumb">
+                <div class="breadcrumb-item"><a href="../inicio/ssl_menu.html">Inicio</a></div>
+                <div class="breadcrumb-item"><a href="#">Cotización a Proveedores</a></div>
+                <div class="breadcrumb-item"><a href="ssl_listado_solicitudes_cotizar.html">Generación y Distribución</a></div>
+                <div class="breadcrumb-item active">Envío a Proveedores</div>
+            </div>
+
+            <!-- Header de la solicitud -->
+            <div class="card p-6 mb-6">
+                <div class="flex flex-col lg:flex-row lg:justify-between lg:items-start gap-4">
+                    <div class="flex-1">
+                        <h1 class="text-2xl font-bold text-gray-900 mb-2">Envío de Solicitudes de Cotización</h1>
+                        <p class="text-gray-600 text-lg">SOLPED-2025-0125 - Constructora Alfa S.A.</p>
+                    </div>
+                    <div class="flex items-center">
+                        <span class="status-badge status-warning">
+                            <i class="fas fa-clock mr-1"></i>
+                            Configurando Envío
+                        </span>
+                    </div>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mt-6">
+                    <div>
+                        <div class="text-sm text-gray-500 mb-1">Obra/Proyecto</div>
+                        <div class="font-semibold text-gray-900">Edificio Corporativo Las Condes</div>
+                    </div>
+                    <div>
+                        <div class="text-sm text-gray-500 mb-1">Fecha Requerida</div>
+                        <div class="font-semibold text-gray-900">30/05/2025</div>
+                    </div>
+                    <div>
+                        <div class="text-sm text-gray-500 mb-1">Responsable</div>
+                        <div class="font-semibold text-gray-900">María González</div>
+                    </div>
+                    <div>
+                        <div class="text-sm text-gray-500 mb-1">Total Productos</div>
+                        <div class="font-semibold text-gray-900">4 productos</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Estadísticas del envío -->
+            <div class="stats-grid mb-6">
+                <div class="stat-card blue">
+                    <div class="text-2xl font-bold text-blue-600" id="products-count">4</div>
+                    <div class="text-sm text-gray-600">Productos a Cotizar</div>
+                </div>
+                <div class="stat-card green">
+                    <div class="text-2xl font-bold text-green-600" id="providers-count">7</div>
+                    <div class="text-sm text-gray-600">Proveedores Seleccionados</div>
+                </div>
+                <div class="stat-card orange">
+                    <div class="text-2xl font-bold text-orange-600" id="quotes-count">8</div>
+                    <div class="text-sm text-gray-600">Cotizaciones a Generar</div>
+                </div>
+                <div class="stat-card purple">
+                    <div class="text-2xl font-bold text-purple-600">23/05/2025</div>
+                    <div class="text-sm text-gray-600">Fecha Límite Respuesta</div>
+                </div>
+            </div>
+
+            <!-- Configuración Global -->
+            <div class="card p-6 mb-6">
+                <h2 class="text-xl font-semibold mb-4 flex items-center">
+                    <i class="fas fa-cog text-blue-600 mr-3"></i>
+                    Configuración Global de Solicitudes
+                </h2>
+                
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Plazo de Respuesta</label>
+                        <select id="global-response-time" class="form-control">
+                            <option>2 días hábiles</option>
+                            <option selected>3 días hábiles</option>
+                            <option>5 días hábiles</option>
+                            <option>7 días hábiles</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Validez de Cotización</label>
+                        <select id="global-validity" class="form-control">
+                            <option>15 días</option>
+                            <option selected>30 días</option>
+                            <option>45 días</option>
+                            <option>60 días</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Condiciones de Entrega</label>
+                        <select id="global-delivery" class="form-control">
+                            <option selected>Puesto en Obra</option>
+                            <option>Retiro en Tienda</option>
+                            <option>Entrega en Bodega SSL</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="flex flex-wrap gap-3">
+                    <button onclick="QuotationManager.applyGlobalSettings()" class="btn btn-primary">
+                        <i class="fas fa-sync"></i>
+                        Aplicar a Todas las Cotizaciones
+                    </button>
+                    <button onclick="QuotationManager.selectAllProviders()" class="btn btn-outline">
+                        <i class="fas fa-check-double"></i>
+                        Seleccionar Todos los Proveedores
+                    </button>
+                    <button onclick="QuotationManager.clearAllProviders()" class="btn btn-outline">
+                        <i class="fas fa-times"></i>
+                        Deseleccionar Todos
+                    </button>
+                </div>
+            </div>
+
+            <!-- Productos y Proveedores -->
+            <div class="card mb-6">
+                <div class="bg-gradient-to-r from-blue-50 to-indigo-50 px-6 py-4 border-b">
+                    <h2 class="text-xl font-semibold flex items-center">
+                        <i class="fas fa-list text-blue-600 mr-3"></i>
+                        Productos y Selección de Proveedores
+                    </h2>
+                    <p class="text-sm text-gray-600 mt-2">Seleccione los proveedores para cada producto y configure las condiciones específicas</p>
+                </div>
+
+                <div class="p-6 space-y-6">
+                    <!-- Producto 1: Cemento Portland -->
+                    <div class="product-card card p-6">
+                        <div class="flex justify-between items-start mb-4">
+                            <div class="flex-1">
+                                <h3 class="text-lg font-semibold text-gray-900 mb-2">Cemento Portland Tipo I</h3>
+                                <div class="flex flex-wrap gap-4 text-sm text-gray-600 mb-2">
+                                    <span><strong>Código:</strong> MC-10254</span>
+                                    <span><strong>Cantidad:</strong> 500 sacos</span>
+                                    <span><strong>Unidad:</strong> Saco 42.5kg</span>
+                                </div>
+                                <p class="text-sm text-gray-700 bg-gray-50 p-3 rounded-lg">
+                                    <strong>Especificación:</strong> Cemento gris, resistencia 28 días min. 28 MPa. Cumplimiento NCh148.
+                                </p>
+                            </div>
+                            <div class="flex items-center space-x-3">
+                                <button class="text-blue-600 hover:text-blue-800 p-2" title="Ver especificaciones completas">
+                                    <i class="fas fa-file-alt"></i>
+                                </button>
+                                <button onclick="QuotationManager.toggleProduct('product-1')" class="text-gray-600 hover:text-gray-800 p-2">
+                                    <i class="fas fa-chevron-down chevron" id="product-1-chevron"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div id="product-1" class="collapsible-content expanded">
+                            <!-- Configuración específica -->
+                            <div class="bg-blue-50 p-4 rounded-lg mb-6">
+                                <h4 class="font-semibold mb-4 text-gray-800">Configuración Específica</h4>
+                                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-2">Plazo de Respuesta</label>
+                                        <select class="form-control">
+                                            <option>2 días hábiles</option>
+                                            <option selected>3 días hábiles</option>
+                                            <option>5 días hábiles</option>
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-2">Incluir Flete</label>
+                                        <select class="form-control">
+                                            <option selected>Sí, incluir flete</option>
+                                            <option>No, sin flete</option>
+                                            <option>Cotizar por separado</option>
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-2">Prioridad</label>
+                                        <select class="form-control">
+                                            <option>Normal</option>
+                                            <option selected>Alta</option>
+                                            <option>Urgente</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Proveedores -->
+                            <div class="mb-4">
+                                <div class="flex justify-between items-center mb-4">
+                                    <h4 class="font-semibold text-gray-800">Proveedores Disponibles</h4>
+                                    <span class="text-sm text-gray-600">
+                                        <span id="selected-1" class="font-semibold text-blue-600">2</span> de 3 seleccionados
+                                    </span>
+                                </div>
+                                
+                                <div class="grid grid-cols-1 gap-4">
+                                    <!-- Proveedor 1 -->
+                                    <div class="provider-card selected rounded-lg p-4">
+                                        <div class="flex items-start space-x-4">
+                                            <input type="checkbox" checked class="mt-1 h-4 w-4 text-blue-600 provider-checkbox" 
+                                                   data-product="1" data-provider="cementos-norte" onchange="QuotationManager.updateProviderCount(1)">
+                                            <div class="flex-1">
+                                                <div class="flex justify-between items-start mb-3">
+                                                    <div>
+                                                        <h5 class="font-semibold text-gray-900 mb-1">Cementos del Norte</h5>
+                                                        <p class="text-sm text-gray-600">Código: CN-CEM-042</p>
+                                                        <p class="text-xs text-gray-500">ventas@cementosnorte.cl</p>
+                                                    </div>
+                                                    <div class="text-right">
+                                                        <div class="rating-stars mb-1">
+                                                            <i class="fas fa-star text-yellow-400 text-sm"></i>
+                                                            <i class="fas fa-star text-yellow-400 text-sm"></i>
+                                                            <i class="fas fa-star text-yellow-400 text-sm"></i>
+                                                            <i class="fas fa-star text-yellow-400 text-sm"></i>
+                                                            <i class="fas fa-star-half-alt text-yellow-400 text-sm"></i>
+                                                            <span class="ml-1 text-sm text-gray-600 font-medium">4.5</span>
+                                                        </div>
+                                                        <p class="text-sm text-gray-700 font-medium">Última: $8.500</p>
+                                                    </div>
+                                                </div>
+                                                <div class="grid grid-cols-3 gap-4 text-sm">
+                                                    <div class="bg-white p-2 rounded border">
+                                                        <div class="text-gray-500 text-xs">Entrega</div>
+                                                        <div class="font-medium text-green-600">2-3 días</div>
+                                                    </div>
+                                                    <div class="bg-white p-2 rounded border">
+                                                        <div class="text-gray-500 text-xs">Crédito</div>
+                                                        <div class="font-medium text-green-600">$50M</div>
+                                                    </div>
+                                                    <div class="bg-white p-2 rounded border">
+                                                        <div class="text-gray-500 text-xs">Última Op.</div>
+                                                        <div class="font-medium">15/05/25</div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Más proveedores aquí... -->
+                                </div>
+                            </div>
+
+                            <!-- Comentarios específicos -->
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Comentarios Específicos</label>
+                                <textarea rows="3" class="form-control" 
+                                          placeholder="Información adicional para proveedores sobre este producto...">Mismo proveedor que arena gruesa preferentemente. Coordinar entregas conjuntas.</textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Más productos aquí... -->
+                </div>
+            </div>
+
+            <!-- Resumen por Proveedor -->
+            <div class="card mb-6">
+                <div class="bg-gradient-to-r from-green-50 to-emerald-50 px-6 py-4 border-b">
+                    <h2 class="text-xl font-semibold flex items-center">
+                        <i class="fas fa-table text-green-600 mr-3"></i>
+                        Resumen por Proveedor
+                    </h2>
+                    <p class="text-sm text-gray-600 mt-2">Vista consolidada de productos asignados a cada proveedor</p>
+                </div>
+
+                <div class="overflow-x-auto">
+                    <table class="min-w-full divide-y divide-gray-200">
+                        <thead class="bg-gray-50">
+                            <tr>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Proveedor
+                                </th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Productos Asignados
+                                </th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Canal de Envío
+                                </th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Estado
+                                </th>
+                                <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Acciones
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody class="bg-white divide-y divide-gray-200" id="provider-summary-table">
+                            <!-- Las filas se generarán dinámicamente -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Información Adicional -->
+            <div class="card p-6 mb-6">
+                <h2 class="text-xl font-semibold mb-4 flex items-center">
+                    <i class="fas fa-comment-alt text-blue-600 mr-3"></i>
+                    Información Adicional para Proveedores
+                </h2>
+                
+                <div class="space-y-6">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Comentarios Generales</label>
+                        <textarea rows="6" class="form-control" 
+                                  placeholder="Información general que se incluirá en todas las solicitudes de cotización...">Proyecto: Edificio Corporativo Las Condes
+Cliente Final: Constructora Alfa S.A.
+Dirección de Obra: Av. Apoquindo 3000, Las Condes, Santiago
+
+CONDICIONES GENERALES:
+- Todos los materiales deben cumplir con normativas chilenas vigentes
+- Se requiere certificación de calidad para todos los productos
+- Coordinar entregas con jefe de obra: Pedro Martínez (+56 9 8765 4321)
+- Horario de recepción en obra: Lunes a Viernes 08:00 - 17:00 hrs
+- Considerar acceso por rampa lateral del edificio</textarea>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Documentos Adjuntos</label>
+                        <div class="upload-area">
+                            <div class="text-center">
+                                <i class="fas fa-cloud-upload-alt text-gray-400 text-4xl mb-4"></i>
+                                <p class="text-gray-600 mb-2 text-lg">Arrastra archivos aquí o haz clic para seleccionar</p>
+                                <p class="text-sm text-gray-500 mb-4">PDF, DOC, XLS hasta 10MB por archivo</p>
+                                <button class="btn btn-primary" onclick="QuotationManager.selectFiles()">
+                                    <i class="fas fa-plus"></i>
+                                    Seleccionar Archivos
+                                </button>
+                                <input type="file" id="file-input" multiple accept=".pdf,.doc,.docx,.xls,.xlsx,.jpg,.png" style="display: none;" onchange="QuotationManager.handleFileSelect(event)">
+                            </div>
+                            
+                            <!-- Archivos subidos -->
+                            <div class="mt-6 space-y-3" id="uploaded-files">
+                                <div class="file-item">
+                                    <div class="flex items-center">
+                                        <div class="file-icon red">
+                                            <i class="fas fa-file-pdf"></i>
+                                        </div>
+                                        <div>
+                                            <p class="text-sm font-medium text-gray-900">Especificaciones Técnicas Cemento.pdf</p>
+                                            <p class="text-xs text-gray-500">1.2 MB - Subido hace 2 minutos</p>
+                                        </div>
+                                    </div>
+                                    <button class="text-red-600 hover:text-red-800 p-2" onclick="QuotationManager.removeFile(this)">
+                                        <i class="fas fa-times"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Acciones Finales -->
+            <div class="card p-6">
+                <div class="flex flex-col lg:flex-row justify-between items-center space-y-4 lg:space-y-0 lg:space-x-6">
+                    <div class="flex items-center space-x-4">
+                        <div class="flex items-center">
+                            <input type="checkbox" id="confirm-data" class="h-4 w-4 text-blue-600 rounded">
+                            <label for="confirm-data" class="ml-3 text-sm text-gray-700 font-medium">
+                                Confirmo que la información es correcta y está lista para envío
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="flex flex-wrap gap-3">
+                        <button onclick="QuotationManager.saveDraft()" class="btn btn-outline">
+                            <i class="fas fa-save"></i>
+                            Guardar Borrador
+                        </button>
+                        <button onclick="QuotationManager.previewQuotations()" class="btn btn-outline">
+                            <i class="fas fa-eye"></i>
+                            Vista Previa
+                        </button>
+                        <button onclick="QuotationManager.sendQuotations()" class="btn btn-success">
+                            <i class="fas fa-paper-plane"></i>
+                            Enviar Solicitudes (<span id="send-count">7</span>)
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Notification Container -->
+    <div id="notification-container"></div>
+
+    <!-- Menu Component Script -->
+    <script src="../js/menu-component.js"></script>
+    
+    <!-- Page Specific Script -->
+    <script src="../js/ssl-cp-detalle-solicitud-cotizacion.js"></script>
+    
+    <!-- Initialize Menu -->
+    <script>
+        // Cargar el menú con la sección activa correcta
+        SSLMenu.load('cotizacion-proveedores', 'generacion-distribucion');
+    </script>
+</body>
+</html>

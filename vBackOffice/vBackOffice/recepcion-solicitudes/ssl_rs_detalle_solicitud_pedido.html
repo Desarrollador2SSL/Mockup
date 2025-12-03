@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SSL v4.0 - Ingreso Manual Solicitud de Pedido</title>
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- CSS del menú reutilizable -->
+    <link rel="stylesheet" href="../css/ssl-menu.css">
+    <link rel="stylesheet" href="../css/ssl-general.css">
+    
+    <!-- Estilos específicos de esta página -->
+    <link rel="stylesheet" href="../css/ssl-rs-detalle-solicitud-pedido.css">
+</head>
+<body>
+    <!-- Contenedor del menú - Se carga dinámicamente -->
+    <div id="menu-container"></div>
+    
+    <!-- Contenido principal -->
+    <main class="content">
+        <div class="breadcrumb">
+            <div class="breadcrumb-item"><a href="../inicio/ssl_menu.html">Inicio</a></div>
+            <div class="breadcrumb-item"><a href="#">Recepción de Solicitudes</a></div>
+            <div class="breadcrumb-item active">Ingreso Manual</div>
+        </div>
+
+        <h1 class="page-title">Ingreso Manual de Solicitud de Pedido</h1>
+        
+        <div class="version-info">
+            <span>Número: SOL-2025-0001</span>
+            <span class="version-badge">Versión 1</span>
+            <span class="status-badge status-cotizada" id="estadoBadge" style="display: none;">Cotizada</span>
+        </div>
+
+        <div class="form-container">
+            <form id="solicitudForm">
+                <!-- Información General -->
+                <div class="form-section">
+                    <h2 class="section-title">
+                        <i class="fas fa-info-circle"></i>
+                        Información General
+                    </h2>
+                    
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="cliente">Cliente <span class="required">*</span></label>
+                            <select id="cliente" class="form-control" required onchange="cargarObras()">
+                                <option value="">Seleccione cliente</option>
+                                <option value="76123456-K">CONSTRUCTORA ALMAGRO S.A.</option>
+                                <option value="76234567-8">INMOBILIARIA INGEVEC</option>
+                                <option value="76345678-9">CONSTRUCTORA MOLLER Y PÉREZ-COTAPOS</option>
+                                <option value="76456789-0">CONSTRUCTORA SOCOVESA</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="obra">Obra <span class="required">*</span></label>
+                            <div class="input-group">
+                                <select id="obra" class="form-control" required disabled onchange="cargarDatosObra()">
+                                    <option value="">Primero seleccione un cliente</option>
+                                </select>
+                                <div class="input-group-append">
+                                    <button type="button" class="btn btn-info btn-sm" onclick="verDetallesObra()" 
+                                            title="Ver detalles de la obra" disabled id="btnVerObra">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="direccionObra">Dirección de la Obra</label>
+                            <input type="text" id="direccionObra" class="form-control" 
+                                   placeholder="Se carga automáticamente" disabled>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="regionObra">Región de la Obra</label>
+                            <input type="text" id="regionObra" class="form-control" 
+                                   placeholder="Se carga automáticamente" disabled>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="docCliente">Doc. Referencia Cliente <span class="required">*</span></label>
+                            <input type="text" id="docCliente" class="form-control" 
+                                   placeholder="Ej: SOLPED-2025-001" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="fechaDocumento">Fecha Doc. Referencia Cliente <span class="required">*</span></label>
+                            <input type="date" id="fechaDocumento" class="form-control" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="subclasificacion">Subclasificación del Cliente</label>
+                            <select id="subclasificacion" class="form-control" onchange="toggleNumeroSubclasificacion()">
+                                <option value="">Sin subclasificación</option>
+                                <option value="PEP">PEP</option>
+                                <option value="CO">CO (Centro Operación)</option>
+                                <option value="CC">CC (Centro de Costo)</option>
+                                <option value="OTRO">Otro</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="numeroSubclasificacion">Número Subclasificación</label>
+                            <input type="text" id="numeroSubclasificacion" class="form-control" 
+                                   placeholder="Ingrese el número" disabled>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="fechaRequerida">Fecha Requerida en Obra<span class="required">*</span></label>
+                            <input type="date" id="fechaRequerida" class="form-control" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="prioridad">Prioridad <span class="required">*</span></label>
+                            <select id="prioridad" class="form-control" required>
+                                <option value="">Seleccione prioridad</option>
+                                <option value="alta">Alta</option>
+                                <option value="media" selected>Media</option>
+                                <option value="baja">Baja</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="tipoFactura">Tipo de Factura <span class="required">*</span></label>
+                            <select id="tipoFactura" class="form-control" required>
+                                <option value="">Seleccione tipo</option>
+                                <option value="AFECTA">Con Factura AFECTA</option>
+                                <option value="EXENTA">Con Factura EXENTA</option>
+                                <option value="OTRO">OTRO</option>
+                            </select>
+                        </div>
+                                                    
+                        <div class="form-group">
+                            <label for="solicitante">Persona que Envía <span class="required">*</span></label>
+                            <input type="text" id="solicitante" class="form-control" 
+                                   placeholder="Nombre del solicitante" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="medioRecepcion">Medio de Recepción <span class="required">*</span></label>
+                            <select id="medioRecepcion" class="form-control" required>
+                                <option value="">Seleccione medio</option>
+                                <option value="correo">Correo Electrónico</option>
+                                <option value="manual" selected>Manual</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="idInterno">ID Interno (Sistema)</label>
+                            <input type="text" id="idInterno" class="form-control" value="SOL-2025-0001" disabled>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="fechaRegistro">Fecha Registro (Sistema)</label>
+                            <input type="datetime-local" id="fechaRegistro" class="form-control" disabled>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Línea de Crédito -->
+                <div class="form-section">
+                    <h2 class="section-title">
+                        <i class="fas fa-credit-card"></i>
+                        Línea de Crédito
+                    </h2>
+
+                    <div class="info-box">
+                        <i class="fas fa-info-circle"></i>
+                        <p>El monto de la Solicitud de Pedido no puede ser superior al Crédito Disponible</p>
+                    </div>
+
+                    <div class="credit-info-container">
+                        <div class="credit-card">
+                            <div class="credit-label">Crédito Ocupado</div>
+                            <div class="credit-value" id="creditoOcupado">$0</div>
+                        </div>
+                        <div class="credit-card available">
+                            <div class="credit-label">Crédito Disponible</div>
+                            <div class="credit-value" id="creditoDisponible">$0</div>
+                        </div>
+                        <div class="credit-card pending">
+                            <div class="credit-label">Solicitudes en Trámite</div>
+                            <div class="credit-value" id="solicitudesTramite">$0</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Productos -->
+                <div class="form-section">
+                    <h2 class="section-title">
+                        <i class="fas fa-boxes"></i>
+                        Listado de Productos
+                    </h2>
+
+                    <div class="info-box">
+                        <i class="fas fa-info-circle"></i>
+                        <div>
+                            <p style="margin: 0;">Ingrese los productos solicitados por el Cliente.</p>
+                            <p style="margin: 5px 0 0 0;">El código del producto del cliente debe estar previamente creado y asociado a un código SSL del catálogo.</p>
+                            <p style="margin: 5px 0 0 0;">No es posible crear nuevos productos del Cliente y de SSL desde esta interfaz.</p>
+                        </div>
+                    </div>
+
+                    <button type="button" class="btn btn-primary" onclick="agregarFilaProducto()">
+                        <i class="fas fa-plus"></i> Agregar Producto
+                    </button>
+
+                    <table class="products-table" id="productsTable">
+                        <thead>
+                            <tr>
+                                <th width="120">Código Cliente</th>
+                                <th width="200">Descripción Cliente</th>
+                                <th width="100">Modelo/Marca</th>
+                                <th width="120">Código SSL</th>
+                                <th width="200">Descripción SSL</th>
+                                <th width="80">U.M. SSL</th>
+                                <th width="80">Cantidad</th>
+                                <th width="110">Fecha Req.</th>
+                                <th width="100">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="productTableBody">
+                            <!-- Las filas se agregarán dinámicamente -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Documentos Adjuntos -->
+                <div class="form-section">
+                    <h2 class="section-title">
+                        <i class="fas fa-paperclip"></i>
+                        Documentos Adjuntos
+                    </h2>
+
+                    <div class="file-upload-area" ondrop="dropHandler(event);" ondragover="dragOverHandler(event);" 
+                         ondragenter="dragEnterHandler(event);" ondragleave="dragLeaveHandler(event);">
+                        <i class="fas fa-cloud-upload-alt" style="font-size: 3rem; color: var(--secondary-color); margin-bottom: 15px;"></i>
+                        <p>Arrastra archivos aquí o <button type="button" class="btn btn-primary" 
+                           onclick="document.getElementById('file-upload').click()">selecciona archivos</button></p>
+                        <input type="file" id="file-upload" multiple style="display: none;" 
+                               onchange="handleFiles(this.files)" accept=".pdf,.doc,.docx,.xls,.xlsx,.jpg,.jpeg,.png">
+                        <p style="font-size: 0.9rem; color: #666; margin-top: 10px;">
+                            Formatos permitidos: PDF, Excel, Word, Imágenes | Máximo: 10MB por archivo
+                        </p>
+                    </div>
+
+                    <div class="file-list" id="fileList">
+                        <!-- Los archivos se mostrarán aquí -->
+                    </div>
+                </div>
+
+                <!-- Consideraciones Especiales -->
+                <div class="form-section">
+                    <h2 class="section-title">
+                        <i class="fas fa-comment-alt"></i>
+                        Consideraciones Especiales
+                    </h2>
+
+                    <div class="form-group">
+                        <label for="consideraciones">Indique consideraciones especiales o específicas de la solicitud</label>
+                        <textarea id="consideraciones" class="form-control" rows="4" 
+                                  placeholder="Ingrese aquí cualquier consideración especial, instrucciones de entrega, condiciones específicas, etc."></textarea>
+                    </div>
+                </div>
+
+                <!-- Cotizaciones Asociadas (Solo visible en modo edición/ver) -->
+                <div class="form-section" id="seccionCotizaciones" style="display: none;">
+                    <h2 class="section-title">
+                        <i class="fas fa-file-invoice-dollar"></i>
+                        Cotizaciones Asociadas
+                    </h2>
+
+                    <div class="info-box">
+                        <div class="comparison-alert-content">
+                            <i class="fas fa-sync-alt" style="color: var(--secondary-color);"></i>
+                            <span class="comparison-alert-text">
+                                <strong>¡Información en tiempo real!</strong> Esta sección es actualizada continuamente a medida que se generan nuevas cotizaciones o se actualizan las existentes.
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="quotations-grid" id="cotizacionesAsociadas">
+                        <!-- Las cotizaciones se cargarán dinámicamente -->
+                    </div>
+
+                    <div class="comparison-alert" id="comparisonAlert" style="display: none;">
+                        <div class="comparison-alert-content">
+                            <i class="fas fa-chart-bar"></i>
+                            <span class="comparison-alert-text">
+                                <strong>¡Cuadro comparativo disponible!</strong> Puede comparar las cotizaciones recibidas y seleccionar la mejor opción para cada producto.
+                            </span>
+                        </div>
+                        <button type="button" class="btn btn-primary" onclick="verCuadroComparativo()" style="margin-left: 20px;">
+                            <i class="fas fa-balance-scale"></i> Ver Cuadro Comparativo
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Chat con Cliente (Solo visible en modo edición/ver) -->
+                <div class="form-section" id="seccionChat" style="display: none;">
+                    <h2 class="section-title">
+                        <i class="fas fa-comments"></i>
+                        Chat con Cliente
+                    </h2>
+
+                    <div class="chat-container">
+                        <div class="chat-messages">
+                            <!-- Los mensajes se cargarán dinámicamente -->
+                        </div>
+
+                        <div class="chat-input-container">
+                            <input type="text" class="chat-input" placeholder="Escriba su mensaje..." id="chatInput">
+                            <button class="btn btn-primary" onclick="enviarMensaje()">
+                                <i class="fas fa-paper-plane"></i> Enviar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Historial de Estados y Versiones (Solo visible en modo edición/ver) -->
+                <div class="form-section" id="seccionHistorial" style="display: none;">
+                    <h2 class="section-title">
+                        <i class="fas fa-history"></i>
+                        Historial de Estados y Versiones
+                    </h2>
+
+                    <div class="timeline">
+                        <!-- El historial se cargará dinámicamente -->
+                    </div>
+                </div>
+
+                <!-- Botones de Acción -->
+                <div class="action-buttons">
+                    <button type="button" class="btn btn-outline" onclick="limpiarFormulario()">
+                        <i class="fas fa-times"></i> Cancelar
+                    </button>
+                    <button type="button" class="btn btn-warning" onclick="guardarBorrador()">
+                        <i class="fas fa-save"></i> Guardar Borrador
+                    </button>
+                    <button type="button" class="btn btn-info" onclick="generarNuevaVersion()">
+                        <i class="fas fa-copy"></i> Generar Nueva Versión
+                    </button>
+                    <button type="submit" class="btn btn-success">
+                        <i class="fas fa-paper-plane"></i> Enviar a Cotizar
+                    </button>
+                </div>
+            </form>
+        </div>
+    </main>
+
+    <!-- Modal para Búsqueda de Productos -->
+    <div id="modalBuscarProducto" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">
+                    <i class="fas fa-search"></i>
+                    Buscar Producto del Cliente
+                </h2>
+                <span class="close" onclick="cerrarModalBusqueda()">&times;</span>
+            </div>
+            
+            <div class="modal-body">
+                <div class="info-box">
+                    <i class="fas fa-info-circle"></i>
+                    <p>Busque el producto del cliente por código, nombre o familia. Solo se mostrarán productos previamente asociados a productos SSL.</p>
+                </div>
+
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="busquedaTexto">Buscar por</label>
+                        <input type="text" id="busquedaTexto" class="form-control" 
+                               placeholder="Código, nombre o familia del producto"
+                               onkeyup="buscarProductosCliente()">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="busquedaFamilia">Familia</label>
+                        <select id="busquedaFamilia" class="form-control" onchange="buscarProductosCliente()">
+                            <option value="">Todas las familias</option>
+                            <option value="ELECTRICO">Eléctrico</option>
+                            <option value="CONSTRUCCION">Construcción</option>
+                            <option value="SANITARIO">Sanitario</option>
+                            <option value="FERRETERIA">Ferretería</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div style="margin: 20px 0; border-top: 1px solid var(--border-color);"></div>
+
+                <div class="search-results" id="resultadosBusqueda">
+                    <!-- Los resultados aparecerán aquí -->
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline" onclick="cerrarModalBusqueda()">
+                    <i class="fas fa-times"></i> Cancelar
+                </button>
+                <button type="button" class="btn btn-success" onclick="seleccionarProducto()" 
+                        disabled id="btnSeleccionarProducto">
+                    <i class="fas fa-check"></i> Seleccionar
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal para Ver Detalles de la Obra -->
+    <div id="modalDetallesObra" class="modal">
+        <div class="modal-content" style="max-width: 900px;">
+            <div class="modal-header">
+                <h2 class="modal-title">
+                    <i class="fas fa-building"></i>
+                    Detalles de la Obra
+                </h2>
+                <span class="close" onclick="cerrarModalObra()">&times;</span>
+            </div>
+            
+            <div class="modal-body">
+                <div class="obra-info-grid">
+                    <div class="obra-info-item">
+                        <span class="obra-info-label">Nombre de la Obra</span>
+                        <span class="obra-info-value" id="modalObraNombre">-</span>
+                    </div>
+                    <div class="obra-info-item">
+                        <span class="obra-info-label">Cliente</span>
+                        <span class="obra-info-value" id="modalObraCliente">-</span>
+                    </div>
+                    <div class="obra-info-item">
+                        <span class="obra-info-label">Dirección</span>
+                        <span class="obra-info-value" id="modalObraDireccion">-</span>
+                    </div>
+                    <div class="obra-info-item">
+                        <span class="obra-info-label">Región</span>
+                        <span class="obra-info-value" id="modalObraRegion">-</span>
+                    </div>
+                </div>
+
+                <h3 style="margin-top: 25px; margin-bottom: 15px;">
+                    <i class="fas fa-users"></i>
+                    Encargados de la Obra
+                </h3>
+                
+                <table class="encargados-table">
+                    <thead>
+                        <tr>
+                            <th>Nombre</th>
+                            <th>Email</th>
+                            <th>Celular</th>
+                            <th>Rol en la Empresa Cliente</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tablaEncargados">
+                        <!-- Los encargados se cargarán dinámicamente -->
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline" onclick="cerrarModalObra()">
+                    <i class="fas fa-times"></i> Cerrar
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal para Información Adicional del Producto -->
+    <div id="modalInfoAdicional" class="modal">
+        <div class="modal-content" style="max-width: 700px;">
+            <div class="modal-header">
+                <h2 class="modal-title">
+                    <i class="fas fa-info-circle"></i>
+                    Información Adicional del Producto
+                </h2>
+                <span class="close" onclick="cerrarModalInfoAdicional()">&times;</span>
+            </div>
+            
+            <div class="modal-body">
+                <div class="info-box">
+                    <i class="fas fa-box"></i>
+                    <div>
+                        <strong id="infoProductoCodigo">-</strong> - <span id="infoProductoDescripcion">-</span>
+                    </div>
+                </div>
+
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="infoDimensiones">Dimensiones del Producto Unitario</label>
+                        <input type="text" id="infoDimensiones" class="form-control" 
+                               placeholder="30x20x15 cm" readonly disabled>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="infoPesoUnitario">Peso Unitario (kg)</label>
+                        <input type="number" id="infoPesoUnitario" class="form-control" 
+                               step="0.01" min="0" placeholder="0.00" readonly disabled>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="infoVolumenUnitario">Volumen Unitario (m³)</label>
+                        <input type="number" id="infoVolumenUnitario" class="form-control" 
+                               step="0.001" min="0" placeholder="0.000" readonly disabled>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="infoCantidad">Cantidad Solicitada</label>
+                        <input type="number" id="infoCantidad" class="form-control" 
+                               disabled style="background-color: #f5f5f5;">
+                    </div>
+                </div>
+
+                <div class="calculation-group">
+                    <div class="calculation-item">
+                        <span class="calculation-label">Volumen Total</span>
+                        <span class="calculation-value" id="volumenTotal">0.000 m³</span>
+                    </div>
+                    <div class="calculation-item">
+                        <span class="calculation-label">Peso Total</span>
+                        <span class="calculation-value" id="pesoTotal">0.00 kg</span>
+                    </div>
+                </div>
+
+                <div class="form-group" style="margin-top: 20px;">
+                    <label for="infoConsideraciones">Consideraciones del Producto</label>
+                    <textarea id="infoConsideraciones" class="form-control considerations-box" rows="3" 
+                              readonly disabled>Sin consideraciones especiales para este producto</textarea>
+                </div>
+
+                <div class="form-grid" style="margin-top: 20px;">
+                    <div class="form-group">
+                        <label for="infoMarca">Marca</label>
+                        <select id="infoMarca" class="form-control" onchange="checkOtraMarca()">
+                            <option value="">Sin especificar</option>
+                            <option value="3M">3M</option>
+                            <option value="ABB">ABB</option>
+                            <option value="CENTELSA">CENTELSA</option>
+                            <option value="LEGRAND">LEGRAND</option>
+                            <option value="SCHNEIDER">SCHNEIDER</option>
+                            <option value="SIEMENS">SIEMENS</option>
+                            <option value="TIGRE">TIGRE</option>
+                            <option value="OTRO">Otro (especificar)</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group" id="grupoOtraMarca" style="display: none;">
+                        <label for="infoOtraMarca">Especificar Marca</label>
+                        <input type="text" id="infoOtraMarca" class="form-control" 
+                               placeholder="Nombre de la marca">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="infoModelo">Modelo Solicitado</label>
+                    <input type="text" id="infoModelo" class="form-control" 
+                           placeholder="Ingrese el modelo específico">
+                </div>
+
+                <div class="form-group">
+                    <label for="infoComentario">Comentario Adicional a la Compra</label>
+                    <textarea id="infoComentario" class="form-control" rows="3" 
+                              placeholder="Ingrese cualquier comentario adicional relevante para la compra"></textarea>
+                </div>
+
+                <div class="warning-box" id="avisoProducto" style="display: none;">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <div>
+                        <strong>Información importante:</strong>
+                        <ul id="listaAvisos" style="margin: 5px 0 0 0; padding-left: 20px;">
+                            <!-- Los avisos se cargarán dinámicamente -->
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline" onclick="cerrarModalInfoAdicional()">
+                    <i class="fas fa-times"></i> Cancelar
+                </button>
+                <button type="button" class="btn btn-success" onclick="guardarInfoAdicional()">
+                    <i class="fas fa-save"></i> Guardar Información
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Script del componente del menú -->
+    <script src="../js/menu-component.js"></script>
+    
+    <!-- Script específico de esta página -->
+    <script src="../js/ssl-rs-detalle-solicitud-pedido.js"></script>
+    
+    <!-- Inicializar el menú -->
+    <script>
+        // Cargar el menú con la sección y elemento activos
+        SSLMenu.load('recepcion-solicitudes', 'ingreso-manual');
+    </script>
+</body>
+</html>

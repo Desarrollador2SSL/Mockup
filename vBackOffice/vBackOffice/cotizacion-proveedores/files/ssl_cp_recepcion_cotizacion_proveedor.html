@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SSL v4.0 - Recepción de Cotización de Proveedor</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- CSS del menú reutilizable -->
+    <link rel="stylesheet" href="../css/ssl-menu.css">
+    <link rel="stylesheet" href="../css/ssl-general.css">
+    
+    <!-- CSS específico de esta página -->
+    <link rel="stylesheet" href="../css/ssl-cp-recepcion-cotizacion-proveedor.css">
+</head>
+<body>
+    <!-- El menú se carga dinámicamente aquí -->
+    <div id="menu-container"></div>
+
+    <!-- CONTENIDO ESPECÍFICO DE LA PÁGINA -->
+    <main class="content" style="margin-left: var(--menu-width);">
+        <!-- Breadcrumb -->
+        <div class="breadcrumb">
+            <div class="breadcrumb-item"><a href="../inicio/ssl_menu.html">Inicio</a></div>
+            <div class="breadcrumb-item">Cotización a Proveedores</div>
+            <div class="breadcrumb-item"><a href="ssl_cp_listado_recepcion_respuesta.html">Recepción de Cotizaciones</a></div>
+            <div class="breadcrumb-item active" id="breadcrumbTitulo">Nueva Cotización</div>
+        </div>
+
+        <!-- Page Header -->
+        <div class="page-header">
+            <h1 class="page-title" id="pageTitle">
+                <i class="fas fa-file-invoice-dollar"></i>
+                <span>Recepción de Cotización de Proveedor</span>
+            </h1>
+            <div class="header-actions">
+                <button class="btn btn-outline" onclick="RecepcionCotizacion.cancelar()">
+                    <i class="fas fa-times"></i> Cancelar
+                </button>
+                <button class="btn btn-warning" onclick="RecepcionCotizacion.guardarBorrador()">
+                    <i class="fas fa-save"></i> Guardar Borrador
+                </button>
+                <button class="btn btn-success" onclick="RecepcionCotizacion.guardarCotizacion()">
+                    <i class="fas fa-check"></i> Guardar Cotización
+                </button>
+            </div>
+        </div>
+
+        <!-- Alert Container -->
+        <div id="alertContainer" class="alert-container"></div>
+
+        <div class="form-container">
+            <!-- Información de la Solicitud Original -->
+            <div class="form-section">
+                <h2 class="section-title">
+                    <i class="fas fa-info-circle"></i>
+                    Información de la Solicitud Original
+                </h2>
+                
+                <div class="warning-box">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <div>
+                        <strong>Fecha Límite de Respuesta: <span id="infoFechaLimite">05/06/2025</span></strong>
+                        <br>
+                        <small>Quedan <strong><span id="infoDiasRestantes">5 días</span></strong> para completar esta cotización</small>
+                    </div>
+                </div>
+                
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Nro. Solicitud SSL</label>
+                        <div class="form-value" id="infoNroSolicitud">SC-2025-0042</div>
+                    </div>
+                    <div class="form-group">
+                        <label>Cliente</label>
+                        <div class="form-value" id="infoCliente">CONSTRUCTORA ALMAGRO S.A.</div>
+                    </div>
+                    <div class="form-group">
+                        <label>Obra</label>
+                        <div class="form-value" id="infoObra">EDIFICIO PACIFIC BLUE</div>
+                    </div>
+                    <div class="form-group">
+                        <label>Fecha Solicitud</label>
+                        <div class="form-value" id="infoFechaSolicitud">22/05/2025</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Datos del Proveedor y Cotización -->
+            <div class="form-section">
+                <h2 class="section-title">
+                    <i class="fas fa-building"></i>
+                    Datos del Proveedor y Cotización
+                </h2>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="proveedor">Proveedor <span class="required">*</span></label>
+                        <select id="proveedor" class="form-control" required onchange="RecepcionCotizacion.cargarDatosProveedor()">
+                            <option value="">Seleccione proveedor</option>
+                            <option value="1">ELECTROCOM LTDA.</option>
+                            <option value="2">IMPORTADORA TÉCNICA S.A.</option>
+                            <option value="3">DISTRIBUIDORA ELÉCTRICA NACIONAL</option>
+                            <option value="4">CABLES Y CONDUCTORES SpA</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="nroCotizacionProveedor">Nro. Cotización Proveedor <span class="required">*</span></label>
+                        <input type="text" id="nroCotizacionProveedor" class="form-control" 
+                               placeholder="Ej: COT-PROV-2025-1234" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="versionCotizacion">Versión <span class="required">*</span></label>
+                        <input type="number" id="versionCotizacion" class="form-control" 
+                               value="1" min="1" required>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="fechaRecepcion">Fecha Recepción <span class="required">*</span></label>
+                        <input type="date" id="fechaRecepcion" class="form-control" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="fechaVencimiento">Fecha Vencimiento Cotización <span class="required">*</span></label>
+                        <input type="date" id="fechaVencimiento" class="form-control" required 
+                               onchange="RecepcionCotizacion.validarFechaVencimiento()">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="fechaEntregaProveedor">Fecha Entrega Ofrecida <span class="required">*</span></label>
+                        <input type="date" id="fechaEntregaProveedor" class="form-control" required 
+                               onchange="RecepcionCotizacion.validarFechaEntrega()">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="moneda">Moneda <span class="required">*</span></label>
+                        <select id="moneda" class="form-control" required>
+                            <option value="CLP" selected>CLP - Peso Chileno</option>
+                            <option value="USD">USD - Dólar Americano</option>
+                            <option value="EUR">EUR - Euro</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="tipoCambio">Tipo de Cambio (si aplica)</label>
+                        <input type="number" id="tipoCambio" class="form-control" 
+                               placeholder="Ej: 950.00" step="0.01">
+                    </div>
+
+                    <div class="form-group checkbox-group">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="incluyeFlete" 
+                                   onchange="RecepcionCotizacion.toggleFlete()">
+                            <span>¿Incluye Flete?</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="form-row" id="fleteRow" style="display: none;">
+                    <div class="form-group">
+                        <label for="montoFlete">Monto Flete</label>
+                        <input type="number" id="montoFlete" class="form-control" 
+                               placeholder="0" step="0.01" 
+                               onchange="RecepcionCotizacion.calcularTotales()">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="tipoFlete">Tipo de Flete</label>
+                        <select id="tipoFlete" class="form-control">
+                            <option value="incluido">Incluido en precio unitario</option>
+                            <option value="separado">Separado del precio</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="responsableFlete">Responsable Flete</label>
+                        <input type="text" id="responsableFlete" class="form-control" 
+                               placeholder="Nombre empresa de transporte">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="observaciones">Observaciones Generales</label>
+                    <textarea id="observaciones" class="form-control" rows="3" 
+                              placeholder="Ingrese observaciones sobre la cotización, condiciones especiales, etc."></textarea>
+                </div>
+            </div>
+
+            <!-- Productos Cotizados -->
+            <div class="form-section">
+                <h2 class="section-title">
+                    <i class="fas fa-box-open"></i>
+                    Productos Cotizados - Comparación
+                </h2>
+
+                <div class="info-box info-box-warning">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <div>
+                        <strong>Importante:</strong> Ingrese los datos de la cotización del proveedor. 
+                        El sistema validará automáticamente cantidades, fechas y unidades contra lo solicitado.
+                        Las discrepancias se marcarán con alertas.
+                    </div>
+                </div>
+
+                <div class="table-wrapper">
+                    <table class="comparison-table">
+                        <thead>
+                            <tr>
+                                <th colspan="6" class="table-header-section">DATOS SOLICITADOS (SSL)</th>
+                                <th colspan="7" class="table-header-section">DATOS COTIZADOS (PROVEEDOR)</th>
+                                <th rowspan="2">Alertas</th>
+                            </tr>
+                            <tr>
+                                <th>Item</th>
+                                <th>Código SSL</th>
+                                <th>Descripción SSL</th>
+                                <th>U.M. SSL</th>
+                                <th>Cant. Solicitada</th>
+                                <th>Fecha Req.</th>
+                                
+                                <th>Código Prov. <span class="required">*</span></th>
+                                <th>Descripción Prov.</th>
+                                <th>U.M. Prov. <span class="required">*</span></th>
+                                <th>Cant. Cotizada <span class="required">*</span></th>
+                                <th>Factor Conv.</th>
+                                <th>Precio Unit. <span class="required">*</span></th>
+                                <th>Total</th>
+                            </tr>
+                        </thead>
+                        <tbody id="productosTableBody">
+                            <!-- Los productos se cargarán dinámicamente -->
+                        </tbody>
+                        <tfoot>
+                            <tr class="totals-row">
+                                <td colspan="12" style="text-align: right; font-weight: bold;">Subtotal Productos:</td>
+                                <td id="subtotalProductos" style="font-weight: bold;">$0</td>
+                                <td></td>
+                            </tr>
+                            <tr class="totals-row" id="fleteTotal" style="display: none;">
+                                <td colspan="12" style="text-align: right; font-weight: bold;">Flete:</td>
+                                <td id="totalFlete" style="font-weight: bold;">$0</td>
+                                <td></td>
+                            </tr>
+                            <tr class="totals-row totals-final">
+                                <td colspan="12" style="text-align: right; font-weight: bold; font-size: 1.1rem;">TOTAL COTIZACIÓN:</td>
+                                <td id="totalCotizacion" style="font-weight: bold; font-size: 1.1rem; color: var(--success-color);">$0</td>
+                                <td></td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Documentos Adjuntos -->
+            <div class="form-section">
+                <h2 class="section-title">
+                    <i class="fas fa-paperclip"></i>
+                    Documentos Adjuntos de la Cotización
+                </h2>
+
+                <div class="file-upload-area" id="fileUploadArea">
+                    <i class="fas fa-cloud-upload-alt"></i>
+                    <p>Arrastra archivos aquí o 
+                        <button type="button" class="btn btn-primary btn-sm" 
+                                onclick="document.getElementById('fileInput').click()">
+                            selecciona archivos
+                        </button>
+                    </p>
+                    <input type="file" id="fileInput" multiple style="display: none;" 
+                           accept=".pdf,.doc,.docx,.xls,.xlsx,.jpg,.jpeg,.png">
+                    <p class="file-info">Formatos: PDF, Excel, Word, Imágenes | Máximo: 10MB por archivo</p>
+                </div>
+
+                <div class="file-list" id="fileList">
+                    <!-- Los archivos se mostrarán aquí -->
+                </div>
+            </div>
+
+            <!-- Resumen y Acciones -->
+            <div class="form-section">
+                <h2 class="section-title">
+                    <i class="fas fa-calculator"></i>
+                    Resumen de la Cotización
+                </h2>
+                
+                <div class="summary-box">
+                    <div class="summary-title">Resumen</div>
+                    <div class="summary-grid">
+                        <div class="summary-item">
+                            <span class="summary-label">Total Items:</span>
+                            <span class="summary-value" id="summaryItems">0</span>
+                        </div>
+                        <div class="summary-item">
+                            <span class="summary-label">Items Completos:</span>
+                            <span class="summary-value" id="summaryCompletos">0</span>
+                        </div>
+                        <div class="summary-item">
+                            <span class="summary-label">Alertas Activas:</span>
+                            <span class="summary-value" id="summaryAlertas">0</span>
+                        </div>
+                        <div class="summary-item">
+                            <span class="summary-label">Total Cotización:</span>
+                            <span class="summary-value" id="summaryTotal">$0</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Botones de Acción -->
+            <div class="action-buttons">
+                <button type="button" class="btn btn-outline" onclick="RecepcionCotizacion.cancelar()">
+                    <i class="fas fa-times"></i> Cancelar
+                </button>
+                <button type="button" class="btn btn-warning" onclick="RecepcionCotizacion.guardarBorrador()">
+                    <i class="fas fa-save"></i> Guardar Borrador
+                </button>
+                <button type="button" class="btn btn-info" onclick="RecepcionCotizacion.nuevaVersion()">
+                    <i class="fas fa-copy"></i> Nueva Versión
+                </button>
+                <button type="button" class="btn btn-primary" onclick="RecepcionCotizacion.vistaPrevia()">
+                    <i class="fas fa-eye"></i> Vista Previa
+                </button>
+                <button type="button" class="btn btn-success" onclick="RecepcionCotizacion.guardarCotizacion()">
+                    <i class="fas fa-check"></i> Guardar y Aceptar
+                </button>
+            </div>
+        </div>
+    </main>
+
+    <!-- Modal de Alerta -->
+    <div id="modalAlerta" class="modal">
+        <div class="modal-content modal-sm">
+            <div class="modal-header">
+                <h3 class="modal-title" id="modalAlertaTitulo">Alerta</h3>
+                <span class="close" onclick="RecepcionCotizacion.cerrarModal()">&times;</span>
+            </div>
+            <div class="modal-body" id="modalAlertaBody">
+                <!-- Contenido dinámico -->
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary" onclick="RecepcionCotizacion.cerrarModal()">
+                    <i class="fas fa-check"></i> Entendido
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Cargar el JS del menú reutilizable -->
+    <script src="../js/menu-component.js"></script>
+    
+    <!-- Script específico de esta página -->
+    <script src="../js/ssl-cp-recepcion-cotizacion-proveedor.js"></script>
+    
+    <!-- Script para cargar el menú -->
+    <script>
+        // Cargar el menú cuando el DOM esté listo
+        document.addEventListener('DOMContentLoaded', function() {
+            SSLMenu.load('cotizacion-proveedores', 'recepcion-cotizaciones');
+            
+            // Inicializar la página
+            setTimeout(() => {
+                RecepcionCotizacion.init();
+            }, 100);
+        });
+    </script>
+</body>
+</html>
